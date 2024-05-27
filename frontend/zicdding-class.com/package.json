@@ -1,7 +1,6 @@
 {
   "name": "@zicdding-web/zicdding-class-com",
   "version": "1.0.0",
-  "description": "직띵 클래스 웹 프로젝트 백엔드",
   "main": "index.js",
   "private": true,
   "packageManager": "yarn@4.2.2",
