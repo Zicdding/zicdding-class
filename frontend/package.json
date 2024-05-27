@@ -1,7 +1,7 @@
 {
-  "name": "@zicdding-fe/frontend",
+  "name": "@zicdding-web/frontend",
   "version": "1.0.0",
-  "description": "직띵 클래스 웹 프로젝트 백엔드",
+  "description": "직띵 클래스 웹 프로젝트 프론트엔드",
   "main": "index.js",
   "repository": "https://github.com/Zicdding/zicdding-class",
   "license": "MIT",
@@ -14,5 +14,8 @@
   "devDependencies": {
     "@types/node": "^18",
     "typescript": "5.3.3"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

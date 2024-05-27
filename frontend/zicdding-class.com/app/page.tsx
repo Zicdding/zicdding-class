@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { foo } from '@zicdding-fe/foo';
+import { foo } from '@zicdding-web/foo';
 
 console.log(`foo value is ${foo}`);
 
