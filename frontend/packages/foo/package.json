@@ -1,5 +1,5 @@
 {
-  "name": "@zicdding-fe/foo",
+  "name": "@zicdding-web/foo",
   "main": "src/index.ts",
   "packageManager": "yarn@4.2.2"
 }

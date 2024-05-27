@@ -246,29 +246,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@zicdding-fe/foo@workspace:^, @zicdding-fe/foo@workspace:packages/foo":
+"@zicdding-web/foo@workspace:^, @zicdding-web/foo@workspace:packages/foo":
   version: 0.0.0-use.local
-  resolution: "@zicdding-fe/foo@workspace:packages/foo"
+  resolution: "@zicdding-web/foo@workspace:packages/foo"
   languageName: unknown
   linkType: soft
 
-"@zicdding-fe/frontend@workspace:.":
+"@zicdding-web/frontend@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@zicdding-fe/frontend@workspace:."
+  resolution: "@zicdding-web/frontend@workspace:."
   dependencies:
     "@types/node": "npm:^18"
     typescript: "npm:5.3.3"
   languageName: unknown
   linkType: soft
 
-"@zicdding-fe/zicdding-class-com@workspace:zicdding-class.com":
+"@zicdding-web/zicdding-class-com@workspace:zicdding-class.com":
   version: 0.0.0-use.local
-  resolution: "@zicdding-fe/zicdding-class-com@workspace:zicdding-class.com"
+  resolution: "@zicdding-web/zicdding-class-com@workspace:zicdding-class.com"
   dependencies:
     "@types/node": "npm:^18"
     "@types/react": "npm:^18"
     "@types/react-dom": "npm:^18"
-    "@zicdding-fe/foo": "workspace:^"
+    "@zicdding-web/foo": "workspace:^"
     next: "npm:14.2.3"
     postcss: "npm:^8"
     react: "npm:^18"
