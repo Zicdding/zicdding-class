@@ -9,10 +9,13 @@
   "scripts": {
     "build": "echo \"빌드 스크립트를 만들어주세요.\"",
     "start": "echo \"실행 스크립트를 만들어주세요.\"",
-    "dev": "nodemon --exec babel-node src/index.js"
+    "dev": "nodemon --exec babel-node ./bin/www.js"
   },
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql": "^2.18.1",
+    "yarn": "^1.22.22"
   },
   "engines": {
     "node": ">=20"

@@ -26,11 +26,11 @@ success Already up-to-date.
 ```
 ➜ yarn dev
 yarn run v1.22.22
-$ nodemon --exec babel-node src/index.js
+$ nodemon --exec babel-node ./bin/Wwws.js
 [nodemon] 3.1.1
 [nodemon] to restart at any time, enter `rs`
 [nodemon] watching path(s): *.*
 [nodemon] watching extensions: js,mjs,cjs,json
-[nodemon] starting `babel-node src/index.js`
+[nodemon] starting `babel-node ./bin/www.js`
 Server is running on http://localhost:3000
 ```

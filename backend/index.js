@@ -1,12 +1,13 @@
 import express, { Request, Response } from 'express';
 
 const app = express();
-const port = 3000;
+const path = require('path');
+const publicPath = path.join(__dirname, 'public');
+app.use(express.static(publicPath));
 
 app.get('/', (_, res) => {
   res.send('Hello, JavaScript with Express!');
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+
+module.exports = app;
