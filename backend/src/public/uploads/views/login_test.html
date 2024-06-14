@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    {%if user%}
+    <a href="/auth/info">회원정보</a>
+    <a href="/logout">로그아웃</a>
+    {%else%}
+    <a href="/auth/kakao">카카오로그인</a>
+    {%endif%}
+  </body>
+</html>
