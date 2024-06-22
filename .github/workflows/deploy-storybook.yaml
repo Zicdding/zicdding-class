@@ -1,0 +1,40 @@
+name: deploy-storybook
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'main'
+    paths: ['frontend/packages/ui/**']
+
+jobs:
+  deploy-storybook:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install Dependencies
+        run: yarn workspaces focus @zicdding-web/ui
+        working-directory: ./frontend
+      - name: Build Storybook
+        run: |
+          yarn build-storybook
+        working-directory: ./frontend/packages/ui
+      - name: Deploy Storybook
+        run: |
+          rm -rf zicdding-ui-storybook
+          git clone https://$ZICDDING_BOT_STORYBOOK@github.com/zicdding/zicdding-ui-storybook.git
+          
+          cd zicdding-ui-storybook
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          cp -R ../storybook-static/* ./docs
+          git add -A
+          git -c core.hookspath=/dev/null commit -m "${{ github.event.head_commit.message }}"
+          git push origin HEAD
+        working-directory: ./frontend/packages/ui
+        env:
+          ZICDDING_BOT_STORYBOOK: ${{ secrets.ZICDDING_BOT_STORYBOOK }}
