@@ -30,11 +30,9 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          rm -rf storybook-static
-          rm -rf docs
-          mv ../storybook-static ./docs
+          cp -R ../storybook-static/* ./docs
           git add -A
-          git -c core.hookspath=/dev/null commit -m "$(git log -1 --pretty=%B)"
+          git -c core.hookspath=/dev/null commit -m "${{ github.event.head_commit.message }}"
           git push origin HEAD
         working-directory: ./frontend/packages/ui
         env:
