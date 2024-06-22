@@ -22,7 +22,7 @@ jobs:
           yarn build-storybook
         working-directory: ./frontend/packages/ui
       - name: Deploy Storybook
-        run:
+        run: |
           rm -rf zicdding-ui-storybook
           git clone https://$ZICDDING_BOT_STORYBOOK@github.com/zicdding/zicdding-ui-storybook.git
           
