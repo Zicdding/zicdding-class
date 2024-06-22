@@ -31,7 +31,8 @@ jobs:
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           rm -rf storybook-static
-          mv ../storybook-static ./storybook-static
+          rm -rf docs
+          mv ../storybook-static ./docs
           git add -A
           git -c core.hookspath=/dev/null commit -m "$(git log -1 --pretty=%B)"
           git push origin HEAD
