@@ -30,6 +30,15 @@ yarn install
 
 ![](./resources/readme-step-2.png)
 
+🔴 `Cannot find module '' or its corresponding type`에러 발생시 해결방법.
+
+1. `Shift` + `Cmd`/`Ctrl` + `P` 누르고 `TypeScript: Select TypeScript Version` 선택합니다.
+
+2. `VS Code의 버전 사용`을 선택하지말고 `Use Workspace Version`을 선택합니다.
+   ![](./resources/readme-step-2-error.png)
+
+3. 해결되지 않으면 VSCode 재시작합
+
 ### 3. yarn dev
 
 ```
