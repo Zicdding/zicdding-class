@@ -1,23 +1,28 @@
-require('dotenv').config;
+require('dotenv').config(); // 환경 변수 로드
 
 const jwt = require('jsonwebtoken');
-
+/*
 const secretKey = process.env.SECRET_KEY;
-const alorithm = process.env.JWT_ALGO;
+const algorithm = process.env.JWT_ALGO;  // 오타 수정
 const expiresIn = process.env.JWT_EXP;
 const issuer = process.env.JWT_ISSUER;
+*/
 
+const secretKey  = 'ZIC';
+const algorithm ='HS256';
+const expiresIn = '10h';
+const issuer = 'USER';
 
-const option = {alorithm, expiresIn, issuer};
+const option = { algorithm, expiresIn, issuer }; // 오타 수정
 
-//토큰 생성
-const generateToken = (payload => {
+// 토큰 생성 함수
+const generateToken = (payload) => {
     return jwt.sign(payload, secretKey, option);
-})
+};
 
-//디코딩
-const decodedPayload = (token => {
-    return jwt.sign(token,secretKey);
-})
+// 토큰 디코딩 함수
+const decodedPayload = (token) => {
+    return jwt.verify(token, secretKey);
+};
 
-module.exports = {generateToken, decodedPayload}
+module.exports = { generateToken, decodedPayload };
