@@ -1,6 +1,12 @@
 const getConnection = require('../../config/db');
 const { connect } = require('../api');
 
+
+exports.findUser = (data, cd) =>{
+    const sql= 'SELECT '
+}
+
+
 exports.createUser = (data, cb) =>{
         const sql = `INSERT 
         INTO TB_USER (user_id, email, passwrod, nickname, phone_num, role_type, suspension_yn, del_yn, created_date, mod_user, mod_date ) 
