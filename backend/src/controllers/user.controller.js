@@ -98,7 +98,7 @@ const process = {
                                 }
                             })
                         }else{
-                            setResponseJson(res, 500, {message : err.message});
+                            setResponseJson(res, 401, '로그인 실패');
                             console.log(err)
                         } 
                     });
