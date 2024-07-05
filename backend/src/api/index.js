@@ -28,6 +28,7 @@ router.get('/logout', unAuth, (req,res) => {
 router.post(apiUrl+users+"/signup", user.process.signup );
 router.get(apiUrl+users+"/signup", user.output.signup );
 router.get(apiUrl+users+'/check-email', user.output['check-email']);
+
 //로그인
 router.post(apiUrl + users + "/signIn" , user.process.signIn);
 

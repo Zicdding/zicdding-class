@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import { generateRefreshToken, generateToken, saveRefreshToken } from "../utils/jwt";
+
 const getConnection = require('../../config/db');
 const setResponseJson = require('../models/responseDto');
 
@@ -10,7 +11,7 @@ const output = {
     },
 
     'check-email' : (req, res) => {
-        const user_email = req.body.email;
+        const userEmail = req.body.email;
         const sql = 'SELECT count(email) AS result FROM TB_USER WHERE email = ?;';
 
         try{
@@ -19,7 +20,7 @@ const output = {
                     setResponseJson(res, 500,  { message: err.message });
                     console.log(err)
                 }
-                connection.query(sql, user_email, (err,rows,result) => {
+                connection.query(sql, userEmail, (err,rows,result) => {
                     if(err){
                         setResponseJson(res, 500, { message: err.message });
                         console.log(err)
