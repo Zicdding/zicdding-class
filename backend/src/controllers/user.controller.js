@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { generateBasicToekn } from "../utils/jwt";
+import { generateBasicToken, generateRefreshToken, generateToken, saveRefreshToken } from "../utils/jwt";
 const getConnection = require('../../config/db');
 const setResponseJson = require('../models/responseDto');
 
@@ -91,9 +91,14 @@ const process = {
                         if(results.length > 0){
                             bcrypt.compare(password, results[0].password, (err,isMatch) =>{
                                 if(isMatch === true){
-                                    res.send(setResponseJson(res, 200,'로그인 성공',{access_token : generateBasicToekn(results[0].id)} ))
+                                    const userId = results[0].user_id;
+                                    const accessToken = generateBasicToken(userId);
+                                    const refreshToken = generateRefreshToken(userId);
+                                    saveRefreshToken(userId, refreshToken);
+
+                                    res.send(setResponseJson(res, 200,'로그인 성공',{accessToken, refreshToken}));
                                 }else {
-                                    res.send(setResponseJson(res, 500, '아이디 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요'));
+                                    res.send(setResponseJson(res, 400, '아이디 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요'));
                                     console.log(err)
                                 }
                             })
@@ -108,7 +113,6 @@ const process = {
              res.sned(setResponseJson(res, 500, {message : err.message}));
             console.log(err)
         }
-        
     }
 }
 
