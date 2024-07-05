@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { generateBasicToken, generateRefreshToken, generateToken, saveRefreshToken } from "../utils/jwt";
+import { generateRefreshToken, generateToken, saveRefreshToken } from "../utils/jwt";
 const getConnection = require('../../config/db');
 const setResponseJson = require('../models/responseDto');
 
@@ -43,14 +43,14 @@ const output = {
 const process = {
     signup : (req, res) => {
         
-        const {email, password, nickname, phone_num} = req.body;
+        const {email, password, nickname, phoneNum} = req.body;
         const passwordBycrpt = bcrypt.hashSync(password, 12);
 
         const sql = `INSERT 
         INTO TB_USER ( email, password, nickname, phone_num, created_date, mod_date ) 
         VALUES ( ?, ?, ?, ?, now(), now())`;
         try{
-            const data = [email, passwordBycrpt, nickname, phone_num];
+            const data = [email, passwordBycrpt, nickname, phoneNum];
             
             getConnection((err,connection) => {
                     if(err){
@@ -92,7 +92,7 @@ const process = {
                             bcrypt.compare(password, results[0].password, (err,isMatch) =>{
                                 if(isMatch === true){
                                     const userId = results[0].user_id;
-                                    const accessToken = generateBasicToken(userId);
+                                    const accessToken = generateToken(userId);
                                     const refreshToken = generateRefreshToken(userId);
                                     saveRefreshToken(userId, refreshToken);
 
