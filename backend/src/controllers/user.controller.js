@@ -1,8 +1,8 @@
 import bcrypt from "bcryptjs";
-import { generateRefreshToken, generateToken, saveRefreshToken } from "../utils/jwt";
+import { generateRefreshToken, generateToken, saveRefreshToken, replaceAccessToken } from "../utils/jwt";
 
 const getConnection = require('../../config/db');
-const setResponseJson = require('../models/responseDto');
+const setResponseJson = require('../utils/responseDto');
 
 
 const output = {
@@ -46,28 +46,49 @@ const process = {
         
         const {email, password, nickname, phoneNum} = req.body;
         const passwordBycrpt = bcrypt.hashSync(password, 12);
-
+            
         const sql = `INSERT 
         INTO TB_USER ( email, password, nickname, phone_num, created_date, mod_date ) 
         VALUES ( ?, ?, ?, ?, now(), now())`;
+        const checkSql = 'SELECT email FROM TB_USER WHERE email = ?';
         try{
             const data = [email, passwordBycrpt, nickname, phoneNum];
-            
             getConnection((err,connection) => {
                     if(err){
-                        setResponseJson(res, 500, {message : err.message});
+                        setResponseJson(res, 500, err);
                         console.log(err)
                     }
-                    connection.query(sql, data, (err, result) =>{
-                        connection.release();
+
+                    connection.query(checkSql, data, (err, result) =>{
                             if(err){
-                                setResponseJson(res, 500, {message : err.message});
+                                connection.release();
+                                setResponseJson(res, 500, err);
                                 console.log(err)
                             }
-                            setResponseJson(res, 200, '회원가입 완료! 환영합니다');
-                            console.log(result)
+                            if(result.length > 0){
+                                connection.release();
+                                setResponseJson(res, 409, '이미 사용중인 이메일입니다.');
+                            }
+                            else{
+                                connection.query(sql, data, (err, result) => {
+                                    const userId = result.insertId;
+                                    const accessToken = generateToken(userId);
+                                    const refreshToken = generateRefreshToken(userId);
+                                    saveRefreshToken(userId, refreshToken);
+    
+                                    res.cookie('authToken', refreshToken, {
+                                        httpOnly : true,
+                                        secure : false,
+                                        sameSite : 'strict'
+                                    });
+
+                                    connection.release();
+                                    setResponseJson(res, 200, '회원가입 완료! 환영합니다', {accessToken, refreshToken});
+                                    console.log(result);
+                                });
+                            }
                         });
-                })
+                });
         }catch(err){
             console.log(err);
         }
@@ -83,9 +104,10 @@ const process = {
                         setResponseJson(res, 500, {message : err.message});
                         console.log(err);
                     }
+
                     connection.query(sql, [email,password], (err, results)=>{
-                        connection.release();
                         if(err){
+                            connection.release();
                             setResponseJson(res, 500, {message : err.message});
                             console.log(err)
                         }
@@ -96,7 +118,11 @@ const process = {
                                     const accessToken = generateToken(userId);
                                     const refreshToken = generateRefreshToken(userId);
                                     saveRefreshToken(userId, refreshToken);
-
+                                    res.cookie('authToken', refreshToken, {
+                                        httpOnly : true,
+                                        secure : false,
+                                        sameSite : 'strict'
+                                    })
                                     res.send(setResponseJson(res, 200,'로그인 성공',{accessToken, refreshToken}));
                                 }else {
                                     res.send(setResponseJson(res, 400, '아이디 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요'));
@@ -111,11 +137,27 @@ const process = {
                 });
             }
         }catch(err){
-             res.sned(setResponseJson(res, 500, {message : err.message}));
+             res.send(setResponseJson(res, 500, {message : err.message}));
             console.log(err)
         }
+    },
+
+    replaceToken : (req, res) =>{
+        const refreshToken = req.cookies.authToken;
+        if(!refreshToken)
+            return res.send(setResponseJson(res,403, '리프레시 토큰 만료'));
+
+        replaceAccessToken(refreshToken)
+            .then((newAccessToken) => {
+                res.send(setResponseJson(res, 200, '토큰 재발급', {accessToken : newAccessToken}))
+            })
+            .catch((err) => {
+                res.send(setResponseJson(res, 403, {message : err.message}))
+            })
     }
 }
+
+
 
 module.exports = {
     output,

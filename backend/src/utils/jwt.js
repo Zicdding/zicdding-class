@@ -10,12 +10,21 @@ const refreshExpiresIn  = process.env.JWT_REFRESH_EXP;
 
 const option = { algorithm, expiresIn, issuer };
 const refreshOption = {algorithm, expiresIn : refreshExpiresIn, issuer}
-
+/*
 const generateBasicToken = (userId) => {
     const payload = {userId :userId};
     const token = jwt.sign(payload, secretKey, option);
     return token;
 }
+*/
+
+// 토큰 생성 함수
+const generateToken = (userId) => {
+    const payload = {userId : userId};
+    const token = jwt.sign(payload, secretKey, option);
+    return token;
+};
+
 
 const generateRefreshToken = (userId) =>{
     const payload = {userId : userId};
@@ -24,23 +33,56 @@ const generateRefreshToken = (userId) =>{
 }
 
 const saveRefreshToken = (userId, refreshToken) =>{
-    const sql = 'UPDATE TB_USER SET refresh_token = ? where user_id = ?;'
-    getConnection((err,connection) => {
-        if(err) throw err;
-        connection.query(sql,[refreshToken,userId], (err,result) =>{
-            connection.release();
-            console.log(userId)
+    const checkSql = 'SELECT refresh_token from TB_USER where user_id = ?';
+    const updateSql = 'UPDATE TB_USER SET refresh_token = ? where user_id = ?;';
+    const insertSql = 'INSERT INTO TB_USER (user_id, refresh_token) VALUES (?, ?)';
+    try{
+        getConnection((err,connection) => {
             if(err) throw err;
-            return result;
-        });
-    })
+            connection.query(checkSql,[userId], (err,result) =>{
+                if(err){
+                    console.err(err);
+                    connection.release();
+                    return;
+                }
+                console.log(userId)
+                if(result[0].length > 0){
+                    connection.query(updateSql, [refreshToken, userId],(err) =>{
+                        connection.release();
+                        if(err){
+                            console.log(err, err.message);
+                        }
+                    });
+                }else{
+                    connection.query(insertSql, [userId, refreshToken],(err,result) => {
+                        connection.release();
+                        if(err) {
+                            console.err(err.message)
+                        }
+                        console.log(result);
+                    })
+                }
+                return result;
+            });
+        })
+    }catch(e) {
+
+    }
+   
 }
 
-// 토큰 생성 함수
-const generateToken = (payload) => {
-    const token = jwt.sign(payload, secretKey, option);
-    return token;
-};
+const replaceAccessToken = (refreshToken) =>{
+    return new Promise((resolve, reject) => {
+        jwt.verify(refreshToken, secretKey, (err, decoded) => {
+            if(err) {
+                return reject(err);
+            }
+            const userId = decoded.userId;
+            const newAccessToken = generateToken(userId);
+            resolve(newAccessToken);
+        })
+    })
+}
 
 // 토큰 디코딩 함수
 const decodedPayload = (token) => {
@@ -50,4 +92,4 @@ const decodedPayload = (token) => {
 
 
 
-module.exports = { generateBasicToken , generateRefreshToken, saveRefreshToken, generateToken, decodedPayload };
+module.exports = {  generateRefreshToken, saveRefreshToken, generateToken, replaceAccessToken, decodedPayload };

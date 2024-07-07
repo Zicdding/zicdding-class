@@ -10,14 +10,10 @@ const {auth} = require('../../middlewares/auth.js');
 
 
 const kakaoOpt = {
-    /*
+
     clientId : process.env.CLIENT_ID,
     clientSecret : process.env.CLIENT_SECRET,
     redirectUri : process.env.REDIRECT_URI,
-*/
-clientId : '153994fbdf5f25b41659b9c79b0a4ffe',
-clientSecret :'3u9uGiDlx1eS5GZXXGl4FlvRffH644hY',
-redirectUri : 'http://localhost:3000/oauth/kakao/callback',
     };
 
 router.get("/kakao", async(req, res) => {
