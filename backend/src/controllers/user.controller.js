@@ -80,10 +80,11 @@ const process = {
                                     saveRefreshToken(userId, refreshToken);
     
                                     res.cookie('accessToken', accessToken, {
+                                        httpOnly : true,
+                                        secure : false,
+                                        sameSite : 'strict',
                                         expires: new Date(),
-                                        httpOnly : true
                                     });
-
                                     connection.release();
                                     setResponseJson(res, 200, '회원가입 완료! 환영합니다', {accessToken, refreshToken});
                                     console.log(result);
@@ -147,7 +148,7 @@ const process = {
     },
 
     replaceToken : (req, res) =>{
-        const refreshToken = req.cookies.accessToken;
+        const refreshToken = req.body.refreshToken;
         if(!refreshToken)
             return res.send(setResponseJson(res,403, '리프레시 토큰 만료'));
 
