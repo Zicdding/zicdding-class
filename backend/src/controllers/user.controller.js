@@ -6,8 +6,11 @@ const setResponseJson = require('../utils/responseDto');
 
 
 const output = {
-    signup : (req,res) =>{
+    signUp : (req,res) =>{
         res.send('회원가입');
+    },
+    signIn : (req,res) =>{
+        res.render('login_test1.ejs');
     },
 
     'check-email' : (req, res) => {
@@ -42,7 +45,7 @@ const output = {
 }
 
 const process = {
-    signup : (req, res) => {
+    signUp : (req, res) => {
         
         const {email, password, nickname, phoneNum} = req.body;
         const passwordBycrpt = bcrypt.hashSync(password, 12);
@@ -76,10 +79,9 @@ const process = {
                                     const refreshToken = generateRefreshToken(userId);
                                     saveRefreshToken(userId, refreshToken);
     
-                                    res.cookie('authToken', refreshToken, {
-                                        httpOnly : true,
-                                        secure : false,
-                                        sameSite : 'strict'
+                                    res.cookie('accessToken', accessToken, {
+                                        expires: new Date(),
+                                        httpOnly : true
                                     });
 
                                     connection.release();
@@ -96,6 +98,7 @@ const process = {
 
     signIn : (req, res )=> {
         const {email, password} = req.body;
+        console.log(email)
         const sql = 'SELECT * FROM TB_USER WHERE email = ?';
         try{
             if(email && password) {
@@ -118,12 +121,13 @@ const process = {
                                     const accessToken = generateToken(userId);
                                     const refreshToken = generateRefreshToken(userId);
                                     saveRefreshToken(userId, refreshToken);
-                                    res.cookie('authToken', refreshToken, {
+                                    res.cookie('accessToken', accessToken, {
                                         httpOnly : true,
                                         secure : false,
                                         sameSite : 'strict'
                                     })
-                                    res.send(setResponseJson(res, 200,'로그인 성공',{accessToken, refreshToken}));
+                                  res.status(200).json({messgae : '로그인 성공', accessToken, refreshToken,userId})
+                                  
                                 }else {
                                     res.send(setResponseJson(res, 400, '아이디 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요'));
                                     console.log(err)
@@ -143,7 +147,7 @@ const process = {
     },
 
     replaceToken : (req, res) =>{
-        const refreshToken = req.cookies.authToken;
+        const refreshToken = req.cookies.accessToken;
         if(!refreshToken)
             return res.send(setResponseJson(res,403, '리프레시 토큰 만료'));
 

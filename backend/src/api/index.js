@@ -13,23 +13,24 @@ router.use('/oauth',kakaoRouter);
 router.get('/', mainAuth, (req, res) => {
     const { user } = req;
     if(!user){
-        res.render('login_test.html');
+        res.render('login_test1');
         return;
     }
-    res.render('login_test.html',{user});
+    res.render('login_test',{user});
 });
 
-router.get('/logout', unAuth, (req,res) => {
+router.get(apiUrl+users+'/logout', unAuth, (req,res) => {
     res.clearCookie('accessToken');
     res.send('로그아웃');
 });
 
 //일반 회원가입
-router.post(apiUrl+users+"/signup", user.process.signup );
-router.get(apiUrl+users+"/signup", user.output.signup );
+router.post(apiUrl+users+"/signUp", user.process.signUp );
+router.get(apiUrl+users+"/signUp", user.output.signUp );
 router.get(apiUrl+users+'/check-email', user.output['check-email']);
 
 //로그인
+router.get(apiUrl+users+"/signIn", user.output.signIn);
 router.post(apiUrl + users + "/signIn" , user.process.signIn);
 
 module.exports = router;

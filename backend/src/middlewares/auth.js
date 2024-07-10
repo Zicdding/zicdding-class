@@ -1,18 +1,27 @@
-const {decodePayload } = require('../utils/jwt');
+const {decodedPayload } = require('../utils/jwt');
 
 const mainAuth = (req, res, next) => {
-    const {accessToekn} = req.cookies;
-    if(accessToekn !== undefined) {
-        const user = decodePayload(accessToekn);
-        req.user;
+    console.log('안녕');
+    console.log(req.cookies)
+    const accessToken = req.cookies.accessToken;
+
+    if(!accessToken){
+        return res.status(401).send('Acces Denied');
     }
-    next();
+    try{
+        const user = decodedPayload(accessToken);
+        req.user = user;
+        next();   
+    }catch(err){
+        console.log(err);
+        res.status(400).send('Invalid Token');
+    }
 };
 
 const auth = (req, res, next) =>{
-    const {accessToekn} = req.cookies;
-    if(accessToekn !== undefined) {
-        const user = decodePayload(accessToekn);
+    const {accessToken} = req.cookies.accessToken;
+    if(accessToken !== undefined) {
+        const user = decodedPayload(accessToken);
         req.user = user;
         next();
     } else {
@@ -21,8 +30,8 @@ const auth = (req, res, next) =>{
 }
 
 const unAuth = (req, res) =>{
-    const {accessToekn} = req.cookies;
-    if(accessToekn !== undefined){
+    const {accessToken} = req.cookies;
+    if(accessToken !== undefined){
         next();
     }else{
         res.send('오류');

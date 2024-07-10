@@ -10,13 +10,6 @@ const refreshExpiresIn  = process.env.JWT_REFRESH_EXP;
 
 const option = { algorithm, expiresIn, issuer };
 const refreshOption = {algorithm, expiresIn : refreshExpiresIn, issuer}
-/*
-const generateBasicToken = (userId) => {
-    const payload = {userId :userId};
-    const token = jwt.sign(payload, secretKey, option);
-    return token;
-}
-*/
 
 // 토큰 생성 함수
 const generateToken = (userId) => {
@@ -57,7 +50,7 @@ const saveRefreshToken = (userId, refreshToken) =>{
                     connection.query(insertSql, [userId, refreshToken],(err,result) => {
                         connection.release();
                         if(err) {
-                            console.err(err.message)
+                            console.log(err.message)
                         }
                         console.log(result);
                     })
