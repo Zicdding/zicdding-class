@@ -1,0 +1,10 @@
+{
+  "root": false,
+  "extends": [
+    "next"
+  ],
+  "rules": {},
+  "globals": {
+    "React": "readonly"
+  }
+}
