@@ -12,9 +12,18 @@ const pool = mysql.createPool({
   connectionLimit : 5
 });
 
-pool.getConnection((error, connection) => {
-  if (error) throw error;
-  console.log("Successfully connected to the ZICDDING database. ");
+pool.getConnection((error,conn) => {
+  if (error){
+    console.log("db connection err" + error);
+    return;
+  }else{
+    console.log("Successfully connected to the ZICDDING database.");
+    conn.release(); 
+  }
 });
 
-module.exports = connection;
+const getConnection = (callback) =>{
+  pool.getConnection(callback);
+}
+
+module.exports = getConnection;
