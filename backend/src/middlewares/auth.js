@@ -1,42 +1,60 @@
-const {decodedPayload } = require('../utils/jwt');
+const {decodedPayload, replaceAccessToken } = require('../utils/jwt');
 
-const mainAuth = (req, res, next) => {
-    console.log('안녕');
-    console.log(req.cookies)
+const mainAuth = async (req, res, next) => {
     const accessToken = req.cookies.accessToken;
-
-    if(!accessToken){
-        return res.status(401).send('Acces Denied');
+    const refreshToken = req.cookies.refreshToken;
+    console.log(accessToken)
+    if (!accessToken && !refreshToken) {
+        return res.status(401).send('Access Denied');
     }
-    try{
-        const user = decodedPayload(accessToken);
-        req.user = user;
-        next();   
-    }catch(err){
-        console.log(err);
-        res.status(400).send('Invalid Token');
+    try {
+        if (accessToken) {
+            const user = decodedPayload(accessToken);
+            req.user = user;
+            return next();
+        }
+    } catch (err) {
+        if (!refreshToken) {
+            return res.status(401).send('Access Denied');
+        }
+
+        try {
+            const newAccessToken = await replaceAccessToken(refreshToken);
+            const updatedRefreshToken = await updateRefreshToken(refreshToken);
+
+            res.cookie('accessToken', newAccessToken, { httpOnly: true });
+            res.cookie('refreshToken', updatedRefreshToken, { httpOnly: true });
+
+            req.user = decodedPayload(newAccessToken);
+            return next();
+        } catch (err) {
+            return res.status(401).send('Invalid Token');
+        }
     }
 };
 
-const auth = (req, res, next) =>{
-    const {accessToken} = req.cookies.accessToken;
-    if(accessToken !== undefined) {
-        const user = decodedPayload(accessToken);
-        req.user = user;
-        next();
+const auth = (req, res, next) => {
+    const accessToken = req.cookies.accessToken;
+    if (accessToken !== undefined) {
+        try {
+            const user = decodedPayload(accessToken);
+            req.user = user;
+            return next();
+        } catch (err) {
+            return res.status(401).send('Invalid Token');
+        }
     } else {
-        res.json('로그인 바랍니다');
+        res.status(401).send('로그인 바랍니다');
     }
-}
+};
 
-const unAuth = (req, res) =>{
-    const {accessToken} = req.cookies;
-    if(accessToken !== undefined){
-        next();
-    }else{
-        res.send('오류');
+const unAuth = (req, res, next) => {
+    const accessToken = req.cookies.accessToken;
+    if (!accessToken) {
+        return next();
+    } else {
+        return res.status(400).send('오류');
     }
-}
+};
 
-
-module.exports = {mainAuth, auth, unAuth}
+module.exports = { mainAuth, auth, unAuth };

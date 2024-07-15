@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
-import { generateRefreshToken, generateToken, saveRefreshToken, replaceAccessToken } from "../utils/jwt";
-
+import { generateRefreshToken, generateToken, saveRefreshToken, replaceAccessToken, updateRefreshToken } from "../utils/jwt";
+import { resetUserPassword } from "../utils/users";
 const getConnection = require('../../config/db');
 const setResponseJson = require('../utils/responseDto');
 
@@ -12,7 +12,12 @@ const output = {
     signIn : (req,res) =>{
         res.render('login_test1.ejs');
     },
-
+    logout : (req,res) =>{
+              res.clearCookie('accessToken');
+              res.clearCookie('refreshToken');
+              res.send(setResponseJson(res,200,'로그아웃 성공'));
+              console.log('삭제') 
+    },
     'check-email' : (req, res) => {
         const userEmail = req.body.email;
         const sql = 'SELECT count(email) AS result FROM TB_USER WHERE email = ?;';
@@ -58,19 +63,18 @@ const process = {
             const data = [email, passwordBycrpt, nickname, phoneNum];
             getConnection((err,connection) => {
                     if(err){
-                        setResponseJson(res, 500, err);
+                        res.send(setResponseJson(res, 500, err));
                         console.log(err)
                     }
-
                     connection.query(checkSql, data, (err, result) =>{
                             if(err){
                                 connection.release();
-                                setResponseJson(res, 500, err);
+                                res.send(setResponseJson(res, 500, err));
                                 console.log(err)
                             }
                             if(result.length > 0){
                                 connection.release();
-                                setResponseJson(res, 409, '이미 사용중인 이메일입니다.');
+                                res.send(setResponseJson(res, 409, '이미 사용중인 이메일입니다.'));
                             }
                             else{
                                 connection.query(sql, data, (err, result) => {
@@ -81,12 +85,18 @@ const process = {
     
                                     res.cookie('accessToken', accessToken, {
                                         httpOnly : true,
+                                        sameSite: 'strict',
                                         secure : false,
-                                        sameSite : 'strict',
-                                        expires: new Date(),
+                                       expires: new Date(Date.now() + 12 * 60 * 60 * 1000) //12시간
+                                    });
+                                    res.cookie('refreshToken', refreshToken, {
+                                        httpOnly: true,
+                                        sameSite: 'strict',
+                                        secure : false,
+                                        expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000) // 90일
                                     });
                                     connection.release();
-                                    setResponseJson(res, 200, '회원가입 완료! 환영합니다', {accessToken, refreshToken});
+                                    res.send(setResponseJson(res, 200, '회원가입 완료! 환영합니다', {accessToken, refreshToken}));
                                     console.log(result);
                                 });
                             }
@@ -105,14 +115,14 @@ const process = {
             if(email && password) {
                 getConnection((err,connection)=>{
                     if(err){
-                        setResponseJson(res, 500, {message : err.message});
+                        res.send(setResponseJson(res, 500, {message : err.message}));
                         console.log(err);
                     }
 
                     connection.query(sql, [email,password], (err, results)=>{
                         if(err){
                             connection.release();
-                            setResponseJson(res, 500, {message : err.message});
+                            res.send(setResponseJson(res, 500, {message : err.message}));
                             console.log(err)
                         }
                         if(results.length > 0){
@@ -124,13 +134,20 @@ const process = {
                                     saveRefreshToken(userId, refreshToken);
                                     res.cookie('accessToken', accessToken, {
                                         httpOnly : true,
+                                        sameSite: 'strict',
                                         secure : false,
-                                        sameSite : 'strict'
-                                    })
-                                  res.status(200).json({messgae : '로그인 성공', accessToken, refreshToken,userId})
+                                       expires: new Date(Date.now() + 12 * 60 * 60 * 1000)
+                                    });
+                                    res.cookie('refreshToken', refreshToken, {
+                                        httpOnly: true,
+                                        sameSite: 'strict',
+                                        secure : false,
+                                        expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000) // 90일
+                                    });
+                                   res.send(setResponseJson(res,200,{messgae : '로그인 성공', accessToken, refreshToken,userId}));
                                   
                                 }else {
-                                    res.send(setResponseJson(res, 400, '아이디 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요'));
+                                    res.send(setResponseJson(res, 400, '아이디(로그인 전용 아이디) 또는 비밀번호를 잘못 입력했습니다.입력하신 내용을 다시 확인해주세요.'));
                                     console.log(err)
                                 }
                             })
@@ -148,17 +165,49 @@ const process = {
     },
 
     replaceToken : (req, res) =>{
-        const refreshToken = req.body.refreshToken;
+        const refreshToken = req.cookies.refreshToken;
         if(!refreshToken)
-            return res.send(setResponseJson(res,403, '리프레시 토큰 만료'));
+            return res.send(setResponseJson(res ,403, '토큰 만료'));
 
-        replaceAccessToken(refreshToken)
-            .then((newAccessToken) => {
-                res.send(setResponseJson(res, 200, '토큰 재발급', {accessToken : newAccessToken}))
+        updateRefreshToken(refreshToken)
+        .then((newRefreshToken) => {
+            replaceAccessToken(newRefreshToken)
+                .then((newAccessToken) => {
+                    setTokensInCookies(res, newAccessToken, newRefreshToken);
+                    res.send(setResponseJson(res, 200, '토큰 재발급', { accessToken: newAccessToken, refreshToken: newRefreshToken }));
+                })
+                .catch((err) => {
+                    res.send(setResponseJson(res, 403, err.message));
+                });
+        })
+        .catch((err) => {
+            res.send(setResponseJson(res, 403, err.message));
+        });
+    },
+
+    'reset-password' :  (req, res) => {
+        const email = req.body.email;     
+         if (!email) {
+            res.send(setResponseJson(res,404,'이메일을 입력하세요.'));
+        }
+        const sql = 'SELECT * FROM TB_USER WHERE email = ?';
+        getConnection((err,connection)=>{
+            if(err){
+                console.log(err)
+            }
+            connection.query(sql, email ,(err,result)=>{
+                connection.release();
+                if(err){
+                    console.log(err)
+                }
+                if (result.length > 0) {
+                    const userId = result[0].user_id;
+                    resetUserPassword(userId, email);
+                    } else {
+                    res.send(setResponseJson(res, 404, '존재하지 않는 ID입니다.'));
+                }
             })
-            .catch((err) => {
-                res.send(setResponseJson(res, 403, {message : err.message}))
-            })
+        }) 
     }
 }
 

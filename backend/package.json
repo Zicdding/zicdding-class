@@ -12,6 +12,7 @@
     "dev": "nodemon --exec babel-node ./bin/www.js"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -21,6 +22,7 @@
     "express": "^4.19.2",
     "multer": "^1.4.5-lts.1",
     "mysql": "^2.18.1",
+    "nodemailer": "^6.9.14",
     "qs": "^6.12.1",
     "yarn": "^1.22.22"
   },
