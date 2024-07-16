@@ -43,6 +43,7 @@ router.get(apiUrl+users+'/logout',auth, user.output.logout);
 
 //아이디, 비밀번호 찾기
 router.post(apiUrl + users + "/reset-password", user.process['reset-password']);
+router.post(apiUrl + users + "/change-password", user.process['change-password']);
 
 
 module.exports = router;

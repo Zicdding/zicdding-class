@@ -46,7 +46,7 @@ const output = {
         }catch(err){
             console.log(err);
         }
-    } 
+    }
 }
 
 const process = {
@@ -208,6 +208,40 @@ const process = {
                 }
             })
         }) 
+    },
+    'change-password' : async (req,res) =>{
+        const {password, newPassword}  = req.body;
+        const {userId} = req.body;
+
+        const hashedPaaword = bcrypt.hashSync(newPassword, 12);
+        const sql = 'UPDATE TB_USER SET password = ?, mod_date = now() where user_id =?';
+        const checkSql = 'SELECT password from TB_USER where user_id = ?';
+        getConnection((err,connection) =>{
+            if(err) console.log(err)
+            connection.query(checkSql,[userId], (err,result) => {
+                if(err){
+                    connection.release();
+                    res.send(setResponseJson(res, 500, {message : err.message}));
+                }
+                if(result.length > 0){        
+                    if(err) console.log(err)
+                    bcrypt.compare(password, result[0].password, (err,isMatch) =>{ 
+                        if(isMatch === true){
+                           connection.query(sql,[hashedPaaword, userId],(err,result)=>{
+                            if(err){
+                                connection.release();
+                                res.send(setResponseJson(res, 500, {message : err.message})); 
+                            }
+                            console.log(result)
+                            res.send(setResponseJson(res,200, {message : 'success'}));
+                           })
+                    }
+                });
+                }else{
+                    console.log(err)
+                }
+            })
+        })
     }
 }
 
