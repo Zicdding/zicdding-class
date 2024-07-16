@@ -45,5 +45,6 @@ router.get(apiUrl+users+'/logout',auth, user.output.logout);
 router.post(apiUrl + users + "/reset-password", user.process['reset-password']);
 router.post(apiUrl + users + "/change-password", user.process['change-password']);
 
+router.get(apiUrl+users+"/me",auth, user.output.me);
 
 module.exports = router;

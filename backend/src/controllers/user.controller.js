@@ -46,6 +46,28 @@ const output = {
         }catch(err){
             console.log(err);
         }
+    },
+    me : (req,res) =>{
+        const userId = req.user.userId;
+        const sql = 'SELECT nickname, email, password, phone_num FROM TB_USER where user_id = ?';
+        try{
+            if(!userId){
+                console.log(err)
+            }
+            getConnection((err,connection)=>{
+                if(err){
+                    console.log(err)
+                }
+                connection.query(sql,userId,(err,result) => {
+                    if(err) {
+                        console.log(err);
+                    }
+                    res.send(setResponseJson(res, 200, result));
+                })
+            })
+        }catch(err){
+            console.log(err)
+        }
     }
 }
 
