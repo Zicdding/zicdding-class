@@ -1,0 +1,49 @@
+name: backend-ci
+
+on:
+  push:
+    branches:
+      - feature/backend-cicd
+#    paths:
+#      - 'backend/**'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v2
+        with:
+          path: backend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: yarn install
+        working-directory: 'backend'
+
+      - name: Prepare dist directory
+        run: rm -rf backend/dist && mkdir backend/dist
+
+      - name: Build project
+        run: yarn build
+        working-directory: 'backend'
+
+      - name: Run tests
+        run: yarn test
+        working-directory: 'backend'
+
+      - name: Deploy application
+        run: |
+          echo "Deploying the application..."
+          # 실제 배포 명령어를 여기에 추가
+
