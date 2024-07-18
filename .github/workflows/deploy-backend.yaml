@@ -1,9 +1,11 @@
 name: backend-ci
 
 on:
+  workflow_dispatch:
   push:
     branches:
-      - feature/backend-cicd
+     - main
+#      - feature/backend-cicd
 #    paths:
 #      - 'backend/**'
 jobs:
