@@ -3,6 +3,8 @@ const {decodedPayload, replaceAccessToken } = require('../utils/jwt');
 const mainAuth = async (req, res, next) => {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
+    const suspension_yn = req.suspension_yn;
+    console.log(suspension_yn)
     console.log(accessToken)
     if (!accessToken && !refreshToken) {
         return res.status(401).send('Access Denied');

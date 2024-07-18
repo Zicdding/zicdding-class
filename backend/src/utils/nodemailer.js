@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const sendResetPasswordEmail = (to, resetPassword) => {
+const sendResetPasswordEmail = async (to, resetPassword) => {
     return new Promise((resolve, reject) => {
 
     const emailOptions = {

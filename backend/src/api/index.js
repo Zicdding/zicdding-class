@@ -28,7 +28,6 @@ router.get('/test', auth, (req,res) =>{
     }
 })
 
-
 //일반 회원가입
 router.post(apiUrl+users+"/signUp", user.process.signUp );
 router.get(apiUrl+users+"/signUp", user.output.signUp );
@@ -45,6 +44,7 @@ router.get(apiUrl+users+'/logout',auth, user.output.logout);
 router.post(apiUrl + users + "/reset-password", user.process['reset-password']);
 router.post(apiUrl + users + "/change-password", user.process['change-password']);
 
+//마이페이지
 router.get(apiUrl+users+"/me",auth, user.output.me);
 
 module.exports = router;

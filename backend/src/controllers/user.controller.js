@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { generateRefreshToken, generateToken, saveRefreshToken, replaceAccessToken, updateRefreshToken } from "../utils/jwt";
 import { resetUserPassword } from "../utils/users";
+import { mainAuth } from "../middlewares/auth";
 const getConnection = require('../../config/db');
 const setResponseJson = require('../utils/responseDto');
 
@@ -28,7 +29,7 @@ const output = {
                     setResponseJson(res, 500,  { message: err.message });
                     console.log(err)
                 }
-                connection.query(sql, userEmail, (err,rows,result) => {
+                connection.query(sql, userEmail, (err, rows, result) => {
                     if(err){
                         setResponseJson(res, 500, { message: err.message });
                         console.log(err)
@@ -151,6 +152,7 @@ const process = {
                             bcrypt.compare(password, results[0].password, (err,isMatch) =>{
                                 if(isMatch === true){
                                     const userId = results[0].user_id;
+                                    const suspension_yn = results[0].suspension_yn;
                                     const accessToken = generateToken(userId);
                                     const refreshToken = generateRefreshToken(userId);
                                     saveRefreshToken(userId, refreshToken);
@@ -166,7 +168,8 @@ const process = {
                                         secure : false,
                                         expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000) // 90일
                                     });
-                                   res.send(setResponseJson(res,200,{messgae : '로그인 성공', accessToken, refreshToken,userId}));
+                                    mainAuth(res.send(suspension_yn));
+                                   res.send(setResponseJson(res,200,{messgae : '로그인 성공'}, {data : accessToken, refreshToken,userId}));
                                   
                                 }else {
                                     res.send(setResponseJson(res, 400, '아이디(로그인 전용 아이디) 또는 비밀번호를 잘못 입력했습니다.입력하신 내용을 다시 확인해주세요.'));
@@ -182,7 +185,7 @@ const process = {
             }
         }catch(err){
              res.send(setResponseJson(res, 500, {message : err.message}));
-            console.log(err)
+             console.log(err)
         }
     },
 
@@ -231,6 +234,7 @@ const process = {
             })
         }) 
     },
+
     'change-password' : async (req,res) =>{
         const {password, newPassword}  = req.body;
         const {userId} = req.body;

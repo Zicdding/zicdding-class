@@ -32,7 +32,7 @@ const resetUserPassword = async (userId, email, res) => {
                     console.log(email)
                     await sendResetPasswordEmail(email, tempPassword)
                     .then(() => res.status(200).send('비밀번호가 변경되었습니다.'))
-                    .catch((err) => res.status(500).send('이메일 전송 중 오류가 발생' + err));
+                    .catch((err) => res.send('이메일 전송 중 오류가 발생' + err));
             });
         });
     } catch (err) {
