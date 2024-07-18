@@ -46,5 +46,5 @@ router.post(apiUrl + users + "/change-password", user.process['change-password']
 
 //마이페이지
 router.get(apiUrl+users+"/me",auth, user.output.me);
-
+//router.post(apiUrl + users + "/me", auth, user.process.me);
 module.exports = router;

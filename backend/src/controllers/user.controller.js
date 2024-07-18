@@ -2,9 +2,8 @@ import bcrypt from "bcryptjs";
 import { generateRefreshToken, generateToken, saveRefreshToken, replaceAccessToken, updateRefreshToken } from "../utils/jwt";
 import { resetUserPassword } from "../utils/users";
 import { mainAuth } from "../middlewares/auth";
-const getConnection = require('../../config/db');
-const setResponseJson = require('../utils/responseDto');
-
+import promisePool from "../../config/db";
+import setResponseJson from "../utils/responseDto";
 
 const output = {
     signUp : (req,res) =>{
@@ -19,10 +18,24 @@ const output = {
               res.send(setResponseJson(res,200,'로그아웃 성공'));
               console.log('삭제') 
     },
-    'check-email' : (req, res) => {
+    'check-email' : async (req, res) => {
         const userEmail = req.body.email;
         const sql = 'SELECT count(email) AS result FROM TB_USER WHERE email = ?;';
-
+        console.log(userEmail)
+        try{
+            const rows = await promisePool.query(sql,[userEmail]);
+            console.log(rows)
+      //      const result = rows[0].result;
+            if(rows.length > 0) {
+                setResponseJson(res,409,{message : "이미 사용중인 이메일입니다."});
+            }else{
+                setResponseJson(res,200,{message : "사용 가능한 이메일입니다."});
+            }
+        }catch(err){
+            console.log(err);
+            setResponseJson(res, 500, { message: err.message });
+        }
+        /*
         try{
             getConnection((err, connection) => {
                 if(err){
@@ -46,7 +59,7 @@ const output = {
             });
         }catch(err){
             console.log(err);
-        }
+        }*/
     },
     me : (req,res) =>{
         const userId = req.user.userId;
