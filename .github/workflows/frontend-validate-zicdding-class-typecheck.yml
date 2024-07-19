@@ -1,0 +1,24 @@
+name: frontend-validate-zicdding-class-typecheck
+
+on:
+  push:
+    branches-ignore:
+      - 'main'
+    paths:
+      - './frontend/**'
+
+jobs:
+  frontend-validate-zicdding-class-typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install Dependencies
+        working-directory: ./frontend
+        run: yarn
+      - name: TypeCheck
+        run: |
+          yarn workspace @zicdding-web/zicdding-class-com run typecheck
+        working-directory: ./frontend
