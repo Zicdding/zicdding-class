@@ -1,0 +1,52 @@
+name: backend-ci
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - main
+     - feature/backend-cicd
+    paths:
+      - 'backend/**'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          sparse-checkout: |
+            .github
+            backend
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v2
+        with:
+          path: backend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: yarn install
+        working-directory: 'backend'
+
+      - name: Prepare dist directory
+        run: rm -rf backend/dist && mkdir backend/dist
+
+      - name: Build project
+        run: yarn build
+        working-directory: 'backend'
+
+# 아직 test 파일 없어 추후 추가
+#      - name: Run tests
+#        run: yarn test
+#        working-directory: 'backend'
+
