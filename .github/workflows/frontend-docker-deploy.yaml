@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - feat/front-docker-deplou
+      - feat/front-docker-deploy
 
 jobs:
   build:
