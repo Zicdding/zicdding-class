@@ -17,6 +17,8 @@
     "./Button": "./src/components/Button/index.ts",
     "./Input": "./src/components/Input/index.ts",
     "./Tabs": "./src/components/Tabs/index.ts",
+    "./Calendar": "./src/components/Calendar/index.ts",
+    "./Typography": "./src/components/Typography/index.ts",
     "./package.json": "./package.json"
   },
   "devDependencies": {
