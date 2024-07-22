@@ -1,18 +1,18 @@
-const {decodePlayload } = require('../utils/jwt');
+const {decodePayload } = require('../utils/jwt');
 
-const mainAuth = (req,res,next) => {
+const mainAuth = (req, res, next) => {
     const {accessToekn} = req.cookies;
     if(accessToekn !== undefined) {
-        const user = decodePlayload(accessToekn);
+        const user = decodePayload(accessToekn);
         req.user;
     }
-    next()
-}
+    next();
+};
 
 const auth = (req, res, next) =>{
     const {accessToekn} = req.cookies;
     if(accessToekn !== undefined) {
-        const user = decodePlayload(accessToekn);
+        const user = decodePayload(accessToekn);
         req.user = user;
         next();
     } else {
@@ -20,6 +20,14 @@ const auth = (req, res, next) =>{
     }
 }
 
+const unAuth = (req, res) =>{
+    const {accessToekn} = req.cookies;
+    if(accessToekn !== undefined){
+        next();
+    }else{
+        res.send('오류');
+    }
+}
 
 
-module.exports = {mainAuth, auth}
+module.exports = {mainAuth, auth, unAuth}
