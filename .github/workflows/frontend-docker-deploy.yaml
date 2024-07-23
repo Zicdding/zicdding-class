@@ -41,8 +41,8 @@ jobs:
         run: echo "${{ secrets.KUBECONFIG }}" | base64 --decode > $HOME/.kube/config
 
       - name: Deploy to ArgoCD
-      run: |
-        argocd login <ARGOCD_SERVER> --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --insecure
-        argocd app sync example-app
-      env:
-        ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
+        run: |
+          argocd login <ARGOCD_SERVER> --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --insecure
+          argocd app sync example-app
+        env:
+          ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
