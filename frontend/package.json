@@ -7,11 +7,9 @@
   "license": "MIT",
   "private": true,
   "packageManager": "yarn@4.2.2",
-  "workspaces": [
-    "zicdding-class.com",
-    "packages/*"
-  ],
+  "workspaces": ["zicdding-class.com", "packages/*"],
   "devDependencies": {
+    "@biomejs/biome": "1.8.3",
     "@types/node": "^18",
     "typescript": "5.3.3"
   },
