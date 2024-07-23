@@ -218,7 +218,6 @@ const process = {
     },
 
     me : async (req,res) =>{
-        //const userId = req.user.userId;
         const {nickname, phoneNum} = req.body;
         const newPassword = req.body.newPassword;
         const userId = req.user.userId;
