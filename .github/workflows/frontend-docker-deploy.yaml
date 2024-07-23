@@ -37,20 +37,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v1
-        with:
-          version: "latest"
-
-      - name: Set up Kustomize
-        run: |
-          curl -Lo kustomize.tar.gz https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv4.0.5/kustomize_v4.0.5_linux_amd64.tar.gz
-          tar -xzf kustomize.tar.gz
-          sudo mv kustomize /usr/local/bin
+      - name: Set up Kubeconfig
+        run: echo "${{ secrets.KUBECONFIG }}" | base64 --decode > $HOME/.kube/config
 
       - name: Deploy to Kubernetes
-        env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
-        run: |
-          kustomize edit set image ${{ secrets.DOCKER_USERNAME }}/zicdding-front:latest
-          kubectl apply -k .
+        uses: argoproj/argo-cd-action@v2
+        with:
+          server: https://your-argo-cd-server.com
+          username: ${{ secrets.ARGOCD_USERNAME }}
+          password: ${{ secrets.ARGOCD_PASSWORD }}
+          namespace: argocd
+          app-name: example-app
+          repo-url: https://github.com/Zicdding/zicdding-class
+          path: frontend/zicdding-class.com/k8s/manifests
+          revision: HEAD
