@@ -1,10 +1,9 @@
 const {decodedPayload, replaceAccessToken } = require('../utils/jwt');
+const suspensionCheck = require('../utils/users'); 
 
 const mainAuth = async (req, res, next) => {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
-    const suspension_yn = req.suspension_yn;
-    console.log(suspension_yn)
     console.log(accessToken)
     if (!accessToken && !refreshToken) {
         return res.status(401).send('Access Denied');
@@ -13,16 +12,28 @@ const mainAuth = async (req, res, next) => {
         if (accessToken) {
             const user = decodedPayload(accessToken);
             req.user = user;
-            return next();
+            const userId = user.userId;
+            try{
+                const suspesded = await suspensionCheck(userId);
+                if(suspesded){
+                    return res.status(403).send('정지된 사용자입니다.');
+                }            
+                return next();
+            }catch(err){
+                console.log(err)
+                return res.status(500).send('머임');
+            }
+
+        }else{
+            return res.status(401).send('유효하지 않은 토큰');
         }
     } catch (err) {
         if (!refreshToken) {
             return res.status(401).send('Access Denied');
         }
-
         try {
             const newAccessToken = await replaceAccessToken(refreshToken);
-            const updatedRefreshToken = await updateRefreshToken(refreshToken);
+            const updatedRefreshToken = await updatedRefreshToken(refreshToken);
 
             res.cookie('accessToken', newAccessToken, { httpOnly: true });
             res.cookie('refreshToken', updatedRefreshToken, { httpOnly: true });
@@ -53,9 +64,9 @@ const auth = (req, res, next) => {
 const unAuth = (req, res, next) => {
     const accessToken = req.cookies.accessToken;
     if (!accessToken) {
-        return next();
+        return res.status(200).send('로그인 해주세요')
     } else {
-        return res.status(400).send('오류');
+        next();
     }
 };
 

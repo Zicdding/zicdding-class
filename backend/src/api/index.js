@@ -16,7 +16,7 @@ router.get('/', mainAuth, (req, res) => {
         res.render('login_test1');
         return;
     }
-    res.render('login_test',user);
+    res.render('login_test_main',user);
 });
 
 router.get('/test', auth, (req,res) =>{
@@ -25,6 +25,17 @@ router.get('/test', auth, (req,res) =>{
         res.render('login_test1');
     }else{
         res.render('test',user)
+    }
+})
+
+router.get('/unAuth', unAuth, (req,res) =>{
+    const {user} = req;
+    if(!user){
+        res.render('unAuthTest');
+        return;
+    }else{
+        res.render('로그인됨',user)
+        return;
     }
 })
 
@@ -42,9 +53,12 @@ router.get(apiUrl+users+'/logout',auth, user.output.logout);
 
 //아이디, 비밀번호 찾기
 router.post(apiUrl + users + "/reset-password", user.process['reset-password']);
-router.post(apiUrl + users + "/change-password", user.process['change-password']);
+router.post(apiUrl + users + "/change-password",auth, user.process['change-password']);
+//테스트
+router.get(apiUrl + users + "/change-password",auth, user.output['change-password']);
 
 //마이페이지
 router.get(apiUrl+users+"/me",auth, user.output.me);
-//router.post(apiUrl + users + "/me", auth, user.process.me);
+router.put(apiUrl + users + "/me", auth, user.process.me);
+
 module.exports = router;

@@ -1,6 +1,6 @@
 require('dotenv').config(); // 환경 변수 로드
 const jwt = require('jsonwebtoken');
-const getConnection = require('../../config/db');
+import promisePool from "../../config/db";
 
 const secretKey = process.env.SECRET_KEY;
 const algorithm = process.env.JWT_ALGO; 
@@ -25,34 +25,21 @@ const generateRefreshToken = (userId) =>{
     return refreshToken;
 }
 //리프레시 토큰 db에 저장
-const saveRefreshToken = (userId, refreshToken) =>{
+const saveRefreshToken = async (userId, refreshToken) =>{
     const checkSql = 'SELECT refresh_token from TB_USER where user_id = ?';
     const updateSql = 'UPDATE TB_USER SET refresh_token = ? where user_id = ?;';
     const insertSql = 'INSERT INTO TB_USER (user_id, refresh_token) VALUES (?, ?)';
-    return new Promise((resolve, reject) => {
-        getConnection((err,connection) =>{
-            if(err) return reject(err);
-            connection.query(checkSql,[userId],(err,result)=>{
-                if(err){
-                    connection.release();
-                    return reject(err);
-                }
-                if(!result.length){
-                    connection.query(insertSql, [userId, refreshToken], (err, result) => {
-                        connection.release();
-                        if (err) return reject(err);
-                        resolve(result);
-                    });
-                }else{
-                    connection.query(updateSql, [refreshToken, userId], (err) => {
-                        connection.release();
-                        if (err) return reject(err);
-                        resolve();
-                    });
-                }
-            })
-        })
-    })
+    try {
+        const [rows] = await promisePool.query(checkSql, [userId]);
+        if (rows.length > 0) {
+            await promisePool.query(updateSql, [refreshToken, userId]);
+        } else {
+            await promisePool.query(insertSql, [userId, refreshToken]);
+        }
+    } catch (err) {
+        console.error('Database operation error: ', err);
+        throw err;
+    }
 }
 //새 토큰 발급
 const replaceAccessToken = (refreshToken) =>{
