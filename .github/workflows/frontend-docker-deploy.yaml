@@ -28,7 +28,7 @@ jobs:
           push: true
           context: frontend
           file: frontend/zicdding-class.com/Dockerfile
-          tags: zicdbottest/zicdding-front:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/zicdding-front:latest
 #   deploy:
 #     runs-on: ubuntu-latest
 #     needs: build
