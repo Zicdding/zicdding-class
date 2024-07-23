@@ -1,6 +1,5 @@
 import express, { Request, Response } from 'express';
-require("dotenv").config({ path: ".env" })
-
+require('dotenv').config({ path: '.env' });
 
 const app = express();
 const cookieParser = require('cookie-parser');
@@ -19,6 +18,6 @@ app.get('/', (_, res) => {
 });
 
 //로그인테스트
-app.set('view engine' , 'html');
+app.set('view engine', 'html');
 
 module.exports = app;

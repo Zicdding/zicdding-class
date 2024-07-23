@@ -5111,7 +5111,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@zicdding-web/zicdding-class-com@workspace:zicdding-class.com"
   dependencies:
-    "@biomejs/biome": "npm:1.8.3"
     "@types/node": "npm:^18"
     "@types/react": "npm:^18"
     "@types/react-dom": "npm:^18"
