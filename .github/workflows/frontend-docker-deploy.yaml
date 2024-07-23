@@ -40,14 +40,9 @@ jobs:
       - name: Set up Kubeconfig
         run: echo "${{ secrets.KUBECONFIG }}" | base64 --decode > $HOME/.kube/config
 
-      - name: Deploy to Kubernetes
-        uses: argoproj/argo-cd-action@v2
-        with:
-          server: https://your-argo-cd-server.com
-          username: ${{ secrets.ARGOCD_USERNAME }}
-          password: ${{ secrets.ARGOCD_PASSWORD }}
-          namespace: argocd
-          app-name: example-app
-          repo-url: https://github.com/Zicdding/zicdding-class
-          path: frontend/zicdding-class.com/k8s/manifests
-          revision: HEAD
+      - name: Deploy to ArgoCD
+      run: |
+        argocd login <ARGOCD_SERVER> --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --insecure
+        argocd app sync example-app
+      env:
+        ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
