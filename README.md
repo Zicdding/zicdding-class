@@ -18,4 +18,4 @@ git clone https://github.com/Zicdding/zicdding-class.git
 
 ## CDN
 
-- https://
+- https://zicdding.github.io/fe-static-cdn/README.md
