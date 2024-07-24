@@ -7,8 +7,9 @@
     <title>Document</title>
   </head>
   <body>
-    {%if user%}
-    <a href="/auth/info">회원정보</a>
-    <a href="/api/v1/users/logout">로그아웃</a>
+    <ul>
+      <li>닉네임 : {{user.nickname}}</li>
+      <li>프사 : <img src="{{user.img}}" alt="" /></li>
+    </ul>
   </body>
 </html>

@@ -25,22 +25,5 @@ pool.getConnection((err, conn) =>{
 })
 
 const promisePool = pool.promise();
-/*
-pool.getConnection((err,conn) => {
-  if (err){
-    console.error("db connection err" + err);
-    return;
-  }else{
-    console.log("Successfully connected to the ZICDDING database.");
-    conn.release(); 
-  }
-});
-
-const getConnection = (callback) =>{
-  pool.getConnection(callback);
-}
-  */
-
-
 
 export default promisePool;

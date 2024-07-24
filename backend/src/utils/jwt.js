@@ -12,11 +12,12 @@ const option = { algorithm, expiresIn, issuer };
 const refreshOption = {algorithm, expiresIn : refreshExpiresIn, issuer}
 
 // 토큰 생성 함수
-const generateToken = (userId) => {
-    const payload = {userId};
+const generateToken = (payload) => {
     const token = jwt.sign(payload, secretKey, option);
     return token;
 };
+
+//
 
 //리프레시 토큰 생성 함수
 const generateRefreshToken = (userId) =>{

@@ -6,7 +6,7 @@ const mainAuth = async (req, res, next) => {
     const refreshToken = req.cookies.refreshToken;
     console.log(accessToken)
     if (!accessToken && !refreshToken) {
-        return res.status(401).send('Access Denied');
+        return res.status(401).send('로그인 바랍니다');
     }
     try {
         if (accessToken) {
@@ -14,14 +14,15 @@ const mainAuth = async (req, res, next) => {
             req.user = user;
             const userId = user.userId;
             try{
+                /*
                 const suspesded = await suspensionCheck(userId);
                 if(suspesded){
                     return res.status(403).send('정지된 사용자입니다.');
-                }            
+                } */           
                 return next();
             }catch(err){
                 console.log(err)
-                return res.status(500).send('머임');
+                return res.status(500).send(err);
             }
 
         }else{
@@ -29,7 +30,7 @@ const mainAuth = async (req, res, next) => {
         }
     } catch (err) {
         if (!refreshToken) {
-            return res.status(401).send('Access Denied');
+            return res.status(401).send('로그인 바랍니다.');
         }
         try {
             const newAccessToken = await replaceAccessToken(refreshToken);
@@ -41,7 +42,7 @@ const mainAuth = async (req, res, next) => {
             req.user = decodedPayload(newAccessToken);
             return next();
         } catch (err) {
-            return res.status(401).send('Invalid Token');
+            return res.status(401).send('유효하지 않은 토큰');
         }
     }
 };
