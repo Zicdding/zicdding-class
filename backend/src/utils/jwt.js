@@ -1,18 +1,20 @@
 require('dotenv').config(); // 환경 변수 로드
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 import promisePool from "../../config/db";
 
 const secretKey = process.env.SECRET_KEY;
-const algorithm = process.env.JWT_ALGO; 
+const algorithm = process.env.JWT_ALGO;
 const expiresIn = process.env.JWT_EXP;
 const issuer = process.env.JWT_ISSUER;
-const refreshExpiresIn  = process.env.JWT_REFRESH_EXP;
+const refreshExpiresIn = process.env.JWT_REFRESH_EXP;
 
 const option = { algorithm, expiresIn, issuer };
-const refreshOption = {algorithm, expiresIn : refreshExpiresIn, issuer}
+const refreshOption = { algorithm, expiresIn: refreshExpiresIn, issuer }
 
+console.log(option)
 // 토큰 생성 함수
-const generateToken = (payload) => {
+const generateToken = (userId) => {
+    const payload = { userId: userId }
     const token = jwt.sign(payload, secretKey, option);
     return token;
 };
@@ -20,13 +22,13 @@ const generateToken = (payload) => {
 //
 
 //리프레시 토큰 생성 함수
-const generateRefreshToken = (userId) =>{
-    const payload = {userId};
+const generateRefreshToken = (userId) => {
+    const payload = { userId };
     const refreshToken = jwt.sign(payload, secretKey, refreshOption);
     return refreshToken;
 }
 //리프레시 토큰 db에 저장
-const saveRefreshToken = async (userId, refreshToken) =>{
+const saveRefreshToken = async (userId, refreshToken) => {
     const checkSql = 'SELECT refresh_token from TB_USER where user_id = ?';
     const updateSql = 'UPDATE TB_USER SET refresh_token = ? where user_id = ?;';
     const insertSql = 'INSERT INTO TB_USER (user_id, refresh_token) VALUES (?, ?)';
@@ -43,10 +45,10 @@ const saveRefreshToken = async (userId, refreshToken) =>{
     }
 }
 //새 토큰 발급
-const replaceAccessToken = (refreshToken) =>{
+const replaceAccessToken = (refreshToken) => {
     return new Promise((resolve, reject) => {
         jwt.verify(refreshToken, secretKey, (err, decoded) => {
-            if(err) {
+            if (err) {
                 return reject(err);
             }
             const userId = decoded.userId;
@@ -58,9 +60,9 @@ const replaceAccessToken = (refreshToken) =>{
 }
 
 //리프레시 토큰 만료시 
-const updateRefreshToken = (refreshToken) =>{
+const updateRefreshToken = (refreshToken) => {
     return new Promise((resolve, reject) => {
-        jwt.verify(refreshToken, secretKey, {ignoreExpiration : true}, (err, decoded) => {
+        jwt.verify(refreshToken, secretKey, { ignoreExpiration: true }, (err, decoded) => {
             if (err) {
                 return reject(err);
             }
@@ -70,7 +72,7 @@ const updateRefreshToken = (refreshToken) =>{
                 .then(() => resolve(newRefreshToken))
                 .catch(reject);
         });
-    });  
+    });
 }
 
 // 토큰 디코딩 함수
@@ -81,4 +83,4 @@ const decodedPayload = (token) => {
 
 
 
-module.exports = {  generateRefreshToken, saveRefreshToken, generateToken, replaceAccessToken, decodedPayload, updateRefreshToken };
+export { generateRefreshToken, saveRefreshToken, generateToken, replaceAccessToken, decodedPayload, updateRefreshToken };

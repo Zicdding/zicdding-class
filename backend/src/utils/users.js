@@ -1,8 +1,8 @@
-const crypto = require('crypto');
-const bcrypt = require('bcrypt'); 
+import crypto from 'crypto';
+import bcrypt from 'bcrypt';
 import promisePool from "../../config/db";
 import setResponseJson from "../utils/responseDto";
-const { sendResetPasswordEmail } = require('./nodemailer');
+import sendResetPasswordEmail from './nodemailer';
 
 //패스워드 랜덤 생성
 const resetPassword = async (length = 8) => {
@@ -36,25 +36,29 @@ const resetUserPassword = async (userId, email, res) => {
         }
     } catch (err) {
         console.error(err);
-        setResponseJson( res, 500, '이메일 전송 중 오류가 발생', { error: err.message });
+        setResponseJson(res, 500, '이메일 전송 중 오류가 발생', { error: err.message });
 
     }
 };
 
-const suspensionCheck = async (req,res,userId) => {
+const suspensionCheck = async (req, res, userId) => {
+    console.log("유저" + userId)
     const sql = 'SELECT suspension_yn FROM TB_USER where user_id = ?';
-    try{
-        const [rows] = await promisePool.query(sql,userId);
-        if(rows.length > 0){
-            return rows[0].suspension_yn === 'Y';
-        }else{
-             setResponseJson(res, 500, '처리 중 오류 발생');
+    try {
+        const [rows] = await promisePool.query(sql, userId);
+        if (rows.length > 0) {
+            if (rows[0].suspension_yn === 'Y') {
+                return true;
+            }
+        } else {
+            setResponseJson(res, 500, '처리 중 오류 발생');
         }
-    }catch(err){
+    } catch (err) {
         console.error(err);
-         setResponseJson( res, 500, {error :  err.message});
-         return false
+        setResponseJson(res, 500, { error: err.message });
+        return false
     }
 
 }
-module.exports = {suspensionCheck,resetUserPassword}; 
+
+export { suspensionCheck, resetUserPassword }; 

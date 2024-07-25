@@ -1,8 +1,8 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 require("dotenv").config({ path: ".env" })
 const app = express();
-const path = require('path');
-const jwt = require('jsonwebtoken');
+import path from 'path';
+import jwt from 'jsonwebtoken';
 const publicPath = path.join(__dirname, 'public');
 const router = require('./src/api/index');
 app.use(express.urlencoded({ extended: true }));
@@ -15,10 +15,11 @@ app.use(jwt.JsonWebTokenError);
 app.use(express.static(publicPath));
 
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'src','public', 'views'));
-app.get('/', (_, res) => {
+app.set('views', path.join(__dirname, 'src', 'public', 'views'));
+
+/*app.get('/', (_, res) => {
   res.send('Hello, JavaScript with Express!');
 });
-
+*/
 
 module.exports = app;
