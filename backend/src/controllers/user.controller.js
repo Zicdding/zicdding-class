@@ -1,5 +1,5 @@
-import bcrypt from "bcryptjs";
-import { generateRefreshToken, generateToken, saveRefreshToken, replaceAccessToken, updateRefreshToken } from "../utils/jwt";
+import bcrypt from "bcrypt";
+import { generateToken, generateRefreshToken, saveRefreshToken, replaceAccessToken, updateRefreshToken } from "../utils/jwt";
 import { resetUserPassword } from "../utils/users";
 import promisePool from "../../config/db";
 import setResponseJson from "../utils/responseDto";
@@ -10,11 +10,11 @@ const output = {
     },
 
     signIn: (req, res) => {
-        res.render('login_test1.ejs');
+        res.render('login_test1');
     },
 
     'change-password': (req, res) => {
-        res.render('pwd_change.ejs');
+        res.render('pwd_change');
     },
 
     logout: (req, res) => {
@@ -44,7 +44,7 @@ const output = {
 
     me: async (req, res) => {
         const userId = req.user.userId;
-        const sql = 'SELECT nickname, email, password, phone_num FROM TB_USER where user_id = ?';
+        const sql = 'SELECT nickname, email, phone_num FROM TB_USER where user_id = ?';
         try {
             const [rows] = await promisePool.query(sql, [userId]);
             const result = rows[0];
@@ -56,7 +56,7 @@ const output = {
             }
         } catch (err) {
             console.log(err);
-            setResponseJson(res, 500, "마이페이지 조회 실패", err.message);
+            setResponseJson(res, 500, "마이페이지 조회 실패", { error: err.message });
         }
     }
 }
@@ -105,10 +105,10 @@ const process = {
 
     signIn: async (req, res) => {
         const { email, password } = req.body;
-        console.log(email)
+        console.log(email, password)
         const sql = 'SELECT * FROM TB_USER WHERE email = ?';
         try {
-            const [rows] = await promisePool.query(sql, [email, password]);
+            const [rows] = await promisePool.query(sql, [email]);
             const rowsPassword = rows[0].password;
             if (rows.length > 0) {
                 bcrypt.compare(password, rowsPassword, (err, isMatch) => {
@@ -121,7 +121,7 @@ const process = {
                             httpOnly: true,
                             sameSite: 'strict',
                             secure: false,
-                            expires: new Date(Date.now() + 12 * 60 * 60 * 1000)
+                            expires: new Date(Date.now() + 12 * 60 * 60 * 1000) //12시간
                         });
                         res.cookie('refreshToken', refreshToken, {
                             httpOnly: true,
@@ -140,7 +140,7 @@ const process = {
                 console.log(err)
             }
         } catch (err) {
-            setResponseJson(res, 500, err.message);
+            setResponseJson(res, 500, { error: err.message });
             console.log(err)
         }
     },
@@ -157,11 +157,11 @@ const process = {
                         setResponseJson(res, 200, '토큰 재발급', { accessToken: newAccessToken, refreshToken: newRefreshToken });
                     })
                     .catch((err) => {
-                        setResponseJson(res, 403, err.message);
+                        setResponseJson(res, 403, { error: err.message });
                     });
             })
             .catch((err) => {
-                setResponseJson(res, 403, err.message);
+                setResponseJson(res, 403, { error: err.message });
             });
     },
 
@@ -180,7 +180,7 @@ const process = {
                 setResponseJson(res, 400, '존재하지 않는 ID입니다.');
             }
         } catch (err) {
-            setResponseJson(res, 500, { message: err.message })
+            setResponseJson(res, 500, { error: err.message })
         }
 
     },

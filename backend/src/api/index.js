@@ -27,14 +27,14 @@ router.get('/test', auth, (req, res) => {
         res.render('test', user)
     }
 })
-
+//비로그인
 router.get('/unAuth', unAuth, (req, res) => {
     const { user } = req;
     if (!user) {
-        res.render('unAuthTest');
+        res.render('login_test1');
         return;
     } else {
-        res.render('로그인됨', user)
+        res.render('login_test_main', user)
         return;
     }
 })
@@ -54,7 +54,8 @@ router.get(apiUrl + users + '/logout', auth, user.output.logout);
 //아이디, 비밀번호 찾기
 router.post(apiUrl + users + "/reset-password", user.process['reset-password']);
 router.post(apiUrl + users + "/change-password", auth, user.process['change-password']);
-//테스트
+
+//비밀번호 찾기 테스트
 router.get(apiUrl + users + "/change-password", auth, user.output['change-password']);
 
 //마이페이지

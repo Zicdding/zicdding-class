@@ -1,5 +1,6 @@
 import { decodedPayload, replaceAccessToken } from '../utils/jwt';
 import { suspensionCheck } from '../utils/users';
+
 const mainAuth = async (req, res, next) => {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
@@ -18,7 +19,6 @@ const mainAuth = async (req, res, next) => {
                 if (suspesded === true) {
                     return res.status(403).send('정지된 사용자입니다.');
                 }
-
             } catch (err) {
                 console.log(err)
                 return res.status(500).send(err);

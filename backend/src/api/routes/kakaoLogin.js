@@ -1,14 +1,13 @@
 const express = require('express');
-const axios = require('axios');
-const qs = require('qs');
-
 const router = express.Router();
 require('dotenv').config();
 
-const { generateToken } = require('../../utils/jwt.js');
-const { auth } = require('../../middlewares/auth.js');
-
+import axios from 'axios';
+import qs from 'qs';
+import generateToken from '../../utils/jwt.js';
+import auth from '../../middlewares/auth.js';
 import { setResponseJson } from "../../utils/responseDto.js"
+
 const kakaoOpt = {
 
     clientId: process.env.CLIENT_ID,

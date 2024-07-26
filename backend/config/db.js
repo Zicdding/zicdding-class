@@ -1,6 +1,5 @@
 //db설정
 import * as mysql from "mysql2";
-//const mysql = require("mysql");
 require('dotenv').config();
 
 
@@ -11,14 +10,14 @@ const pool = mysql.createPool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  connectionLimit : 5
+  connectionLimit: 5
 });
 
-pool.getConnection((err, conn) =>{
-  try{
+pool.getConnection((err, conn) => {
+  try {
     console.log("Successfully connected to the ZICDDING database.");
-    conn.release(); 
-  }catch(err){
+    conn.release();
+  } catch (err) {
     console.error("db connection err" + err);
     return;
   }
