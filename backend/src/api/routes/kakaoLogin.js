@@ -1,12 +1,13 @@
-const express = require('express');
-const router = express.Router();
-require('dotenv').config();
-
+import express from 'express';
+import dotenv from 'dotenv';
 import axios from 'axios';
 import qs from 'qs';
 import generateToken from '../../utils/jwt.js';
-import auth from '../../middlewares/auth.js';
-import { setResponseJson } from "../../utils/responseDto.js"
+import { auth } from '../../middlewares/auth.js';
+import { setResponseJson } from "../../utils/responseDto.js";
+dotenv.config();
+
+const router = express.Router();
 
 const kakaoOpt = {
 
@@ -16,6 +17,7 @@ const kakaoOpt = {
     redirectUri: 'http://localhost:3000/oauth/kakao/callback'
 };
 console.log(kakaoOpt.clientId)
+
 router.get("/kakao", async (req, res) => {
     const kakaoLoginURL = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoOpt.clientId}&redirect_uri=${kakaoOpt.redirectUri}&response_type=code`;
     console.log(kakaoLoginURL)
@@ -78,4 +80,4 @@ router.get('/info', auth, (req, res) => {
     res.render('info', { user });
 });
 
-module.exports = router
+export default router;

@@ -30,8 +30,9 @@ const output = {
         console.log(userEmail)
         try {
             const [rows] = await promisePool.query(sql, [userEmail]);
-            console.log(rows)
-            if (rows[0].length > 0) {
+            const result = rows[0].result;
+            console.log(result)
+            if (result > 0) {
                 setResponseJson(res, 409, "이미 사용중인 이메일입니다.");
             } else {
                 setResponseJson(res, 200, "사용 가능한 이메일입니다.");
@@ -62,7 +63,9 @@ const output = {
 }
 
 const process = {
+
     signUp: async (req, res) => {
+        const connection = await promisePool.getConnection();
         const { email, password, nickname, phoneNum } = req.body;
         const passwordBycrpt = bcrypt.hashSync(password, 12);
         const sql = `INSERT 
@@ -71,21 +74,27 @@ const process = {
         const checkSql = 'SELECT email FROM TB_USER WHERE email = ?';
         const data = [email, passwordBycrpt, nickname, phoneNum];
         try {
-            const [checkRows] = await promisePool.query(checkSql, [email]);
+            const [checkRows] = await connection.query(checkSql, [email]);
             if (checkRows.length > 0) {
                 setResponseJson(res, 409, '이미 사용중인 이메일입니다.');
+                return;
             } else {
-                const [rows] = await promisePool.query(sql, data);
+                await connection.beginTransaction();
+                const [rows] = await connection.query(sql, data);
+                await connection.commit();
                 const userId = rows.insertId;
                 const accessToken = generateToken(userId);
                 const refreshToken = generateRefreshToken(userId);
+
                 saveRefreshToken(userId, refreshToken);
+
                 res.cookie('accessToken', accessToken, {
                     httpOnly: true,
                     sameSite: 'strict',
                     secure: false,
                     expires: new Date(Date.now() + 12 * 60 * 60 * 1000) //12시간
                 });
+
                 res.cookie('refreshToken', refreshToken, {
                     httpOnly: true,
                     sameSite: 'strict',
@@ -94,13 +103,14 @@ const process = {
                 });
 
                 setResponseJson(res, 200, '회원가입 완료! 환영합니다', { accessToken, refreshToken, userId });
-                console.log(result);
+                await connection.commit();
             }
         } catch (err) {
+            await connection.rollback();
             setResponseJson(res, 500, '회원가입 중 오류 발생', { error: err.message })
+        } finally {
+            connection.release();
         }
-
-
     },
 
     signIn: async (req, res) => {
@@ -132,7 +142,6 @@ const process = {
                         setResponseJson(res, 200, '로그인 성공', { accessToken, refreshToken, userId });
                     } else {
                         setResponseJson(res, 400, '아이디(로그인 전용 아이디) 또는 비밀번호를 잘못 입력했습니다.입력하신 내용을 다시 확인해주세요.');
-                        console.log(err)
                     }
                 });
             } else {
@@ -265,7 +274,4 @@ const process = {
 
 
 
-module.exports = {
-    output,
-    process
-}
+export { output, process };

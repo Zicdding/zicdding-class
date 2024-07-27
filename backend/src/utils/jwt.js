@@ -1,6 +1,8 @@
-require('dotenv').config(); // 환경 변수 로드
+import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import promisePool from "../../config/db";
+
+dotenv.config();
 
 const secretKey = process.env.SECRET_KEY;
 const algorithm = process.env.JWT_ALGO;

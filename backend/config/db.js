@@ -14,13 +14,13 @@ const pool = mysql.createPool({
 });
 
 pool.getConnection((err, conn) => {
-  try {
-    console.log("Successfully connected to the ZICDDING database.");
-    conn.release();
-  } catch (err) {
+  if (err) {
     console.error("db connection err" + err);
+
     return;
   }
+  console.log("Successfully connected to the ZICDDING database.");
+  conn.release();
 })
 
 const promisePool = pool.promise();

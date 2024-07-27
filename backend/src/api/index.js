@@ -1,8 +1,8 @@
-const express = require("express");
+import express from 'express';
 const router = express.Router();
-const kakaoRouter = require('../api/routes/kakaoLogin.js');
+import kakaoRouter from '../api/routes/kakaoLogin.js';
 import { mainAuth, auth, unAuth } from '../middlewares/auth';
-const user = require('../controllers/user.controller.js');
+import * as user from '../controllers/user.controller.js';
 
 const apiUrl = '/api/v1';
 const users = '/users';
@@ -62,4 +62,4 @@ router.get(apiUrl + users + "/change-password", auth, user.output['change-passwo
 router.get(apiUrl + users + "/me", auth, user.output.me);
 router.put(apiUrl + users + "/me", auth, user.process.me);
 
-module.exports = router;
+export default router;
