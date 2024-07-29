@@ -1,6 +1,6 @@
 "use strict";
 
-const app = require("../index");
+import app from "../index";
 
 const port = 3000;
 
