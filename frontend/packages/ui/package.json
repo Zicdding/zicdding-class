@@ -17,9 +17,12 @@
     "./Button": "./src/components/Button/index.ts",
     "./Input": "./src/components/Input/index.ts",
     "./Tabs": "./src/components/Tabs/index.ts",
+    "./Calendar": "./src/components/Calendar/index.ts",
+    "./Typography": "./src/components/Typography/index.ts",
     "./package.json": "./package.json"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.8.3",
     "@chromatic-com/storybook": "^1.5.0",
     "@storybook/addon-essentials": "^8.1.10",
     "@storybook/addon-interactions": "^8.1.10",

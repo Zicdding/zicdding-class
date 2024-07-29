@@ -1,0 +1,11 @@
+{
+  "name": "zicdding-class",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:Zicdding/zicdding-class.git",
+  "author": "CreatiCoding <nodejsdeveloper@kakao.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@biomejs/biome": "1.8.3"
+  }
+}
