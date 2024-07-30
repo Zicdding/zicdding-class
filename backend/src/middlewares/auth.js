@@ -1,4 +1,5 @@
 import { decodedPayload, replaceAccessToken } from '../utils/jwt';
+
 import { suspensionCheck } from '../utils/users';
 
 const mainAuth = async (req, res, next) => {
@@ -13,6 +14,7 @@ const mainAuth = async (req, res, next) => {
             const user = decodedPayload(accessToken);
             req.user = user;
             const userId = user.userId;
+            console.log(userId)
             try {
                 const suspesded = await suspensionCheck(req, res, userId);
                 console.log(suspesded)

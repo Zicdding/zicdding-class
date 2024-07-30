@@ -15,8 +15,7 @@ const refreshOption = { algorithm, expiresIn: refreshExpiresIn, issuer }
 
 console.log(option)
 // 토큰 생성 함수
-const generateToken = (userId) => {
-    const payload = { userId }
+const generateToken = (payload) => {
     const token = jwt.sign(payload, secretKey, option);
     return token;
 };
