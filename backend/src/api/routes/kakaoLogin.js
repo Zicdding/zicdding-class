@@ -1,23 +1,19 @@
 import express from 'express';
-import dotenv from 'dotenv';
-import axios from 'axios';
 import { generateRefreshToken, saveRefreshToken } from '../../utils/jwt.js';
 import promisePool from '../../../config/db.js';
 import qs from 'qs';
+import axios from 'axios';
 import { generateToken } from '../../utils/jwt.js';
 import { auth } from '../../middlewares/auth.js';
 import setResponseJson from '../../utils/responseDto.js';
-dotenv.config();
-
 const router = express.Router();
-
 
 const kakaoOpt = {
 
-    clientId: '153994fbdf5f25b41659b9c79b0a4ffe',
-    clientSecret: '3u9uGiDlx1eS5GZXXGl4FlvRffH644hY',
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
     //redirectUri : process.env.REDIRECT_URI,
-    redirectUri: 'http://localhost:3000/oauth/kakao/callback'
+    redirectUri: process.env.REDIRECT_URI
 };
 console.log(kakaoOpt.clientId)
 
@@ -47,16 +43,19 @@ router.get('/kakao/callback', async (req, res) => {
 
         const header = { 'content-type': 'application/x-www-form-urlencoded' };
         const response = await axios.post(url, body, header);
+
         token = response.data.access_token;
+
         try {
-            const response = await axios.get('https://kapi.kakao.com/v2/user/me', {
+            const userResponse = await axios.get('https://kapi.kakao.com/v2/user/me', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            const { nickname: nick, profile_img: pf_img } = response.data.properties;
+            const checkSql = 'SELECT * FROM TB_USER where nick'
+            const { nickname: nick, profile_img: pf_img } = userResponse.data.properties;
             const payload = { nick, pf_img };
-            console.log(nick);
+            console.log('아이디' + JSON.stringify(userResponse.data.properties))
             const accessTokenMake = generateToken(payload);
             const cookieOpt = { maxAge: 1000 * 60 * 60 };
             res.cookie('accessToken', accessTokenMake, cookieOpt);
