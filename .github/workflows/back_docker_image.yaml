@@ -9,7 +9,7 @@ on:
 #        default: 'latest'  
   push:
     branches:
-     - feature/backend-cicd
+     - feature/back-cicd
     paths:
       - 'backend/**'
 

@@ -3,8 +3,7 @@ name: back_build_test
 on:
   push:
     branches:
-     - main
-     - feature/backend-cicd
+     - feature/back-cicd
     paths:
       - 'backend/**'
 jobs:
