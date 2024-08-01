@@ -54,6 +54,7 @@ jobs:
         run: rm -rf backend/dist && mkdir backend/dist
 
       - name: dev project
-        run: yarn dev
+        run: |
+          nohup yarn dev > server.log 2>&1 &
         working-directory: 'backend'
 
