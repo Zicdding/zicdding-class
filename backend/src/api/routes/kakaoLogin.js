@@ -1,82 +1,108 @@
-const express = require('express');
-const axios = require('axios');
-const qs = require('qs');
-
+import express from 'express';
+import { generateRefreshToken, saveRefreshToken } from '../../utils/jwt.js';
+import promisePool from '../../../config/db.js';
+import qs from 'qs';
+import axios from 'axios';
+import { generateToken } from '../../utils/jwt.js';
+import { auth } from '../../middlewares/auth.js';
+import setResponseJson from '../../utils/responseDto.js';
 const router = express.Router();
-require('dotenv').config();
-
-const {generateToken} = require('../../utils/jwt.js');
-const {auth} = require('../../middlewares/auth.js');
-
 
 const kakaoOpt = {
 
-    clientId : process.env.CLIENT_ID,
-    clientSecret : process.env.CLIENT_SECRET,
-    redirectUri : process.env.REDIRECT_URI,
-    };
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    //redirectUri : process.env.REDIRECT_URI,
+    redirectUri: process.env.REDIRECT_URI
+};
+console.log(kakaoOpt.clientId)
 
-router.get("/kakao", async(req, res) => {
-    const kakaoLoginURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoOpt.clientId}&redirect_uri=${kakaoOpt.redirectUri}`;
+router.get("/kakao", async (req, res) => {
+    const kakaoLoginURL = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoOpt.clientId}&redirect_uri=${kakaoOpt.redirectUri}&response_type=code`;
     console.log(kakaoLoginURL)
-    try{
-        res.redirect(kakaoLoginURL); 
-    }catch(e){
+    try {
+        res.redirect(kakaoLoginURL);
+    } catch (e) {
         console.log(e);
     }
 });
 
-router.get('/kakao/callback', async (req, res)=>{
+router.get('/kakao/callback', async (req, res) => {
     let token;
     const code = req.query.code;
-    try{
-        const url = 'https://kauth.kakao.com/ouath/token';
+    try {
+        const url = 'https://kauth.kakao.com/oauth/token';
         const body = qs.stringify({
-            grant_type : 'authgorization_code',
-            client_id : kakaoOpt.clientId,
-            client_secret : kakaoOpt.clientSecret,
-            redirectUri : kakaoOpt.redirectUri,
-            code : code,
+            grant_type: 'authorization_code',
+            client_id: kakaoOpt.clientId,
+            client_secret: kakaoOpt.clientSecret,
+            redirectUri: kakaoOpt.redirectUri,
+            code: code,
         });
 
 
-        const response  = await axios.post(url, body, {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-        });
+        const header = { 'content-type': 'application/x-www-form-urlencoded' };
+        const response = await axios.post(url, body, header);
+
         token = response.data.access_token;
-        console.log(token)
-    }catch(err){
-        console.err(err);
-        console.log('');
-        res.send('err');
+
+        try {
+            const userResponse = await axios.get('https://kapi.kakao.com/v2/user/me', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const checkSql = 'SELECT * FROM TB_USER where nick'
+            const { nickname: nick, profile_img: pf_img } = userResponse.data.properties;
+            const payload = { nick, pf_img };
+            console.log('아이디' + json.stringify(userResponse.data.properties))
+            const accessTokenMake = generateToken(payload);
+            const cookieOpt = { maxAge: 1000 * 60 * 60 };
+            res.cookie('accessToken', accessTokenMake, cookieOpt);
+            const sql = 'INSERT INTO TB_USER(email,password,nickname,created_date) VALUES("","",?,now())';
+            const sql2 = 'INSERT INTO TB_USER_SNS(user_id,social_type) VALUES(?,"KAKAO")';
+
+            const [userResult] = await promisePool.query(sql, nick);
+            const userId = userResult.insertId;
+            const userSnsInsert = await promisePool.query(sql2, userId);
+            const refreshToken = generateRefreshToken(userId);
+            saveRefreshToken(userId, refreshToken);
+
+            if (userSnsInsert) {
+
+                res.cookie('accessToken', accessTokenMake, {
+                    httpOnly: true,
+                    sameSite: 'strict',
+                    secure: false,
+                    expires: new Date(Date.now() + 12 * 60 * 60 * 1000) //12시간
+                });
+
+                res.cookie('refreshToken', refreshToken, {
+                    httpOnly: true,
+                    sameSite: 'strict',
+                    secure: false,
+                    expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000) // 90일
+                });
+                setResponseJson(res, 200, '카카오로그인성공', { accessTokenMake, refreshToken, userId });
+            } else {
+                setResponseJson(res, 500, '카카오 로그인 실패')
+            }
+        } catch (err) {
+            console.log(err);
+            setResponseJson(res, 500, { error: err.message });
+        }
+    } catch (err) {
+        setResponseJson(res, 500, { error: err.message });
     }
 
-    try{
-      const response = await axios.get('https://kapi.kakao.com/v2/user/me', {
-        headers: {
-            Authorization: `Bearer ${response.data.access_token 
-            }`,
-        },
-    });
-        const {nickanme : nick, profile_img : pf_img} = response.data.properties;
-        const payload = {nick , pf_img};
-        const access_token = generateToken(payload);
-        const cookieOpt = {maxAge : 1000 * 60 * 60};
-        res.send(user);
-        res.cookie('accessToken', access_token, cookieOpt);
-        res.setResponseJson(200, '로그인 성공');
-    }catch(err){
-        console.error(err);
-        res.setResponseJson(500, err);
-    }
+
+
 });
 
 router.get('/info', auth, (req, res) => {
     const { user } = req;
-  
-    res.render('login_test.html', { user });
-  });
 
-module.exports = router
+    res.render('info', { user });
+});
+
+export default router;

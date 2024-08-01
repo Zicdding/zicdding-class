@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - image: suhyeonsong/zicdding:test_1
-        name: backendzicdding
+        name: backendtest
         ports:
         - containerPort: 3000

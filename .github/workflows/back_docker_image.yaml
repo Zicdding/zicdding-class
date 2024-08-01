@@ -1,16 +1,15 @@
 name: back_build_dockerfile
 
 on:
-  workflow_dispatch:
-    inputs:
-      image_version:
-        description: 'The version of the Docker image to deploy'
-        required: true
-        default: 'latest'  
+#  workflow_dispatch:
+#    inputs:
+#      image_version:
+#        description: 'The version of the Docker image to deploy'
+#        required: true
+#        default: 'latest'  
   push:
     branches:
      - main
-     - feature/backend-cicd
     paths:
       - 'backend/**'
 
@@ -26,6 +25,14 @@ jobs:
           sparse-checkout: |
             .github
             backend
+             
+      - name: Extract tag from commit message
+        id: extract_tag
+        run: |
+          TAG=$(echo "${{ github.event.head_commit.message }}" | grep -oP 'Build: \s*\K[\w\.]+')
+          echo "Extracted tag is $TAG"
+          echo "TAG=$TAG" >> $GITHUB_ENV
+          echo "TAG=$TAG" >> $GITHUB_OUTPUT
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -45,6 +52,30 @@ jobs:
           context: backend
           file: backend/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/zicdding:${{ github.event.inputs.image_version }}
+#          tags: ${{ secrets.DOCKER_USERNAME }}/zicdding:${{ github.event.inputs.image_version }}
+          tags:  ${{ secrets.DOCKER_USERNAME }}/zicdding:${{ env.TAG }}
 
+  push:
+    name: Push Manifest
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ needs.build.outputs.TAG }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_TOKEN }}
 
+      - name: Change manifest
+        run: sed -i "s|suhyeonsong/zicdding:[^ ]*|suhyeonsong/zicdding:${TAG}|" ./backend/backend_argocd/back_deployment.yaml
+
+      - name: Commit image version
+        run: |
+          git config user.name "suhyeonXYZ""
+          git config email "${{ secrets.EMAIL }}"
+          git add ./backend/backend_argocd/back_deployment.yaml
+          git commit -m ":tada: Update: Image [${{ env.TAG }}]"
+
+      - name: push image version
+        run: git push zicdding
