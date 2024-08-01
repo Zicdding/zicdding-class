@@ -78,4 +78,4 @@ jobs:
           git commit -m ":tada: Update: Image [${{ env.TAG }}]"
 
       - name: push image version
-        run: git push zicdding
+        run: git push origin main
