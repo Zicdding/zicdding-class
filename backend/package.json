@@ -7,8 +7,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "babel src -d dist",
-    "start": "node dist/api/index.js",
+    "build": "echo \"빌드 스크립트를 만들어주세요.\"",
+    "start": "echo \"실행 스크립트를 만들어주세요.\"",
     "dev": "nodemon --exec babel-node ./bin/www.js"
   },
   "dependencies": {
@@ -36,6 +36,6 @@
     "@babel/node": "^7.24.6",
     "@babel/preset-env": "^7.24.6",
     "@biomejs/biome": "1.8.3",
-    "nodemon": "^3.1.1"
+    "nodemon": "^3.1.4"
   }
 }

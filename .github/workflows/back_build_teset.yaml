@@ -45,8 +45,7 @@ jobs:
         run: yarn build
         working-directory: 'backend'
 
-# 아직 test 파일 없어 추후 추가
-#      - name: Run tests
-#        run: yarn test
-#        working-directory: 'backend'
+      - name: Run tests
+        run: yarn test
+        working-directory: 'backend'
 
