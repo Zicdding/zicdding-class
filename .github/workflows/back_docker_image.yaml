@@ -10,8 +10,9 @@ on:
   push:
     branches:
      - feature/back-cicd
-#    paths:
+    paths:
 #      - 'backend/**'
+       - .github
 
 jobs:
   build:
@@ -82,14 +83,14 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
 
       - name: Change manifest
-        run: sed -i "s|suhyeonsong/zicdding:[^ ]*|suhyeonsong/zicdding:${TAG}|" ./backend/backend_argocd/back_deployment.yaml
+        run: sed -i "s|suhyeonsong/zicdding:[^ ]*|suhyeonsong/zicdding:${{ env.TAG }}|" ./backend/backend_argocd/back_deployment.yaml
 
       - name: Commit image version
         run: |
           git config user.name "suhyeonXYZ"
           git config user.email "${{ secrets.EMAIL }}"
           git add ./backend/backend_argocd/back_deployment.yaml
-          git commit -m ":tada: Update: Image [${{ env.TAG }}]"
+          git commit -m ":tada: Update: Image [ ${{ env.TAG }} ] "
 
       - name: push image version
         run: git push origin feature/back-cicd
