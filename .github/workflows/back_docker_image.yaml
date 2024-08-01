@@ -10,7 +10,7 @@ on:
   push:
     branches:
      - main
-     = feature/backend-cicd
+     - feature/backend-cicd
     paths:
       - 'backend/**'
 
