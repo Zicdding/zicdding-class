@@ -17,6 +17,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      TAG: ${{ steps.extract_tag.outputs.TAG }}
 
     steps:
       - name: Checkout repository
