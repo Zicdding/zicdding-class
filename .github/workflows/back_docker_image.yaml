@@ -88,14 +88,14 @@ jobs:
         run: echo "TAG=${{ env.TAG }}"
 
       - name: Change manifest
-        run: sed -i "s|suhyeonsong/zicdding:[^ ]*|suhyeonsong/zicdding:${{ env.TAG }}|" ./backend/backend_argocd/back_deployment.yaml
+        run: sed -i "s|suhyeonsong/zicdding:[^ ]*|suhyeonsong/zicdding:${{ needs.build.outputs.TAG }}|" ./backend/backend_argocd/back_deployment.yaml
 
       - name: Commit image version
         run: |
           git config user.name "suhyeonXYZ"
           git config user.email "${{ secrets.EMAIL }}"
           git add ./backend/backend_argocd/back_deployment.yaml
-          git commit -m ":tada: Update: Image [ ${{ env.TAG }} ] "
+          git commit -m ":tada: Update: Image [ ${{ needs.build.outputs.TAG }} ] "
 
       - name: push image version
         run: git push origin feature/back-cicd
