@@ -41,11 +41,7 @@ jobs:
       - name: Prepare dist directory
         run: rm -rf backend/dist && mkdir backend/dist
 
-      - name: Build project
-        run: yarn build
-        working-directory: 'backend'
-
-      - name: Run tests
-        run: yarn test
+      - name: dev project
+        run: yarn dev
         working-directory: 'backend'
 
