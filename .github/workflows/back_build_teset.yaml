@@ -56,16 +56,5 @@ jobs:
       - name: dev project
         run: |
           nohup yarn dev > server.log 2>&1 &
-          echo "Development server started in the background"
-          sleep 30 
         working-directory: 'backend'
 
-      - name: Display server logs
-        run: |
-          if [ -f $GITHUB_WORKSPACE/server.log ]; then
-            echo "server.log contents:"
-            tail -n 100 $GITHUB_WORKSPACE/server.log
-          else
-            echo "server.log not found!"
-            exit 1
-          fi

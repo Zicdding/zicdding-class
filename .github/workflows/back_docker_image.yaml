@@ -92,4 +92,4 @@ jobs:
           git commit -m ":tada: Update: Image [${{ env.TAG }}]"
 
       - name: push image version
-        run: git push origin main
+        run: git push origin feature/back-cicd
