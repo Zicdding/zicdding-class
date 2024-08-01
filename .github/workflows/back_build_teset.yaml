@@ -43,8 +43,4 @@ jobs:
       - name: dev project
         run: yarn dev
         working-directory: 'backend'
-<<<<<<< HEAD
-
-=======
->>>>>>> 4dd4ddf179c785a715f3d058d177e7cf722beb2e
 
