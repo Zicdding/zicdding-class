@@ -87,7 +87,7 @@ jobs:
       - name: Commit image version
         run: |
           git config user.name "suhyeonXYZ"
-          git config email "${{ secrets.EMAIL }}"
+          git config user.email "${{ secrets.EMAIL }}"
           git add ./backend/backend_argocd/back_deployment.yaml
           git commit -m ":tada: Update: Image [${{ env.TAG }}]"
 
