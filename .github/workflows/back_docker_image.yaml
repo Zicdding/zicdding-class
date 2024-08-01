@@ -12,7 +12,7 @@ on:
      - feature/back-cicd
     paths:
 #      - 'backend/**'
-       - .github
+       - .github/workflow/**
 
 jobs:
   build:

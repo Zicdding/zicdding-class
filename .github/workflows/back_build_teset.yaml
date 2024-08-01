@@ -4,8 +4,9 @@ on:
   push:
     branches:
      - feature/back-cicd
-#    paths:
-#      - 'backend/**'
+    paths:
+     - 'backend/**'
+     - '.github/**'
 jobs:
   build:
     runs-on: ubuntu-latest
