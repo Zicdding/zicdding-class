@@ -82,6 +82,11 @@ jobs:
         with:
           token: ${{ secrets.GH_TOKEN }}
 
+      
+     
+      - name: Debug TAG
+        run: echo "TAG=${{ env.TAG }}"
+
       - name: Change manifest
         run: sed -i "s|suhyeonsong/zicdding:[^ ]*|suhyeonsong/zicdding:${{ env.TAG }}|" ./backend/backend_argocd/back_deployment.yaml
 
