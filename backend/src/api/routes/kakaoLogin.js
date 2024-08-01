@@ -55,7 +55,7 @@ router.get('/kakao/callback', async (req, res) => {
             const checkSql = 'SELECT * FROM TB_USER where nick'
             const { nickname: nick, profile_img: pf_img } = userResponse.data.properties;
             const payload = { nick, pf_img };
-            console.log('아이디' + JSON.stringify(userResponse.data.properties))
+            console.log('아이디' + json.stringify(userResponse.data.properties))
             const accessTokenMake = generateToken(payload);
             const cookieOpt = { maxAge: 1000 * 60 * 60 };
             res.cookie('accessToken', accessTokenMake, cookieOpt);

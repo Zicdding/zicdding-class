@@ -50,3 +50,25 @@ yarn dev
 ### 4. 브라우저에서 확인하기
 
 ![](./resources/readme-step-4.png)
+
+### 5. Docker
+
+#### 1. Dockerfile 을 통해서 Docker Image 만들기
+
+```bash
+# frontend 위치로 이동
+cd frontend
+
+# docker build
+docker build -t zicdding-class-com-frontend:1 -f ./zicdding-class.com/Dockerfile .
+```
+
+![](./resources/frontend-docker-build.png)
+
+#### 2. 만든 Docker Image 로 Docker Process 띄우기
+
+```
+docker run -p 3000:3000 zicdding-class-com-frontend:1
+```
+
+![](./resources/frontend-docker-run.png)

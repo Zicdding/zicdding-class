@@ -26,6 +26,8 @@ app.use((err, req, res, next) => {
   }
 });
 
+//로그인테스트
+app.set('view engine', 'html');
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(path.resolve(), 'src', 'public', 'views'));

@@ -15,3 +15,7 @@ git clone https://github.com/Zicdding/zicdding-class.git
 ## frontend
 
 - [보러가기](./frontend/README.md)
+
+## CDN
+
+- https://zicdding.github.io/fe-static-cdn/README.md

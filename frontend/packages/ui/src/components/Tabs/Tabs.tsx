@@ -1,10 +1,5 @@
-import React from "react";
-import {
-  RadixTabs,
-  RadixTabsList,
-  RadixTabsTrigger,
-  RadixTabsContent,
-} from "./RadixTabs";
+import React from 'react';
+import { RadixTabs, RadixTabsContent, RadixTabsList, RadixTabsTrigger } from './RadixTabs';
 
 interface TabsProps {
   items: Array<{ title: string; value: string }>;
