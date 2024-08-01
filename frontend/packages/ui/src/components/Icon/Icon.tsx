@@ -1,4 +1,4 @@
-import React from "react";
+import type React from 'react';
 import { SearchIcon } from './resources/SearchIcon';
 
 type IconName = 'search';
@@ -15,4 +15,4 @@ export function Icon({ name, ...props }: IconProps) {
   }
 }
 
-Icon.displayName = "Icon"
+Icon.displayName = 'Icon';

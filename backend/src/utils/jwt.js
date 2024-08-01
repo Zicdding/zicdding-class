@@ -1,8 +1,5 @@
-import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import promisePool from "../../config/db";
-
-dotenv.config();
 
 const secretKey = process.env.SECRET_KEY;
 const algorithm = process.env.JWT_ALGO;
@@ -13,10 +10,8 @@ const refreshExpiresIn = process.env.JWT_REFRESH_EXP;
 const option = { algorithm, expiresIn, issuer };
 const refreshOption = { algorithm, expiresIn: refreshExpiresIn, issuer }
 
-console.log(option)
 // 토큰 생성 함수
-const generateToken = (userId) => {
-    const payload = { userId }
+const generateToken = (payload) => {
     const token = jwt.sign(payload, secretKey, option);
     return token;
 };

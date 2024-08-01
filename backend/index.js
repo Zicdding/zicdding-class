@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import router from './src/api/index.js';
 
+
 dotenv.config({ path: ".env" });
 
 const app = express();
@@ -25,6 +26,8 @@ app.use((err, req, res, next) => {
   }
 });
 
+//로그인테스트
+app.set('view engine', 'html');
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(path.resolve(), 'src', 'public', 'views'));

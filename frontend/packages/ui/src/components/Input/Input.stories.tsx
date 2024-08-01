@@ -12,8 +12,8 @@ const meta = {
   argTypes: {},
   args: {
     onClickSearch: fn(),
-    type: "search",
-    placeholder: "검색어를 입력하세요"
+    type: 'search',
+    placeholder: '검색어를 입력하세요',
   },
 } satisfies Meta<typeof Input>;
 
@@ -22,5 +22,5 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {}
+  args: {},
 };

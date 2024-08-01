@@ -101,7 +101,6 @@ const process = {
                     secure: false,
                     expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000) // 90일
                 });
-
                 setResponseJson(res, 200, '회원가입 완료! 환영합니다', { accessToken, refreshToken, userId });
                 await connection.commit();
             }

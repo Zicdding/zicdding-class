@@ -1,11 +1,9 @@
 const getConnection = require('../../config/db');
 const { connect } = require('../api');
 
-
-exports.findUser = (data, cb) => {
-    const sql = 'SELECT '
-}
-
+exports.findUser = (data, cd) => {
+    const sql = 'SELECT ';
+};
 
 exports.createUser = (data, cb) => {
     const sql = `INSERT 
@@ -13,8 +11,14 @@ exports.createUser = (data, cb) => {
         VALUES (?, ?, ?, ?, ?, '1', ?, 'N', now(), ?,now())`;
 
     const values = [
-        data.user_id, data.email, data.password, data.nickname, data.phone_num, data.suspesion_yn, data.mod_user
-    ]
+        data.user_id,
+        data.email,
+        data.password,
+        data.nickname,
+        data.phone_num,
+        data.suspesion_yn,
+        data.mod_user,
+    ];
 
     pool.getConnection((err, connection) => {
         if (err) {
@@ -27,14 +31,11 @@ exports.createUser = (data, cb) => {
                 cb(err);
             }
             cb(null, result);
-        })
+        });
     });
-}
+};
 
-exports.singIn = (data, cb) => {
-
-
-}
+exports.singIn = (data, cb) => { };
 
 exports.getUser = (user_id, cb) => {
     const sql = `SELECT * FROM TB_USER where user_id = '${user_id} limit 1'`;
@@ -42,4 +43,4 @@ exports.getUser = (user_id, cb) => {
         if (err) throw err;
         cb(rows);
     });
-}
+};

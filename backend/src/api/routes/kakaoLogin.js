@@ -1,12 +1,11 @@
 import express from 'express';
-import dotenv from 'dotenv';
-import axios from 'axios';
+import { generateRefreshToken, saveRefreshToken } from '../../utils/jwt.js';
+import promisePool from '../../../config/db.js';
 import qs from 'qs';
-import generateToken from '../../utils/jwt.js';
+import axios from 'axios';
+import { generateToken } from '../../utils/jwt.js';
 import { auth } from '../../middlewares/auth.js';
-import { setResponseJson } from "../../utils/responseDto.js";
-dotenv.config();
-
+import setResponseJson from '../../utils/responseDto.js';
 const router = express.Router();
 
 const kakaoOpt = {
@@ -14,7 +13,7 @@ const kakaoOpt = {
     clientId: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
     //redirectUri : process.env.REDIRECT_URI,
-    redirectUri: 'http://localhost:3000/oauth/kakao/callback'
+    redirectUri: process.env.REDIRECT_URI
 };
 console.log(kakaoOpt.clientId)
 
@@ -42,34 +41,60 @@ router.get('/kakao/callback', async (req, res) => {
         });
 
 
-        const response = await axios.post(url, body, {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-        });
-        const accessToken = response.data.access_token;
-        console.log(response.data.access_token)
+        const header = { 'content-type': 'application/x-www-form-urlencoded' };
+        const response = await axios.post(url, body, header);
+
+        token = response.data.access_token;
+
         try {
-            const response = await axios.get('https://kapi.kakao.com/v2/user/me', {
+            const userResponse = await axios.get('https://kapi.kakao.com/v2/user/me', {
                 headers: {
-                    Authorization: `Bearer ${accessToken}`,
+                    Authorization: `Bearer ${token}`,
                 },
             });
-            const { nickanme: nick, profile_img: pf_img } = response.data.properties;
+            const checkSql = 'SELECT * FROM TB_USER where nick'
+            const { nickname: nick, profile_img: pf_img } = userResponse.data.properties;
             const payload = { nick, pf_img };
-            console.log(nick);
-            const accessToken = generateToken(payload);
+            console.log('아이디' + json.stringify(userResponse.data.properties))
+            const accessTokenMake = generateToken(payload);
             const cookieOpt = { maxAge: 1000 * 60 * 60 };
-            res.send(user);
-            res.cookie('accessToken', accessToken, cookieOpt);
-            setResponseJson(200, '로그인 성공');
+            res.cookie('accessToken', accessTokenMake, cookieOpt);
+            const sql = 'INSERT INTO TB_USER(email,password,nickname,created_date) VALUES("","",?,now())';
+            const sql2 = 'INSERT INTO TB_USER_SNS(user_id,social_type) VALUES(?,"KAKAO")';
+
+            const [userResult] = await promisePool.query(sql, nick);
+            const userId = userResult.insertId;
+            const userSnsInsert = await promisePool.query(sql2, userId);
+            const refreshToken = generateRefreshToken(userId);
+            saveRefreshToken(userId, refreshToken);
+
+            if (userSnsInsert) {
+
+                res.cookie('accessToken', accessTokenMake, {
+                    httpOnly: true,
+                    sameSite: 'strict',
+                    secure: false,
+                    expires: new Date(Date.now() + 12 * 60 * 60 * 1000) //12시간
+                });
+
+                res.cookie('refreshToken', refreshToken, {
+                    httpOnly: true,
+                    sameSite: 'strict',
+                    secure: false,
+                    expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000) // 90일
+                });
+                setResponseJson(res, 200, '카카오로그인성공', { accessTokenMake, refreshToken, userId });
+            } else {
+                setResponseJson(res, 500, '카카오 로그인 실패')
+            }
         } catch (err) {
-            console.error(err);
+            console.log(err);
+            setResponseJson(res, 500, { error: err.message });
         }
     } catch (err) {
-        console.log(err);
-        res.send('err');
+        setResponseJson(res, 500, { error: err.message });
     }
+
 
 
 });
