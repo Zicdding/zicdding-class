@@ -12,16 +12,15 @@ const refreshOption = { algorithm, expiresIn: refreshExpiresIn, issuer }
 
 // 토큰 생성 함수
 const generateToken = (payload) => {
-    const token = jwt.sign(payload, secretKey, option);
+    const token = jwt.sign({ payload }, secretKey, option);
     return token;
 };
 
 //
 
 //리프레시 토큰 생성 함수
-const generateRefreshToken = (userId) => {
-    const payload = { userId };
-    const refreshToken = jwt.sign(payload, secretKey, refreshOption);
+const generateRefreshToken = (payload) => {
+    const refreshToken = jwt.sign({ payload }, secretKey, refreshOption);
     return refreshToken;
 }
 //리프레시 토큰 db에 저장

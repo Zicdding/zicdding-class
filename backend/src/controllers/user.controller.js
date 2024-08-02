@@ -44,7 +44,7 @@ const output = {
     },
 
     me: async (req, res) => {
-        const userId = req.user.userId;
+        const userId = req.user.payload.userId;
         const sql = 'SELECT nickname, email, phone_num FROM TB_USER where user_id = ?';
         try {
             const [rows] = await promisePool.query(sql, [userId]);
@@ -123,8 +123,13 @@ const process = {
                 bcrypt.compare(password, rowsPassword, (err, isMatch) => {
                     if (isMatch === true) {
                         const userId = rows[0].user_id;
+<<<<<<< HEAD
                         const accessToken = generateToken(userId);
                         const refreshToken = generateRefreshToken(userId);
+=======
+                        const accessToken = generateToken({ userId: userId });
+                        const refreshToken = generateRefreshToken({ usetId: userId });
+>>>>>>> 14cb188c9efd5d17a34ca9c17771ee24851a1686
                         saveRefreshToken(userId, refreshToken);
                         res.cookie('accessToken', accessToken, {
                             httpOnly: true,
@@ -195,6 +200,7 @@ const process = {
 
     'change-password': async (req, res) => {
         const { password, newPassword } = req.body;
+<<<<<<< HEAD
         const userId = req.user.userId;
 
         const hashedPaaword = bcrypt.hashSync(newPassword, 12);
@@ -205,6 +211,19 @@ const process = {
             const [checkRows] = await promisePool.query(checkSql, [userId]);
             const checkRowsPassword = checkRows[0].password;
 
+=======
+        const userId = req.user.payload.userId;
+        console.log(password)
+        const hashedPaaword = bcrypt.hashSync(newPassword, 12);
+        const sql = 'UPDATE TB_USER SET password = ?, mod_date = now() where user_id =?';
+        const checkSql = 'SELECT password from TB_USER where user_id = ?';
+        try {
+
+            const [checkRows] = await promisePool.query(checkSql, [userId]);
+            console.log(checkRows)
+            const checkRowsPassword = checkRows[0].password;
+
+>>>>>>> 14cb188c9efd5d17a34ca9c17771ee24851a1686
             if (checkRows.length > 0) {
                 const isMatch = await bcrypt.compare(password, checkRowsPassword);
                 if (!isMatch) {
@@ -227,7 +246,11 @@ const process = {
     me: async (req, res) => {
         const { nickname, phoneNum } = req.body;
         const newPassword = req.body.newPassword;
+<<<<<<< HEAD
         const userId = req.user.userId;
+=======
+        const userId = req.user.payload.userId;
+>>>>>>> 14cb188c9efd5d17a34ca9c17771ee24851a1686
         const sql = `
         UPDATE TB_USER 
         SET 
