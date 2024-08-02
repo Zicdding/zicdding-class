@@ -13,7 +13,7 @@ spec:
         app: backend
     spec:
       containers:
-      - image: suhyeonsong/zicdding:v1.5
+      - image: suhyeonsong/zicdding:v1.21
         name: backendtest
         ports:
         - containerPort: 3000
@@ -53,8 +53,8 @@ spec:
             secretKeyRef:
               name: backend-secrets
               key: JWT_ALGO
-        - name: 
-          valueFrom: JWT_EXP
+        - name: JWT_EXP
+          valueFrom: 
             secretKeyRef:
               name: backend-secrets
               key: JWT_EXP

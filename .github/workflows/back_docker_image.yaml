@@ -6,6 +6,7 @@ on:
       - feature/back-cicd
     paths:
       - .github/**
+      - backend/**
 
 jobs:
   build:
