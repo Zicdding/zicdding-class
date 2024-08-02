@@ -10,7 +10,6 @@ on:
   push:
     branches:
      - feature/back-cicd
-     - main
     paths:
 #       - 'backend/**'
        - .github/**
@@ -84,8 +83,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.GH_TOKEN }}
-
-      
+          ref: main
      
       - name: Debug TAG
         run: echo "TAG=${{ env.TAG }}"
@@ -101,4 +99,4 @@ jobs:
           git commit -m ":tada: Update: Image [ ${{ needs.build.outputs.TAG }} ] "
 
       - name: push image version
-        run: git push origin feature/back-cicd
+        run: git push origin main
