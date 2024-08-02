@@ -1,23 +1,36 @@
-import express, { Request, Response } from 'express';
-require('dotenv').config({ path: '.env' });
+import express from 'express';
+import dotenv from 'dotenv';
+import path from 'path';
+import jwt from 'jsonwebtoken';
+import cookieParser from 'cookie-parser';
+import router from './src/api/index.js';
+
+
+dotenv.config({ path: ".env" });
 
 const app = express();
-const cookieParser = require('cookie-parser');
 
-const path = require('path');
-const publicPath = path.join(__dirname, 'public');
-const router = require('./src/api/index');
-
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(router);
-app.use(express.static(publicPath));
 app.use(cookieParser());
+app.use(router);
 
-app.get('/', (_, res) => {
-  res.send('Hello, JavaScript with Express!');
+const publicPath = path.join(path.resolve(), 'public');
+app.use(express.static(publicPath));
+
+app.use((err, req, res, next) => {
+  if (err instanceof jwt.JsonWebTokenError) {
+    res.status(401).send('Invalid token');
+  } else {
+    next(err);
+  }
 });
 
 //로그인테스트
 app.set('view engine', 'html');
 
-module.exports = app;
+app.set('view engine', 'ejs');
+app.set('views', path.join(path.resolve(), 'src', 'public', 'views'));
+
+
+export default app;

@@ -1,27 +1,11 @@
-const setResponseJson = (res, code, message, data) => {
-  let result = {};
-  if (data) {
-    try {
-      JSON.stringify(data);
-      result = {
+const setResponseJson = (res, code, message, data = {}) => {
+    const result = {
         code: code,
         message: message,
-        data: data,
-      };
-    } catch (err) {
-      result = {
-        code: code,
-        message: message,
-        data: { err: '' },
-      };
-    }
-  } else {
-    result = {
-      code: code,
-      message: message,
+        data: data
     };
-  }
-  res.status(code).json(result);
+
+    res.status(code).json(result);
 };
 
-module.exports = setResponseJson;
+export default setResponseJson;
