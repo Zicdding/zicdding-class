@@ -9,13 +9,16 @@ on:
 #        default: 'latest'  
   push:
     branches:
-     - main
+     - feature/back-cicd
     paths:
-      - 'backend/**'
+#      - 'backend/**'
+       - .github/**
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      TAG: ${{ steps.extract_tag.outputs.TAG }}
 
     steps:
       - name: Checkout repository
@@ -54,6 +57,20 @@ jobs:
           push: true
 #          tags: ${{ secrets.DOCKER_USERNAME }}/zicdding:${{ github.event.inputs.image_version }}
           tags:  ${{ secrets.DOCKER_USERNAME }}/zicdding:${{ env.TAG }}
+          build-args: |
+            DB_DATABASE=${{ secrets.DB_DATABASE }}
+            DB_PORT=${{ secrets.DB_PORT }}
+            DB_HOST=${{ secrets.DB_HOST }}
+            DB_USER=${{ secrets.DB_USER }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            SECRET_KEY=${{ secrets.SECRET_KEY }}
+            JWT_ALGO=${{ secrets.JWT_ALGO }}
+            JWT_EXP=${{ secrets.JWT_EXP }}
+            JWT_ISSUER=${{ secrets.JWT_ISSUER }}
+            JWT_REFRESH_EXP=${{ secrets.JWT_REFRESH_EXP }}
+            CLIENT_ID=${{ secrets.CLIENT_ID }}
+            CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
+            REDIRECT_URI=${{ secrets.REDIRECT_URI }}
 
   push:
     name: Push Manifest
@@ -67,15 +84,20 @@ jobs:
         with:
           token: ${{ secrets.GH_TOKEN }}
 
+      
+     
+      - name: Debug TAG
+        run: echo "TAG=${{ env.TAG }}"
+
       - name: Change manifest
-        run: sed -i "s|suhyeonsong/zicdding:[^ ]*|suhyeonsong/zicdding:${TAG}|" ./backend/backend_argocd/back_deployment.yaml
+        run: sed -i "s|suhyeonsong/zicdding:[^ ]*|suhyeonsong/zicdding:${{ needs.build.outputs.TAG }}|" ./backend/backend_argocd/back_deployment.yaml
 
       - name: Commit image version
         run: |
-          git config user.name "suhyeonXYZ""
-          git config email "${{ secrets.EMAIL }}"
+          git config user.name "suhyeonXYZ"
+          git config user.email "${{ secrets.EMAIL }}"
           git add ./backend/backend_argocd/back_deployment.yaml
-          git commit -m ":tada: Update: Image [${{ env.TAG }}]"
+          git commit -m ":tada: Update: Image [ ${{ needs.build.outputs.TAG }} ] "
 
       - name: push image version
-        run: git push origin main
+        run: git push origin feature/back-cicd

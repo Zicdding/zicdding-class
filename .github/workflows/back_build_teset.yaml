@@ -3,13 +3,27 @@ name: back_build_test
 on:
   push:
     branches:
-     - main
-     - feature/backend-cicd
+     - feature/back-cicd
     paths:
-      - 'backend/**'
+     - 'backend/**'
+     - '.github/**'
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      DB_DATABASE: ${{ secrets.DB_DATABASE }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      JWT_ALGO: ${{ secrets.JWT_ALGO }}
+      JWT_EXP: ${{ secrets.JWT_EXP }}
+      JWT_ISSUER: ${{ secrets.JWT_ISSUER }}
+      JWT_REFRESH_EXP: ${{ secrets.JWT_REFRESH_EXP }}
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}
+      CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+      REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
 
     steps:
       - name: Checkout repository
@@ -41,6 +55,7 @@ jobs:
         run: rm -rf backend/dist && mkdir backend/dist
 
       - name: dev project
-        run: yarn dev
+        run: |
+          nohup yarn dev > server.log 2>&1 &
         working-directory: 'backend'
 
