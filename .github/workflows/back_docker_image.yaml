@@ -10,8 +10,9 @@ on:
   push:
     branches:
      - feature/back-cicd
+     - main
     paths:
-       - 'backend/**'
+#       - 'backend/**'
        - .github/**
 
 jobs:
