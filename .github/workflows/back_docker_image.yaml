@@ -1,18 +1,11 @@
 name: back_build_dockerfile
 
 on:
-#  workflow_dispatch:
-#    inputs:
-#      image_version:
-#        description: 'The version of the Docker image to deploy'
-#        required: true
-#        default: 'latest'  
   push:
     branches:
-     - feature/back-cicd
+      - feature/back-cicd
     paths:
-#       - 'backend/**'
-       - .github/**
+      - .github/**
 
 jobs:
   build:
@@ -26,9 +19,8 @@ jobs:
         with:
           fetch-depth: 0
           sparse-checkout: |
-#            .github
             backend
-             
+
       - name: Extract tag from commit message
         id: extract_tag
         run: |
@@ -55,8 +47,7 @@ jobs:
           context: backend
           file: backend/Dockerfile
           push: true
-#          tags: ${{ secrets.DOCKER_USERNAME }}/zicdding:${{ github.event.inputs.image_version }}
-          tags:  ${{ secrets.DOCKER_USERNAME }}/zicdding:${{ env.TAG }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/zicdding:${{ env.TAG }}
           build-args: |
             DB_DATABASE=${{ secrets.DB_DATABASE }}
             DB_PORT=${{ secrets.DB_PORT }}
@@ -84,19 +75,20 @@ jobs:
         with:
           token: ${{ secrets.GH_TOKEN }}
           ref: main
-     
+
       - name: Debug TAG
         run: echo "TAG=${{ env.TAG }}"
 
       - name: Change manifest
-        run: sed -i "s|suhyeonsong/zicdding:[^ ]*|suhyeonsong/zicdding:${{ needs.build.outputs.TAG }}|" ./backend/backend_argocd/back_deployment.yaml
+        run: sed -i "s|suhyeonsong/zicdding:[^ ]*|suhyeonsong/zicdding:${{ env.TAG }}|" ./backend/backend_argocd/back_deployment.yaml
 
       - name: Commit image version
         run: |
           git config user.name "suhyeonXYZ"
           git config user.email "${{ secrets.EMAIL }}"
           git add ./backend/backend_argocd/back_deployment.yaml
-          git commit -m ":tada: Update: Image [ ${{ needs.build.outputs.TAG }} ] "
+          git commit -m ":tada: Update: Image [ ${{ env.TAG }} ] "
 
-      - name: push image version
+      - name: Push image version
         run: git push origin main
+
