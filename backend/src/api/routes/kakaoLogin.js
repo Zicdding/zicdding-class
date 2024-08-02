@@ -52,13 +52,15 @@ router.get('/kakao/callback', async (req, res) => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            const checkSql = 'SELECT * FROM TB_USER where nick'
-            const { nickname: nick, profile_img: pf_img } = userResponse.data.properties;
-            const payload = { nick, pf_img };
-            console.log('아이디' + json.stringify(userResponse.data.properties))
+            const checkSql = 'SELECT * FROM TB_USER where refreshToken = ?'
+            const { nickname: nick, profile_img: pf_img, account_email: email } = userResponse.data.properties;
+            const payload = { nick, pf_img, email, userId };
+            console.log('아이디' + email);
             const accessTokenMake = generateToken(payload);
             const cookieOpt = { maxAge: 1000 * 60 * 60 };
             res.cookie('accessToken', accessTokenMake, cookieOpt);
+
+
             const sql = 'INSERT INTO TB_USER(email,password,nickname,created_date) VALUES("","",?,now())';
             const sql2 = 'INSERT INTO TB_USER_SNS(user_id,social_type) VALUES(?,"KAKAO")';
 

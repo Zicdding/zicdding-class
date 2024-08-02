@@ -5,7 +5,7 @@ import { suspensionCheck } from '../utils/users';
 const mainAuth = async (req, res, next) => {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
-    console.log(accessToken)
+    console.log(req.userId)
     if (!accessToken && !refreshToken) {
         return res.status(401).send('로그인 바랍니다');
     }
@@ -13,7 +13,8 @@ const mainAuth = async (req, res, next) => {
         if (accessToken) {
             const user = decodedPayload(accessToken);
             req.user = user;
-            const userId = user.userId;
+            console.log(user)
+            const userId = user.payload.userId;
             console.log(userId)
             try {
                 const suspesded = await suspensionCheck(req, res, userId);
