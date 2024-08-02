@@ -53,8 +53,8 @@ spec:
             secretKeyRef:
               name: backend-secrets
               key: JWT_ALGO
-        - name: 
-          valueFrom: JWT_EXP
+        - name: JWT_EXP
+          valueFrom: 
             secretKeyRef:
               name: backend-secrets
               key: JWT_EXP
