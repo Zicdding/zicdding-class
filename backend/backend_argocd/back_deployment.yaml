@@ -13,7 +13,7 @@ spec:
         app: backend
     spec:
       containers:
-      - image: suhyeonsong/zicdding:outputs
+      - image: suhyeonsong/zicdding:v1.5
         name: backendtest
         ports:
         - containerPort: 3000
