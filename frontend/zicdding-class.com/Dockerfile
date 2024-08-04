@@ -12,7 +12,7 @@ RUN corepack enable && corepack prepare yarn@stable --activate
 COPY ../package.json ../yarn.lock ./
 
 # Install dependencies with immutable option
-RUN yarn install --immutable
+RUN yarn install
 
 # Copy the rest of the code from the frontend directory to the Docker build context
 COPY ../ .
