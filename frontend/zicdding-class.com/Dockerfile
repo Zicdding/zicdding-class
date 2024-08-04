@@ -8,6 +8,9 @@ ENV ENV=production
 # Copy package.json and yarn.lock from the frontend directory to the Docker build context
 COPY package.json yarn.lock ./
 
+# Enable Corepack and install the correct version of Yarn
+RUN corepack enable && corepack prepare yarn@stable --activate
+
 # Install dependencies
 RUN yarn install --frozen-lockfile
 
