@@ -18,7 +18,7 @@ RUN yarn install
 COPY ../ .
 
 # Focus workspaces and build the project
-RUN yarn workspaces focus @zicdding-web/ui @zicdding-web/zicdding-class-com
+RUN yarn workspaces focus --all
 WORKDIR /app/frontend/zicdding-class.com
 RUN yarn build
 
