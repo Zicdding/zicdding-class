@@ -60,6 +60,6 @@ jobs:
             docker pull $DOCKER_USERNAME/zicdding-front:latest
             docker stop zicdding-front-app || true
             docker rm zicdding-front-app || true
-            docker run -d --name zicdding-front-app -p 3000:3000 $DOCKER_USERNAME/zicdding-front:latest
+            docker run -d --name zicdding-front-app -p 3100:3000 $DOCKER_USERNAME/zicdding-front:latest
             docker image prune -f
           EOF
