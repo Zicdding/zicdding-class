@@ -6,7 +6,7 @@ WORKDIR /app
 ENV ENV=production
 
 # Copy package.json and yarn.lock first to leverage Docker cache
-COPY zicdding-class.com/package.json zicdding-class.com/yarn.lock ./
+COPY package.json yarn.lock ./
 
 # Install dependencies
 RUN yarn install --frozen-lockfile
