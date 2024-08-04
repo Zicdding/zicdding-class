@@ -9,7 +9,7 @@ spec:
   - host: 121.152.79.226.nip.io
     http:
       paths:
-      - path: /
+      - path: /front
         pathType: Prefix
         backend:
           service:
