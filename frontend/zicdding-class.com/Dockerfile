@@ -6,13 +6,13 @@ WORKDIR /app
 ENV ENV=production
 
 # Copy the root package.json and yarn.lock first to leverage Docker cache
-COPY frontend/package.json frontend/yarn.lock ./
+COPY ../package.json ../yarn.lock ./
 
 # Install dependencies
 RUN yarn install --frozen-lockfile
 
 # Copy the rest of the code and build
-COPY frontend /app/frontend
+COPY ../frontend /app/frontend
 WORKDIR /app/frontend/zicdding-class.com
 RUN yarn workspaces focus @zicdding-web/ui @zicdding-web/zicdding-class-com
 RUN yarn build
