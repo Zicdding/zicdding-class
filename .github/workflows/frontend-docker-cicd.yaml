@@ -49,10 +49,12 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no -t $SSH_USER@$SSH_HOST -p $SSH_PORT << 'EOF'
-            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-            docker pull $DOCKER_USERNAME/zicdding-front:latest
+          sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no -t $SSH_USER@$SSH_HOST -p $SSH_PORT << EOF
+            export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
+            export DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}
+            docker login -u \$DOCKER_USERNAME -p \$DOCKER_PASSWORD
+            docker pull \$DOCKER_USERNAME/zicdding-front:latest
             docker stop zicdding-front-app || true
             docker rm zicdding-front-app || true
-            docker run -d --name zicdding-front-app -p 3100:3000 $DOCKER_USERNAME/zicdding-front:latest
+            docker run -d --name zicdding-front-app -p 3100:3000 \$DOCKER_USERNAME/zicdding-front:latest
           EOF
