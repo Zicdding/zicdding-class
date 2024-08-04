@@ -5,17 +5,17 @@ WORKDIR /app
 
 ENV ENV=production
 
-# Copy package.json and yarn.lock from the frontend directory to the Docker build context
-COPY package.json yarn.lock ./
-
 # Enable Corepack and install the correct version of Yarn
 RUN corepack enable && corepack prepare yarn@stable --activate
+
+# Copy package.json and yarn.lock from the frontend directory to the Docker build context
+COPY ../package.json ../yarn.lock ./
 
 # Install dependencies with immutable option
 RUN yarn install --immutable
 
 # Copy the rest of the code from the frontend directory to the Docker build context
-COPY . .
+COPY ../ .
 
 # Focus workspaces and build the project
 RUN yarn workspaces focus @zicdding-web/ui @zicdding-web/zicdding-class-com
