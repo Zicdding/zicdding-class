@@ -16,8 +16,8 @@ jobs:
       - name: Prepare Docker context
         run: |
           mkdir -p frontend/zicdding-class.com
-          cp package.json frontend/zicdding-class.com/
-          cp yarn.lock frontend/zicdding-class.com/
+          cp frontend/package.json frontend/zicdding-class.com/
+          cp frontend/yarn.lock frontend/zicdding-class.com/
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
