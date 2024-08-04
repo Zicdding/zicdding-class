@@ -11,8 +11,8 @@ COPY package.json yarn.lock ./
 # Enable Corepack and install the correct version of Yarn
 RUN corepack enable && corepack prepare yarn@stable --activate
 
-# Install dependencies
-RUN yarn install --frozen-lockfile
+# Install dependencies with immutable option
+RUN yarn install --immutable
 
 # Copy the rest of the code from the frontend directory to the Docker build context
 COPY . .
