@@ -49,7 +49,7 @@ jobs:
 
       - name: Deploy to ArgoCD
         run: |
-          argocd login $ARGOCD_SERVER --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --insecure
+          argocd login ${{ secrets.ARGOCD_SERVER }} --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --insecure
           argocd app create example-app \
             --repo https://github.com/Zicdding/zicdding-class.git \
             --path frontend/zicdding-class.com/k8s/manifests \
@@ -57,5 +57,3 @@ jobs:
             --dest-namespace default \
             --sync-policy automated
           argocd app sync example-app
-        env:
-          ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
