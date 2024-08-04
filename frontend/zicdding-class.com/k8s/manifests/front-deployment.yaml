@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: zicdding-front-app
-        image: ${{ secrets.FRONT_IMAGE_NAME }}
+        image: zicdding0904/zicdding-front:latest
         ports:
         - containerPort: 3000
