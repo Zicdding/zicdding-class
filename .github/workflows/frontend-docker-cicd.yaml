@@ -49,7 +49,7 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST -p $SSH_PORT << 'EOF'
+          sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no -t $SSH_USER@$SSH_HOST -p $SSH_PORT << 'EOF'
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
             docker pull $DOCKER_USERNAME/zicdding-front:latest
             docker stop zicdding-front-app || true
