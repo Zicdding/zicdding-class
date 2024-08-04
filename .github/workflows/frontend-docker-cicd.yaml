@@ -29,6 +29,10 @@ jobs:
           context: frontend
           file: frontend/zicdding-class.com/Dockerfile
           tags: ${{ secrets.DOCKER_USERNAME }}/zicdding-front:latest
+
+      - name: Clean up dangling images
+        run: docker image prune -f
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
@@ -37,8 +41,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install SSH Client
-        run: sudo apt-get install -y openssh-client
+      - name: Install SSH Client and sshpass
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openssh-client sshpass
 
       - name: Execute remote SSH commands
         env:
@@ -50,11 +56,10 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
           sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no -t $SSH_USER@$SSH_HOST -p $SSH_PORT << EOF
-            export DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
-            export DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}
-            docker login -u \$DOCKER_USERNAME -p \$DOCKER_PASSWORD
-            docker pull \$DOCKER_USERNAME/zicdding-front:latest
+            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+            docker pull $DOCKER_USERNAME/zicdding-front:latest
             docker stop zicdding-front-app || true
             docker rm zicdding-front-app || true
-            docker run -d --name zicdding-front-app -p 3100:3000 \$DOCKER_USERNAME/zicdding-front:latest
+            docker run -d --name zicdding-front-app -p 3000:3000 $DOCKER_USERNAME/zicdding-front:latest
+            docker image prune -f
           EOF
