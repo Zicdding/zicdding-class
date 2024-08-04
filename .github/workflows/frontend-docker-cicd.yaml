@@ -27,7 +27,7 @@ jobs:
         with:
           push: true
           context: .
-          file: ./Dockerfile
+          file: ./frontend/zicdding-class.com/Dockerfile
           tags: ${{ secrets.DOCKER_USERNAME }}/zicdding-front:latest
           cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/zicdding-front:cache
           cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/zicdding-front:cache,mode=max
