@@ -26,8 +26,8 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          context: .
-          file: ./frontend/zicdding-class.com/Dockerfile
+          context: ./frontend/zicdding-class.com
+          file: ./Dockerfile
           tags: ${{ secrets.DOCKER_USERNAME }}/zicdding-front:latest
           cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/zicdding-front:cache
           cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/zicdding-front:cache,mode=max
