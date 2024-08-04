@@ -4,8 +4,10 @@ metadata:
   name: example-app
 spec:
   selector:
-    app: example-app
+    app: front-app
   ports:
     - protocol: TCP
       port: 3000
       targetPort: 3000
+      nodePort: 31000
+  type: NodePort
