@@ -41,26 +41,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install SSH Client and sshpass
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y openssh-client sshpass
+      - name: Install SSH Client
+        run: sudo apt-get update && sudo apt-get install -y openssh-client
+
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Execute remote SSH commands
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_PORT: ${{ secrets.SSH_PORT }}
           SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no -t $SSH_USER@$SSH_HOST -p $SSH_PORT << EOF
+          ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST << 'EOF'
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
             docker stop zicdding-front-app || true
             docker rm zicdding-front-app || true
             docker rmi $DOCKER_USERNAME/zicdding-front:latest || true
-            docker pull $DOCKER_USERNAME/zicdding-front:latest
+            docker pull $DOCKER_USERNAME/zicdding-front:latest &
+            wait
             docker run -d --name zicdding-front-app -p 3000:3000 $DOCKER_USERNAME/zicdding-front:latest
             docker image prune -f
           EOF
