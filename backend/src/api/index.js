@@ -3,10 +3,10 @@ const router = express.Router();
 import kakaoRouter from '../api/routes/kakaoLogin.js';
 import { mainAuth, auth, unAuth } from '../middlewares/auth';
 import * as user from '../controllers/user.controller.js';
-
+import * as itNews from '../controllers/ITnews.controller.js';
 const apiUrl = '/api/v1';
 const users = '/users';
-
+const news = '/news';
 
 router.use('/oauth', kakaoRouter);
 
@@ -62,4 +62,7 @@ router.get(apiUrl + users + "/change-password", auth, user.output['change-passwo
 router.get(apiUrl + users + "/me", auth, user.output.me);
 router.put(apiUrl + users + "/me", auth, user.process.me);
 
+//itNews
+router.post(apiUrl + news, auth, itNews.process.news);
+router.get(apiUrl + news, auth, itNews.output.news);
 export default router;
