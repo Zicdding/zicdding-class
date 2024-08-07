@@ -55,6 +55,7 @@ router.get('/kakao/callback', async (req, res) => {
             const checkSql = 'SELECT * FROM TB_USER where refreshToken = ?'
             const { nickname: nick, profile_img: pf_img, account_email: email } = userResponse.data.properties;
             const payload = { nick, pf_img, email, userId };
+<<<<<<< HEAD
 
             const accessTokenMake = generateToken(payload);
             const cookieOpt = { maxAge: 1000 * 60 * 60 };
@@ -62,6 +63,13 @@ router.get('/kakao/callback', async (req, res) => {
             res.cookie('refreshToken', refreshToken, cookieOpt);
             console.log(refreshToken);
             // const checkResult = await promisePool.query(checkSql, refreshToken);
+=======
+            console.log('아이디' + email);
+            const accessTokenMake = generateToken(payload);
+            const cookieOpt = { maxAge: 1000 * 60 * 60 };
+            res.cookie('accessToken', accessTokenMake, cookieOpt);
+
+>>>>>>> 14cb188c9efd5d17a34ca9c17771ee24851a1686
 
             const sql = 'INSERT INTO TB_USER(email,password,nickname,created_date) VALUES("","",?,now())';
             const sql2 = 'INSERT INTO TB_USER_SNS(user_id,social_type) VALUES(?,"KAKAO")';
