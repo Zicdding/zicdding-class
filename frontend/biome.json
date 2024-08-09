@@ -1,3 +1,13 @@
 {
-  "extends": ["../biome.json"]
+  "extends": [
+    "../biome.json"
+  ],
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "suspicious": {
+        "noExplicitAny": "off"
+      }
+    }
+  }
 }
