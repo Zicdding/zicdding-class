@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, useCallback } from 'react';
-import { apiV1 } from '../remotes';
+import { apiV1 } from '../_remotes';
 
 function useUser() {
   const [user, setUser] = useState<{ email: string; nickname: string } | null>();

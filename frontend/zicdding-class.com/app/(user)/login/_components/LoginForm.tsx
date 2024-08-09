@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
-import { apiV1 } from '@/app/remotes';
+import { apiV1 } from '@/app/_remotes';
 
 const labelStyle = "font-['Roboto'] font-normal block text-[14px] text-[#777777] leading-[22px]";
 

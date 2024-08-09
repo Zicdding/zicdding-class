@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useCallback } from 'react';
-import { useForm, type SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import { apiV1 } from '@/app/remotes';
+import { apiV1 } from '@/app/_remotes';
 
 const labelStyle = "font-['Roboto'] font-normal block text-[14px] text-[#777777] leading-[22px]";
 
