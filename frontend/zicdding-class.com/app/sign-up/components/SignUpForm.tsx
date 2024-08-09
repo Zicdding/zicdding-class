@@ -2,40 +2,8 @@
 
 import React, { useCallback } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import ky from '@toss/ky';
 import { useRouter } from 'next/navigation';
-
-const signUpWithEmail = async (data: FormValues) => {
-  if (data.password !== data.confirmPassword) {
-    alert('비밀번호가 일치하지 않습니다.');
-    return;
-  }
-
-  const response = await ky.post('api/v1/users/signUp', {
-    json: {
-      email: data.email,
-      password: data.password,
-      nickname: data.nickname,
-      phoneNum: data.phoneNumber,
-    },
-  });
-
-  return await response.json();
-};
-
-const checkEmail = async (email: string) => {
-  const response = await ky.get(`api/v1/users/check-email?email=${email}`, { email });
-
-  return await response.json();
-};
-
-type FormValues = {
-  email: string;
-  password: string;
-  confirmPassword: string;
-  nickname: string;
-  phoneNumber: string;
-};
+import { apiV1 } from '@/app/remotes';
 
 const labelStyle = "font-['Roboto'] font-normal block text-[14px] text-[#777777] leading-[22px]";
 
@@ -49,36 +17,48 @@ export function SignUpForm() {
     handleSubmit,
     formState: { errors },
     watch,
-  } = useForm<FormValues>();
+  } = useForm<{
+    email: string;
+    password: string;
+    confirmPassword: string;
+    nickname: string;
+    phoneNumber: string;
+  }>();
 
   const email = watch('email');
 
   const handleCheckEmailDuplicated = useCallback(async () => {
-    const result = await checkEmail(email);
-    if (result) {
-      alert('사용 가능한 이메일입니다.');
-    } else {
-      alert('이미 사용중인 이메일입니다.');
-    }
+    const { message } = await apiV1.users.checkEmail({ email });
+
+    alert(message);
   }, [email]);
 
-  const onSubmit: SubmitHandler<FormValues> = async (values) => {
+  const onSubmit = handleSubmit(async (values) => {
     try {
-      const { code, message, data } = await signUpWithEmail(values);
-      localStorage.setItem('accessToken', data.accessToken);
-
-      if (code === 200) {
-        alert(message);
-        router.push('/');
+      if (values.password !== values.confirmPassword) {
+        alert('비밀번호가 일치하지 않습니다.');
+        return;
       }
+
+      await apiV1.users.signUpWithEmail(values);
+
+      // FIXME: / 로 이동하면 로그인이 올바르게 되지 않아서 일단 /login 으로 이동시키기
+      router.push('/login');
+      // router.push('/');
     } catch (error: any) {
+      if (error.name === 'HTTPError') {
+        const { message } = await error.response.json();
+        alert(message);
+        return;
+      }
+
       alert(error.message);
     }
-  };
+  });
 
   return (
     <div className="flex justify-center">
-      <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-lg max-w-md w-full">
+      <form onSubmit={onSubmit} className="bg-white rounded-lg max-w-md w-full">
         <div className="text-center mb-6">
           <img src="/logo.png" alt="Logo" className="mx-auto h-16" />
         </div>

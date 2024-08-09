@@ -28,16 +28,9 @@ export function LoginForm({ className = '' }: { className?: string }) {
   const { register, handleSubmit } = useForm<{ email: string; password: string }>();
 
   const onSubmit = async (formData: { email: string; password: string }) => {
-    const { code, data, message } = await login(formData);
+    await login(formData);
 
-    alert(message);
-
-    if (code === 200) {
-      localStorage.setItem('accessToken', data.accessToken);
-      router.push('/');
-    } else {
-      localStorage.removeItem('accessToken');
-    }
+    router.push('/');
   };
 
   return (
@@ -57,7 +50,7 @@ export function LoginForm({ className = '' }: { className?: string }) {
 
       <p className="mb-[31px]">
         <label className={labelStyle}>Password</label>
-        <input className={inputStyle} placeholder="비밀번호를 입력해주세요" {...register('password')} />
+        <input className={inputStyle} type="password" placeholder="비밀번호를 입력해주세요" {...register('password')} />
       </p>
 
       <button className={`${buttonStyle} mb-[20px]`} type="submit">
