@@ -25,7 +25,7 @@ export function LoginForm({ className = '' }: { className?: string }) {
   return (
     <form className={`w-[467px] px-[70px] ${className}`} onSubmit={onSubmit}>
       <div className="w-full mb-[9px]">
-        <img className="my-0 mx-auto" width="191" src="/login/zicdding-login-logo.png" alt="직띵 로고" />
+        <img className="my-0 mx-auto" width="191" src="/logo.png" alt="직띵 로고" />
       </div>
 
       <p className="w-full text-center mb-[20px]">
