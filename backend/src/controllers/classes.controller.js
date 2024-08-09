@@ -11,7 +11,7 @@ const output = {
         }
         
         const connection = await promisePool.getConnection();
-        const { classType, searchType, searchWord, sort } = req.body;
+        const { classType, searchType, searchWord, sort } = req.query;
         
         try {
             let classSql = `
@@ -55,16 +55,14 @@ const output = {
                 if (searchType === 'title') {
                     classSql += ` AND cs.class_title LIKE '&?&'`;
                 } else if (searchType === 'technology') {
-                    // TODO: 기술 검색 로직 추가
                     classSql +=  `
                         AND cs.class_id IN (
                             SELECT ct.class_id FROM TB_CLASS_TECHNOLOGY ct 
                                 LEFT JOIN TB_TECHNOLOGY t ON t.technology_id = ct.technology_id AND t.del_yn = 'N' 
-                            WHERE LOWER(t.name) LIKE '%?%'
+                            WHERE MATCH(t.name) AGAINST(?)
                         )
                     `;
                 } else if (searchType === 'position') {
-                    // TODO: 포지션 검색 로직 추가
                     classSql +=  `
                         AND ? IN (SELECT po.position FROM TB_POSITION po WHERE po.class_id = cs.class_id AND po.del_yn = 'N')
                     `;
