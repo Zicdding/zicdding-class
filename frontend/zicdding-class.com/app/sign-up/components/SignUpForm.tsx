@@ -10,7 +10,7 @@ const labelStyle = "font-['Roboto'] font-normal block text-[14px] text-[#777777]
 const inputStyle =
   'w-full box-border flex-row align-center p-[13px] gap-[10px] bg-[#FFFFFF] border-[1px] border-[#C6C6C6] rounded-[20px] placeholder-gray-300';
 
-export function SignUpForm() {
+export function SignUpForm({ className = '' }: { className?: string }) {
   const router = useRouter();
   const {
     register,
@@ -57,7 +57,7 @@ export function SignUpForm() {
   });
 
   return (
-    <div className="flex justify-center">
+    <div className={`flex justify-center ${className}`}>
       <form onSubmit={onSubmit} className="bg-white rounded-lg max-w-md w-full">
         <div className="text-center mb-6">
           <img src="/logo.png" alt="Logo" className="mx-auto h-16" />

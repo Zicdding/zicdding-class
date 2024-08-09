@@ -12,13 +12,13 @@ function useUser() {
       try {
         await apiV1.users.getMe().then(setUser);
       } catch (error: any) {
+        setUser(null);
+
         if (error.name === 'HTTPError') {
           console.error(await error.response.json());
         } else {
           console.error(error.message);
         }
-
-        setUser(null);
       }
     })();
   }, []);

@@ -17,7 +17,7 @@ export default function RootLayout({
     <html lang="ko">
       <body>
         <TanstackProviders>
-          <div className="mw-[1280px] m-auto">
+          <div className="max-w-[1280px] m-auto">
             <NavBar />
             <div className="mt-20">{children}</div>
           </div>
