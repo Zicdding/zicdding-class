@@ -52,3 +52,15 @@ export async function getMe() {
 export async function logout() {
   return await ky.get("api/v1/users/logout").json();
 }
+
+/**
+ * @name POST /api/v1/users/login (일반 로그인)
+ * @see https://documenter.getpostman.com/view/35361347/2sA3kUJ38T#d0a5eb2a-735d-43f6-81a8-e13c10f0cab5
+ */
+export async function login(data: { email: string; password: string }) {
+  return await ky
+    .post("api/v1/users/signIn", {
+      json: data,
+    })
+    .json();
+}

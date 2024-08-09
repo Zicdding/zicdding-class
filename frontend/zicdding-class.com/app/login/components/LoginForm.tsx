@@ -1,5 +1,6 @@
 'use client';
 
+import { apiV1 } from '@/app/remotes';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -11,30 +12,18 @@ const inputStyle =
 
 const buttonStyle = 'h-[40px] bg-[#000000] rounded-[8px] text-[#FFFFFF] w-full';
 
-async function login(data: { email: string; password: string }) {
-  const response = await fetch('api/v1/users/signIn', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
-
-  return await response.json();
-}
-
 export function LoginForm({ className = '' }: { className?: string }) {
-  const router = useRouter();
   const { register, handleSubmit } = useForm<{ email: string; password: string }>();
+  const router = useRouter();
 
-  const onSubmit = async (formData: { email: string; password: string }) => {
-    await login(formData);
+  const onSubmit = handleSubmit(async (formData) => {
+    await apiV1.users.login(formData);
 
     router.push('/');
-  };
+  });
 
   return (
-    <form className={`w-[467px] px-[70px] ${className}`} onSubmit={handleSubmit(onSubmit)}>
+    <form className={`w-[467px] px-[70px] ${className}`} onSubmit={onSubmit}>
       <div className="w-full mb-[9px]">
         <img className="my-0 mx-auto" width="191" src="/login/zicdding-login-logo.png" alt="직띵 로고" />
       </div>
