@@ -1,36 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState, useEffect, useCallback } from 'react';
-import { apiV1 } from '../_remotes';
-
-function useUser() {
-  const [user, setUser] = useState<{ email: string; nickname: string } | null>();
-
-  useEffect(() => {
-    (async () => {
-      try {
-        await apiV1.users.getMe().then(setUser);
-      } catch (error: any) {
-        setUser(null);
-
-        if (error.name === 'HTTPError') {
-          console.error(await error.response.json());
-        } else {
-          console.error(error.message);
-        }
-      }
-    })();
-  }, []);
-
-  const logout = useCallback(async () => {
-    await apiV1.users.logout();
-
-    setUser(null);
-  }, []);
-
-  return [user, logout] as const;
-}
+import { useUser } from '@/app/_hooks';
 
 export function UserInfo() {
   const router = useRouter();

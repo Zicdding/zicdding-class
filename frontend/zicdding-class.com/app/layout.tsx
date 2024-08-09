@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { NavBar } from '../_components/NavBar';
-import { TanstackProviders } from '../_providers/tanstack';
+import { NavBar } from './_components/NavBar';
+import { TanstackProviders } from './_providers/tanstack';
 
 export const metadata: Metadata = {
   title: '직띵 클래스',
