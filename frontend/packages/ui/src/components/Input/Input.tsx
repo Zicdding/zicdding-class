@@ -1,4 +1,3 @@
-"use client"
 import { cn } from '@ui/lib/utils';
 import React, { useState } from 'react';
 import { Icon } from '../Icon';
