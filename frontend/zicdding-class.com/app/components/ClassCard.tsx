@@ -1,5 +1,5 @@
 import { Icon } from "@ui/components/Icon"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@zicdding-web/ui"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@zicdding-web/ui/Card"
 import Image from "next/image"
 import Link from "next/link"
 
