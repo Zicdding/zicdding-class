@@ -25,7 +25,7 @@ const output = {
     },
 
     'check-email': async (req, res) => {
-        const userEmail = req.body.email;
+        const userEmail = req.query.email;
         const sql = 'SELECT count(email) AS result FROM TB_USER WHERE email = ?;';
         console.log(userEmail)
         try {
@@ -78,32 +78,32 @@ const process = {
             if (checkRows.length > 0) {
                 setResponseJson(res, 409, '이미 사용중인 이메일입니다.');
                 return;
-            } else {
-                await connection.beginTransaction();
-                const [rows] = await connection.query(sql, data);
-                await connection.commit();
-                const userId = rows.insertId;
-                const accessToken = generateToken(userId);
-                const refreshToken = generateRefreshToken(userId);
-
-                saveRefreshToken(userId, refreshToken);
-
-                res.cookie('accessToken', accessToken, {
-                    httpOnly: true,
-                    sameSite: 'strict',
-                    secure: false,
-                    expires: new Date(Date.now() + 12 * 60 * 60 * 1000) //12시간
-                });
-
-                res.cookie('refreshToken', refreshToken, {
-                    httpOnly: true,
-                    sameSite: 'strict',
-                    secure: false,
-                    expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000) // 90일
-                });
-                setResponseJson(res, 200, '회원가입 완료! 환영합니다', { accessToken, refreshToken, userId });
-                await connection.commit();
             }
+
+            await connection.beginTransaction();
+            const [rows] = await connection.query(sql, data);
+            await connection.commit();
+            const userId = rows.insertId;
+            const accessToken = generateToken(userId);
+            const refreshToken = generateRefreshToken(userId);
+
+            saveRefreshToken(userId, refreshToken);
+
+            res.cookie('accessToken', accessToken, {
+                httpOnly: true,
+                sameSite: 'strict',
+                secure: false,
+                expires: new Date(Date.now() + 12 * 60 * 60 * 1000) //12시간
+            });
+
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                sameSite: 'strict',
+                secure: false,
+                expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000) // 90일
+            });
+            setResponseJson(res, 200, '회원가입 완료! 환영합니다', { accessToken, refreshToken, userId });
+            await connection.commit();
         } catch (err) {
             await connection.rollback();
             setResponseJson(res, 500, '회원가입 중 오류 발생', { error: err.message })

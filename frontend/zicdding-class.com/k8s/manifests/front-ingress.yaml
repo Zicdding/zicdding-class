@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: front-app-ingress
+  namespace: zicdding
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /front
+        pathType: Prefix
+        backend:
+          service:
+            name: front-app
+            port:
+              number: 3000

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zicdding-front-app
+  labels:
+    app: front-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: front-app
+  template:
+    metadata:
+      labels:
+        app: front-app
+    spec:
+      containers:
+      - name: zicdding-front-app
+        image: zicdding0904/zicdding-front:latest
+        ports:
+        - containerPort: 3000
