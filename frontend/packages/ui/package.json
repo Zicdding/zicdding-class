@@ -20,6 +20,7 @@
     "./Calendar": "./src/components/Calendar/index.ts",
     "./Typography": "./src/components/Typography/index.ts",
     "./Card": "./src/components/Card/index.ts",
+    "./ITCard": "./src/components/ITCard/index.ts",
     "./package.json": "./package.json"
   },
   "devDependencies": {
