@@ -55,7 +55,7 @@ jobs:
           ARGOCD_PASSWORD: ${{ secrets.ARGOCD_PASSWORD }}
         run: |
           sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no -t -p $SSH_PORT $SSH_USER@$SSH_HOST << 'EOF'
-            argocd login $ARGOCD_SERVER --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD --insecure --grpc-web-root-path /argocd || exit 1
+            argocd login $ARGOCD_SERVER --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD --insecure --grpc-web-root-path /argocd --plaintext || exit 1
             argocd app sync zicdding-front-app --prune --self-heal || exit 1
             argocd app wait zicdding-front-app --sync --timeout 300 || exit 1
           EOF
