@@ -36,19 +36,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install ArgoCD CLI
-        run: |
-          curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
-          chmod +x /usr/local/bin/argocd
+      - name: Install SSH Client and sshpass
+        run: sudo apt-get update && sudo apt-get install -y openssh-client sshpass
 
-      - name: ArgoCD Login
-        run: |
-          argocd login ${{ secrets.ARGOCD_SERVER }} --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --insecure --grpc-web-root-path argocd
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Deploy to Kubernetes via ArgoCD
+      - name: Execute ArgoCD commands on remote server
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+          ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
+          ARGOCD_USERNAME: ${{ secrets.ARGOCD_USERNAME }}
+          ARGOCD_PASSWORD: ${{ secrets.ARGOCD_PASSWORD }}
         run: |
-          argocd app sync zicdding-front-app --prune --self-heal
-          argocd app wait zicdding-front-app --sync --timeout 300
+          sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST << 'EOF'
+            argocd login $ARGOCD_SERVER --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD --insecure --grpc-web-root-path argocd
+            argocd app sync zicdding-front-app --prune --self-heal
+            argocd app wait zicdding-front-app --sync --timeout 300
+          EOF
   # deploy:
   #   runs-on: ubuntu-latest
   #   needs: build
