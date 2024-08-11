@@ -40,7 +40,6 @@ router.get('/unAuth', unAuth, (req, res) => {
 })
 
 //일반 회원가입
-router.post(apiUrl + users + "/signUp", user.process.signUp);
 router.get(apiUrl + users + "/signUp", user.output.signUp);
 router.get(apiUrl + users + '/check-email', user.output['check-email']);
 

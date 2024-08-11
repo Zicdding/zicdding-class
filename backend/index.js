@@ -4,7 +4,7 @@ import path from 'path';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import router from './src/api/index.js';
-
+import { apiRouter } from './src/controllers';
 
 dotenv.config({ path: ".env" });
 
@@ -14,6 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(router);
+app.use(apiRouter);
 
 const publicPath = path.join(path.resolve(), 'public');
 app.use(express.static(publicPath));
