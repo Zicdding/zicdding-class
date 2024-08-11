@@ -1,9 +1,8 @@
 name: back_build_dockerfile
-#
 on:
   push:
     branches:
-      - feature/back-cicd
+      - main
     paths:
       - .github/**
       - backend/**
@@ -25,11 +24,14 @@ jobs:
       - name: Extract tag from commit message
         id: extract_tag
         run: |
-          TAG=$(echo "${{ github.event.head_commit.message }}" | grep -oP 'Build: \s*\K[\w\.]+')
-          echo "Extracted tag is $TAG"
-          echo "TAG=$TAG" >> $GITHUB_ENV
-          echo "TAG=$TAG" >> $GITHUB_OUTPUT
-
+          TAG=$(cat backend/VERSION)
+          if [[ -z "$TAG" ]]; then
+            echo "VERSION file is empty or not found"
+            exit 1
+          fi
+          echo "TAG=${TAG}" >> $GITHUB_ENV
+          echo "TAG=${TAG}" >> $GITHUB_OUTPUT
+      
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
