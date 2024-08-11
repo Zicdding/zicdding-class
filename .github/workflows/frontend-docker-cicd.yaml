@@ -46,7 +46,7 @@ jobs:
 
       - name: Update targetRevision in application.yaml
         run: |
-          sed -i "s/targetRevision:.*/targetRevision: '${{ secrets.TARGET_REVISION }}'/" frontend/zicdding-class.com/k8s/manifests/application.yaml
+          sed -i "s|targetRevision:.*|targetRevision: '${{ secrets.TARGET_REVISION }}'|" frontend/zicdding-class.com/k8s/manifests/application.yaml
 
       - name: Execute ArgoCD commands on remote server
         env:
