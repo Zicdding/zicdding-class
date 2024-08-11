@@ -11,4 +11,4 @@ spec:
     protocol: TCP
   selector:
     app: backend
-  type: NodePort
+  type: LoadBalancer
