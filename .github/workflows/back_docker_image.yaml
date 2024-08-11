@@ -3,7 +3,7 @@ name: back_build_dockerfile
 on:
   push:
     branches:
-      - feature/back-cicd
+      - main
     paths:
       - .github/**
       - backend/**
