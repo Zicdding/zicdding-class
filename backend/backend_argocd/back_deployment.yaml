@@ -14,7 +14,7 @@ spec:
         app: backend
     spec:
       containers:
-      - image: suhyeonsong/zicdding:v2.1
+      - image: suhyeonsong/zicdding:v3.0
         name: zicdding-backend-app
         ports:
         - containerPort: 3000
