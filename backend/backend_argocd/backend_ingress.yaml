@@ -4,13 +4,12 @@ metadata:
   name: backend-ingress
   namespace: backend
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
 spec:
   rules:
-    - host: 121.152.79.226.nip.io
-      http:
+    - http:
         paths:
-          - path: /
+          - path: /back
             pathType: Prefix
             backend:
               service:

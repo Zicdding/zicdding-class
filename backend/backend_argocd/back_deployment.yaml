@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
+  name: backend-app
   namespace: backend
 spec:
   replicas: 2
@@ -14,8 +14,8 @@ spec:
         app: backend
     spec:
       containers:
-      - image: suhyeonsong/zicdding:v2.5
-        name: backendtest
+      - image: suhyeonsong/zicdding:v2.1
+        name: zicdding-backend-app
         ports:
         - containerPort: 3000
         env:

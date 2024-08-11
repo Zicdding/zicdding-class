@@ -1,5 +1,4 @@
 name: back_build_dockerfile
-#
 on:
   push:
     branches:
@@ -25,14 +24,13 @@ jobs:
       - name: Extract tag from commit message
         id: extract_tag
         run: |
-          TAG=$(echo "${{ github.event.pull_request.title }}" | grep -oP '(?<=Tag: )[\w\.]+')
-          if [ -z "$TAG" ]; then
-            echo "No tag found in PR title, assigning default tag 'latest'."
-            TAG="latest"
+          TAG=$(cat backend/VERSION)
+          if [[ -z "$TAG" ]]; then
+            echo "VERSION file is empty or not found"
+            exit 1
           fi
-          echo "Extracted tag is $TAG"
-          echo "TAG=$TAG" >> $GITHUB_ENV
-          echo "TAG=$TAG" >> $GITHUB_OUTPUT
+          echo "TAG=${TAG}" >> $GITHUB_ENV
+          echo "TAG=${TAG}" >> $GITHUB_OUTPUT
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
