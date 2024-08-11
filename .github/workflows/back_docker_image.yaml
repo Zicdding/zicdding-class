@@ -25,7 +25,11 @@ jobs:
       - name: Extract tag from commit message
         id: extract_tag
         run: |
-          TAG=$(echo "${{ github.event.head_commit.message }}" | grep -oP 'Build: \s*\K[\w\.]+')
+          TAG=$(echo "${{ github.event.pull_request.title }}" | grep -oP '(?<=Tag: )[\w\.]+')
+          if [ -z "$TAG" ]; then
+            echo "No tag found in PR title, assigning default tag 'latest'."
+            TAG="latest"
+          fi
           echo "Extracted tag is $TAG"
           echo "TAG=$TAG" >> $GITHUB_ENV
           echo "TAG=$TAG" >> $GITHUB_OUTPUT
