@@ -4,15 +4,12 @@ on:
   push:
     branches:
       - feat/front-docker-deploy
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
       - name: Prepare Docker context
         run: |
           mkdir -p frontend/zicdding-class.com
