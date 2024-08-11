@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: 'https://github.com/Zicdding/zicdding-class.git'
-    targetRevision: HEAD
+    targetRevision: feat/front-docker-deploy
     path: 'frontend/zicdding-class.com/k8s/manifests'
   destination:
     server: 'https://kubernetes.default.svc'
