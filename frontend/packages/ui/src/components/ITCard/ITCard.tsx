@@ -4,44 +4,36 @@ import { cn } from '@ui/lib/utils';
 
 export const ITCard = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn('rounded-lg border bg-ITcard text-ITcard-foreground shadow-sm', className)}
-      {...props}
-    />
+    <div ref={ref} className={cn('rounded-2xl border border-black py-2.5 px-[15px]', className)} {...props} />
   ),
 );
 ITCard.displayName = 'ITCard';
 
 export const ITCardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('flex flex-col space-y-1.5 p-6', className)} {...props} />
-  ),
+  ({ className, ...props }, ref) => <div ref={ref} className={cn('pb-56', className)} {...props} />,
 );
 ITCardHeader.displayName = 'ITCardHeader';
 
 export const ITCardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
-    <h3 ref={ref} className={cn('text-2xl font-semibold leading-none tracking-tight', className)} {...props} />
+    <h3 ref={ref} className={cn('text-base font-semibold leading-none tracking-tight', className)} {...props} />
   ),
 );
 ITCardTitle.displayName = 'ITCardTitle';
 
 export const ITCardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => (
-    <p ref={ref} className={cn('text-sm text-muted-foreground', className)} {...props} />
+    <p ref={ref} className={cn('text-[14px] text-muted-foreground border bg-gray-300 rounded', className)} {...props} />
   ),
 );
 ITCardDescription.displayName = 'ITCardDescription';
 
 export const ITCardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => <div ref={ref} className={cn('p-6 pt-0', className)} {...props} />,
+  ({ className, ...props }, ref) => <div ref={ref} className={cn('', className)} {...props} />,
 );
 ITCardContent.displayName = 'ITCardContent';
 
 export const ITCardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('flex items-center p-6 pt-0', className)} {...props} />
-  ),
+  ({ className, ...props }, ref) => <div ref={ref} className={cn('', className)} {...props} />,
 );
 ITCardFooter.displayName = 'ITCardFooter';
