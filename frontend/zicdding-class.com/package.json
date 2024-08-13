@@ -15,6 +15,7 @@
     "@tanstack/react-query": "^5.51.23",
     "@toss/ky": "^1.2.0",
     "@zicdding-web/ui": "workspace:^",
+    "ky": "^1.6.0",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",

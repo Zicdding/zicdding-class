@@ -5,14 +5,14 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 export function MyInfoForm() {
-  const [user] = useUser();
+  const { user, isLogged } = useUser();
   const router = useRouter();
 
   useEffect(() => {
-    if (user === null) {
+    if (!isLogged) {
       router.push('/login');
     }
-  }, [user, router]);
+  }, [isLogged, router]);
 
   return (
     <div className="space-y-4 w-[420px] mx-auto my-0">
@@ -49,7 +49,7 @@ export function MyInfoForm() {
         <input
           id="password"
           type="password"
-          value={user == null ? '' : '********'}
+          value={isLogged ? '********' : ''}
           readOnly
           className="form-input w-full border-gray-300"
         />
@@ -62,7 +62,7 @@ export function MyInfoForm() {
         <input
           id="phoneNumber"
           type="tel"
-          value={user?.phoneNumber || ''}
+          value={user?.phone_num || ''}
           readOnly
           className="form-input w-full border-gray-300"
         />

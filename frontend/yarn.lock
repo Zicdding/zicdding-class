@@ -5142,6 +5142,7 @@ __metadata:
     "@types/react": "npm:^18"
     "@types/react-dom": "npm:^18"
     "@zicdding-web/ui": "workspace:^"
+    ky: "npm:^1.6.0"
     next: "npm:14.2.3"
     postcss: "npm:^8"
     react: "npm:^18"
@@ -8052,6 +8053,13 @@ __metadata:
   version: 3.0.3
   resolution: "kleur@npm:3.0.3"
   checksum: 10/0c0ecaf00a5c6173d25059c7db2113850b5457016dfa1d0e3ef26da4704fbb186b4938d7611246d86f0ddf1bccf26828daa5877b1f232a65e7373d0122a83e7f
+  languageName: node
+  linkType: hard
+
+"ky@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "ky@npm:1.6.0"
+  checksum: 10/4c16276a0c3da85088f4828a1fa2a7d91694061c5602f2aba95af4cb6ca7500a99a82060a76895f177ed2fb59621d7363b8e674ecc1f27eb0fd3114e0bea794f
   languageName: node
   linkType: hard
 

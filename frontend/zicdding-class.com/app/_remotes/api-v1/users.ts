@@ -1,4 +1,4 @@
-import ky from "@toss/ky";
+import ky from "ky";
 
 /**
  * @name POST /api/v1/users/signUp (일반 회원가입)
@@ -19,7 +19,9 @@ export async function signUpWithEmail(params: {
  */
 export async function checkEmail({ email }: { email: string }) {
   try {
-    const res = await ky.get(`/api/v1/users/check-email?email=${email}`).json();
+    const res = await ky
+      .get(`/api/v1/users/check-email?email=${email}`)
+      .json<{ message: string }>();
 
     return { result: true, message: res.message };
   } catch (error: any) {
@@ -35,12 +37,19 @@ export async function checkEmail({ email }: { email: string }) {
   }
 }
 
+interface User {
+  nickname: string;
+  email: string;
+  // TODO: phoneNumber type
+  phone_num: string;
+}
+
 /**
  * @name GET /api/v1/users/me (마이페이지 조회)
  * @see https://documenter.getpostman.com/view/35361347/2sA3kUJ38T#256d8b62-7b9b-49b1-8228-e188e9de2cf6
  */
 export async function getMe() {
-  const { data } = await ky.get("/api/v1/users/me").json();
+  const { data } = await ky.get("/api/v1/users/me").json<{ data: User }>();
 
   return data;
 }
