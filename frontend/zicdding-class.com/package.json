@@ -12,10 +12,14 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.51.23",
+    "@toss/ky": "^1.2.0",
     "@zicdding-web/ui": "workspace:^",
+    "ky": "^1.6.0",
     "next": "14.2.3",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-hook-form": "^7.52.2"
   },
   "devDependencies": {
     "@types/node": "^18",
