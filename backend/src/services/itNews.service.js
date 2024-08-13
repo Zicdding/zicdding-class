@@ -34,7 +34,7 @@ const process = {
         const userId = req.user.payload.userId;
         const itNewsType = req.body.itNewsType;
         console.log(itNewsType)
-        const typeSql = 'SELECT description FROM TB_CODE where code_group_id = 4 and sort = ?';
+        const typeSql = 'SELECT sort FROM TB_CODE where code_group_id = 4 and code = ?';
         let typeResult = await promisePool.query(typeSql, itNewsType);
         typeResult = typeResult[0][0].description;
         console.log(typeResult);
@@ -82,4 +82,4 @@ const process = {
     }
 }
 
-export { process, output };
+export const itNewsService = { process, output };

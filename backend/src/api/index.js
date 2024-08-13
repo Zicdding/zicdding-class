@@ -5,7 +5,6 @@ import userRouter from '../controllers/user.controller.js';
 import itNewsRouter from '../controllers/itNews.controller.js';
 
 const router = express.Router();
-const apiUrl = "/api/v1";
 
 router.use('/oauth', kakaoRouter);
 
@@ -38,9 +37,8 @@ router.get('/unAuth', unAuth, (req, res) => {
     }
 })
 
-router.use(apiUrl + "/users", userRouter);
-
-router.use(apiUrl + "/itnews", itNewsRouter);
+router.use("/api/v1/users", userRouter);
+router.use("/api/v1/itnews", itNewsRouter);
 
 
 export default router;

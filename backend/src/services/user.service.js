@@ -25,7 +25,7 @@ const output = {
     },
 
     'check-email': async (req, res) => {
-        const userEmail = req.body.email;
+        const userEmail = req.query.email;
         const sql = 'SELECT count(email) AS result FROM TB_USER WHERE email = ?;';
         console.log(userEmail)
         try {
@@ -83,11 +83,9 @@ const process = {
                 const [rows] = await connection.query(sql, data);
                 await connection.commit();
                 const userId = rows.insertId;
-                const accessToken = generateToken(userId);
-                const refreshToken = generateRefreshToken(userId);
-
+                const accessToken = generateToken({ userId: userId });
+                const refreshToken = generateRefreshToken({ userId: userId });
                 saveRefreshToken(userId, refreshToken);
-
                 res.cookie('accessToken', accessToken, {
                     httpOnly: true,
                     sameSite: 'strict',
@@ -101,6 +99,7 @@ const process = {
                     secure: false,
                     expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000) // 90일
                 });
+                console.log(userId)
                 setResponseJson(res, 200, '회원가입 완료! 환영합니다', { accessToken, refreshToken, userId });
                 await connection.commit();
             }
@@ -124,7 +123,7 @@ const process = {
                     if (isMatch === true) {
                         const userId = rows[0].user_id;
                         const accessToken = generateToken({ userId: userId });
-                        const refreshToken = generateRefreshToken({ usetId: userId });
+                        const refreshToken = generateRefreshToken({ userId: userId });
                         saveRefreshToken(userId, refreshToken);
                         res.cookie('accessToken', accessToken, {
                             httpOnly: true,
@@ -274,4 +273,4 @@ const process = {
 
 
 
-export { output, process };
+export const userService = { output, process };

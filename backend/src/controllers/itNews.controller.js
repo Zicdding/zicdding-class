@@ -1,5 +1,5 @@
 import express from "express";
-import * as itNewsService from '../services/itNews.service';
+import { itNewsService } from '../services/itNews.service';
 
 const router = express.Router();
 

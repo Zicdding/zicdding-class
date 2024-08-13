@@ -2,12 +2,13 @@ import { decodedPayload, replaceAccessToken } from '../utils/jwt';
 
 import { suspensionCheck } from '../utils/users';
 
+import setResponseJson, { responseDto } from '../utils/responseDto';
 const mainAuth = async (req, res, next) => {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
     console.log(req.userId)
     if (!accessToken && !refreshToken) {
-        return res.status(401).send('로그인 바랍니다');
+        return setResponseJson(res, 401, '로그인 바랍니다');
     }
     try {
         if (accessToken) {
@@ -20,19 +21,19 @@ const mainAuth = async (req, res, next) => {
                 const suspesded = await suspensionCheck(req, res, userId);
                 console.log(suspesded)
                 if (suspesded === true) {
-                    return res.status(403).send('정지된 사용자입니다.');
+                    setResponseJson(res, 403, '정지된 사용자입니다.');
                 }
             } catch (err) {
                 console.log(err)
-                return res.status(500).send(err);
+                return setResponseJson(res, 500, { error: err.message })
             }
             return next();
         } else {
-            return res.status(401).send('유효하지 않은 토큰');
+            return setResponseJson(res, 401, '유효하지 않은 토큰');
         }
     } catch (err) {
         if (!refreshToken) {
-            return res.status(401).send('로그인 바랍니다.');
+            return setResponseJson(res, 401, '로그인 바랍니다');
         }
         try {
             const newAccessToken = await replaceAccessToken(refreshToken);
@@ -44,7 +45,7 @@ const mainAuth = async (req, res, next) => {
             req.user = decodedPayload(newAccessToken);
             return next()
         } catch (err) {
-            return res.status(401).send('유효하지 않은 토큰');
+            return setResponseJson(res, 401, '유효하지 않은 토큰');
         }
     }
 };
@@ -57,10 +58,10 @@ const auth = (req, res, next) => {
             req.user = user;
             return next();
         } catch (err) {
-            return res.status(401).send('Invalid Token');
+            return setResponseJson(res, 401, '유효하지 않은 토큰');
         }
     } else {
-        res.status(401).send('로그인 바랍니다');
+        return setResponseJson(res, 401, '로그인 바랍니다.');
     }
 };
 

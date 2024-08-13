@@ -1,5 +1,5 @@
 import express from 'express';
-import * as userService from '../services/user.service.js';
+import { userService } from '../services/user.service.js';
 const router = express.Router();
 
 //일반 회원가입
@@ -17,9 +17,6 @@ router.get('/logout', userService.output.logout);
 //아이디, 비밀번호 찾기
 router.post("/reset-password", userService.process['reset-password']);
 router.post("/change-password", userService.process['change-password']);
-
-//비밀번호 찾기 테스트
-router.get("/change-password", userService.output['change-password']);
 
 //마이페이지
 router.get("/me", userService.output.me);

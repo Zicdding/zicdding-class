@@ -5,4 +5,4 @@ const uploadService = require('../services/upload.service');
 
 router.post('/', upload.single('file'), uploadService.upload);
 
-module.exports = router;
+export default uploadService;
