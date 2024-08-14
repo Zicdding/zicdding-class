@@ -44,9 +44,9 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Update targetRevision in application.yaml
-        run: |
-          sed -i "s|targetRevision:.*|targetRevision: '${{ secrets.TARGET_REVISION }}'|" frontend/zicdding-class.com/k8s/manifests/application.yaml
+#      - name: Update targetRevision in application.yaml
+#        run: |
+#          sed -i "s|targetRevision:.*|targetRevision: '${{ secrets.TARGET_REVISION }}'|" frontend/zicdding-class.com/k8s/manifests/application.yaml
 
       - name: Execute ArgoCD commands on remote server
         env:
