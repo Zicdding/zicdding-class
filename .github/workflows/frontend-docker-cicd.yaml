@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - feat/front-docker-deploy
+      - feat/front-docker-update
 jobs:
   build:
     runs-on: ubuntu-latest
