@@ -1,6 +1,6 @@
 import type React from 'react';
 import { SearchIcon } from './resources/SearchIcon';
-import { JSIcon } from './resources/JSIcon';
+// import { JSIcon } from './resources/JSIcon';
 import { Star } from './resources/Star';
 
 type IconName = 'search' | "star";
