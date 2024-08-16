@@ -57,7 +57,6 @@ jobs:
           ARGOCD_SERVER: ${{ secrets.ARGOCD_SERVER }}
           ARGOCD_USERNAME: ${{ secrets.ARGOCD_USERNAME }}
           ARGOCD_PASSWORD: ${{ secrets.ARGOCD_PASSWORD }}
-          TARGET_REVEISION: ${{ secrets.TARGET_REVISION }}
         run: |
           sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no -t -p $SSH_PORT $SSH_USER@$SSH_HOST << EOF
             argocd login ${ARGOCD_SERVER} --username ${ARGOCD_USERNAME} --password ${ARGOCD_PASSWORD} --insecure --plaintext --grpc-web-root-path /argocd || exit 1
@@ -67,7 +66,7 @@ jobs:
               --path frontend/zicdding-class.com/k8s/manifests \
               --dest-server https://kubernetes.default.svc \
               --dest-namespace default \
-              --revision ${TARGET_REVEISION} \
+              --revision feat/front-docker-update \
               --sync-policy automated \
               --self-heal \
               --upsert || exit 1
