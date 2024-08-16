@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: zicdding-front-app
-        image: zicdding0904/zicdding-front:latest
+        image: zicdding0904/zicdding-front:0.0.1
         ports:
         - containerPort: 3000
