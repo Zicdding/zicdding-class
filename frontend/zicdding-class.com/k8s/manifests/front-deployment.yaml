@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: zicdding-front-app
+  namespace: zicdding
   labels:
     app: front-app
 spec:
