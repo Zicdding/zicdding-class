@@ -5,11 +5,7 @@ import setResponseJson from "../utils/responseDto";
 
 const output = {
     classesList: async (req, res) => {
-        let userId = '';
-        if(req.user && req.user.payload) {
-            userId = req.user.payload.userId;
-        }
-        
+        const userId = req.user?.payload?.userId ?? '';
         const connection = await promisePool.getConnection();
         const { classType, searchType, searchWord, sort } = req.query;
         
@@ -71,17 +67,15 @@ const output = {
             }
 
             // 정렬
-            if (sort) {
-                if (sort === 'latest') {
-                    classSql += ' ORDER BY cs.mod_date DESC';
-                } else if (sort === 'popular') {
-                    classSql += ' ORDER BY likeCnt DESC, cs.mod_date DESC';
-                } else if (sort === 'views') {
-                    classSql += ' ORDER BY viewCnt DESC, cs.mod_date DESC';
-                }
+            if (sort === 'latest') {
+                classSql += ' ORDER BY cs.mod_date DESC';
+            } else if (sort === 'popular') {
+                classSql += ' ORDER BY likeCnt DESC, cs.mod_date DESC';
+            } else if (sort === 'views') {
+                classSql += ' ORDER BY viewCnt DESC, cs.mod_date DESC';
             }
 
-            let [classRows] = await connection.query(classSql, params);
+            const [classRows] = await connection.query(classSql, params);
 
             
             for (let i = 0; i < classRows.length; i++) {
