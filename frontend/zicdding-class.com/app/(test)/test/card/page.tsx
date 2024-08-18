@@ -1,4 +1,4 @@
-import ClassCard from "@/app/components/ClassCard";
+import ClassCard from "@/app/_components/ClassCard";
 
 export default function TestPage() {
     return (
