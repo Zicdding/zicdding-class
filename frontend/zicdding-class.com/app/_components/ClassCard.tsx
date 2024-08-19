@@ -1,7 +1,8 @@
-import { Icon } from "@ui/components/Icon"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@zicdding-web/ui/Card"
 import Image from "next/image"
 import Link from "next/link"
+
+import { Icon } from "@ui/components/Icon"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@zicdding-web/ui/Card"
 
 export default function ClassCard({
     id,
@@ -30,7 +31,7 @@ export default function ClassCard({
     myLike: boolean
 }) {
     return (
-        <Card className="relative max-w-[300px] bg-white border-[1px] border-black">
+        <Card className="relative flex-[0_0_300px] w-[300px] aspect-[400/240] bg-white border-[1px] border-black">
             <Link href={`/class/${id}`}>
                 <CardHeader>
                     <CardTitle>{title}</CardTitle>
@@ -55,10 +56,10 @@ export default function ClassCard({
                         <div>💬 {commentCnt}</div>
                     </div>
                 </CardFooter>
-                <div className="absolute top-4 right-6">
-                    <Icon name="star" className={myLike ? "text-yellow-400" : 'text-gray-300'} />
-                </div>
             </Link>
+            <div className="absolute top-4 right-6">
+                <Icon name="star" className={myLike ? "text-yellow-400" : 'text-gray-300'} />
+            </div>
         </Card>
     )
 }
