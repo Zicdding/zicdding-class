@@ -1,11 +1,13 @@
 const fs = require('fs');
 
-const uploadService = {
+
+const process = {
   upload: async (req, res) => {
     try {
       const { originName, filename, mimeType, path } = req.file;
-    } catch {}
-  },
-};
+    } catch { }
+  }
+}
 
-module.exports = uploadService;
+
+export const uploadService = { process };

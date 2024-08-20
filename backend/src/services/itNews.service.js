@@ -82,4 +82,5 @@ const process = {
     }
 }
 
+
 export const itNewsService = { process, output };

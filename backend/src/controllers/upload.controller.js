@@ -1,7 +1,7 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const upload = require('../utils/multer');
-const uploadService = require('../services/upload.service');
+import upload from '../utils/multer';
+import { uploadService } from '../services/upload.service';
 
 router.post('/', upload.single('file'), uploadService.upload);
 

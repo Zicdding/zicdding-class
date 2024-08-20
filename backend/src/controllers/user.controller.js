@@ -8,7 +8,7 @@ router.get("/signUp", userService.output.signUp);
 router.get("/checkEmail", userService.output.checkEmail);
 
 //로그인
-router.get("/signIn", userService.output.signIn);
+router.get("/signIn", mainAuth, userService.output.signIn);
 router.post("/signIn", userService.process.signIn);
 
 //로그아웃
