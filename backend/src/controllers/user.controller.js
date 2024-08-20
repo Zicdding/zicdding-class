@@ -1,11 +1,11 @@
 import express from 'express';
 import { userService } from '../services/user.service.js';
+import { mainAuth, auth } from '../middlewares/auth.js';
 const router = express.Router();
-
 //일반 회원가입
 router.post("/signUp", userService.process.signUp);
 router.get("/signUp", userService.output.signUp);
-router.get("/check-email", userService.output['check-email']);
+router.get("/checkEmail", userService.output.checkEmail);
 
 //로그인
 router.get("/signIn", userService.output.signIn);
@@ -15,11 +15,12 @@ router.post("/signIn", userService.process.signIn);
 router.get('/logout', userService.output.logout);
 
 //아이디, 비밀번호 찾기
-router.post("/reset-password", userService.process['reset-password']);
-router.post("/change-password", userService.process['change-password']);
+router.get('/changePassword', auth, userService.output.changePassword);
+router.post("/resetPassword", userService.process.resetPassword);
+router.post("/changePassword", auth, userService.process.changePassword);
 
 //마이페이지
-router.get("/me", userService.output.me);
-router.put("/me", userService.process.me);
+router.get("/me", auth, userService.output.me);
+router.put("/me", auth, userService.process.me);
 
 export default router;

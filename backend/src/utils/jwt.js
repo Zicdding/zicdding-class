@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import promisePool from "../../config/db";
+import setResponseJson from './responseDto';
 
 const secretKey = process.env.SECRET_KEY;
 const algorithm = process.env.JWT_ALGO;
@@ -37,7 +38,7 @@ const saveRefreshToken = async (userId, refreshToken) => {
         }
     } catch (err) {
         console.error('Database operation error: ', err);
-        throw err;
+        setResponseJson(res, 500, { error: err.message });
     }
 }
 //새 토큰 발급
@@ -47,8 +48,8 @@ const replaceAccessToken = (refreshToken) => {
             if (err) {
                 return reject(err);
             }
-            const userId = decoded.userId;
-            const newAccessToken = generateToken(userId);
+            const userId = decoded.payload.userId;
+            const newAccessToken = generateToken({ userId });
             resolve(newAccessToken);
         })
     })
@@ -62,8 +63,8 @@ const updateRefreshToken = (refreshToken) => {
             if (err) {
                 return reject(err);
             }
-            const userId = decoded.userId;
-            const newRefreshToken = generateRefreshToken(userId);
+            const userId = decoded.payload.userId;
+            const newRefreshToken = generateRefreshToken({ userId });
             saveRefreshToken(userId, newRefreshToken)
                 .then(() => resolve(newRefreshToken))
                 .catch(reject);
@@ -74,7 +75,7 @@ const updateRefreshToken = (refreshToken) => {
 // 토큰 디코딩 함수
 const decodedPayload = (token) => {
     const tokenDecoded = jwt.verify(token, secretKey);
-    return tokenDecoded;
+    return tokenDecoded.payload;
 };
 
 

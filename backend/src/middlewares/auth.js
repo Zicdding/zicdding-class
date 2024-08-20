@@ -2,7 +2,7 @@ import { decodedPayload, replaceAccessToken } from '../utils/jwt';
 
 import { suspensionCheck } from '../utils/users';
 
-import setResponseJson, { responseDto } from '../utils/responseDto';
+import setResponseJson from '../utils/responseDto';
 const mainAuth = async (req, res, next) => {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
@@ -15,8 +15,8 @@ const mainAuth = async (req, res, next) => {
             const user = decodedPayload(accessToken);
             req.user = user;
             console.log(user)
-            const userId = user.payload.userId;
-            console.log(userId)
+            const userId = user.userId;
+            console.log("디코딩" + userId)
             try {
                 const suspesded = await suspensionCheck(req, res, userId);
                 console.log(suspesded)
@@ -67,8 +67,8 @@ const auth = (req, res, next) => {
 
 const unAuth = (req, res, next) => {
     const accessToken = req.cookies.accessToken;
-    if (!accessToken) {
-        return res.status(200).send('로그인 해주세요')
+    if (accessToken) {
+        next();
     } else {
         next();
     }

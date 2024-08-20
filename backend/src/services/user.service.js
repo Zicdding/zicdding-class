@@ -6,14 +6,14 @@ import setResponseJson from "../utils/responseDto";
 
 const output = {
     signUp: (req, res) => {
-        res.send('회원가입');
+        res.render('signUp_test');
     },
 
     signIn: (req, res) => {
         res.render('login_test1');
     },
 
-    'change-password': (req, res) => {
+    changePassword: (req, res) => {
         res.render('pwd_change');
     },
 
@@ -24,7 +24,7 @@ const output = {
         console.log('로그아웃 성공')
     },
 
-    'check-email': async (req, res) => {
+    checkEmail: async (req, res) => {
         const userEmail = req.query.email;
         const sql = 'SELECT count(email) AS result FROM TB_USER WHERE email = ?;';
         console.log(userEmail)
@@ -44,7 +44,8 @@ const output = {
     },
 
     me: async (req, res) => {
-        const userId = req.user.payload.userId;
+        const userId = req.user.userId;
+        console.log("유저아이디" + userId)
         const sql = 'SELECT nickname, email, phone_num FROM TB_USER where user_id = ?';
         try {
             const [rows] = await promisePool.query(sql, [userId]);
@@ -81,11 +82,13 @@ const process = {
             } else {
                 await connection.beginTransaction();
                 const [rows] = await connection.query(sql, data);
-                await connection.commit();
                 const userId = rows.insertId;
-                const accessToken = generateToken({ userId: userId });
-                const refreshToken = generateRefreshToken({ userId: userId });
-                saveRefreshToken(userId, refreshToken);
+                await connection.commit();
+
+                const accessToken = generateToken({ userId });
+                const refreshToken = generateRefreshToken({ userId });
+                await saveRefreshToken(userId, refreshToken);
+
                 res.cookie('accessToken', accessToken, {
                     httpOnly: true,
                     sameSite: 'strict',
@@ -172,7 +175,7 @@ const process = {
             });
     },
 
-    'reset-password': async (req, res) => {
+    resetPassword: async (req, res) => {
         const email = req.body.email;
         if (!email) {
             setResponseJson(res, 400, '이메일을 입력하세요.');
@@ -192,9 +195,9 @@ const process = {
 
     },
 
-    'change-password': async (req, res) => {
+    changePassword: async (req, res) => {
         const { password, newPassword } = req.body;
-        const userId = req.user.payload.userId;
+        const userId = req.user.userId;
         console.log(password)
         const hashedPaaword = bcrypt.hashSync(newPassword, 12);
         const sql = 'UPDATE TB_USER SET password = ?, mod_date = now() where user_id =?';
@@ -227,7 +230,7 @@ const process = {
     me: async (req, res) => {
         const { nickname, phoneNum } = req.body;
         const newPassword = req.body.newPassword;
-        const userId = req.user.payload.userId;
+        const userId = req.user.userId;
         const sql = `
         UPDATE TB_USER 
         SET 
