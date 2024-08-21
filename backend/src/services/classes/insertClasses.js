@@ -59,34 +59,35 @@ export async function insertClasses(req, res) {
 
       const [classRows] = await connection.query(insertClassSql, classData);
 
-      for (let i = 0; i < position.length; i++) {
-        const insertPositionSql = 'INSERT INTO TB_POSITION (class_id, position) VALUES (?, ?);';
-        const positionData = [classRows.insertId, position[i]];
-
-        const [positionRows] = await connection.query(insertPositionSql, positionData);
-        if (positionRows.affectedRows > 0) {
-          await connection.commit();
-        } else {
-          await connection.rollback();
-          setResponseJson(res, 401, '클래스 포지션 등록 실패');
-        }
-      }
-
-      for (let i = 0; i < technology.length; i++) {
-        const insertTechnologySql = 'INSERT INTO TB_CLASS_TECHNOLOGY (class_id, technology_id) VALUES (?, ?)';
-        const technologyData = [classRows.insertId, technology[i]];
-
-        const [technologyRows] = await connection.query(insertTechnologySql, technologyData);
-        if (technologyRows.affectedRows > 0) {
-          await connection.commit();
-        } else {
-          await connection.rollback();
-          setResponseJson(res, 401, '클래스 기술 등록 실패');
-        }
-      }
-
       if (classRows.affectedRows > 0) {
         await connection.commit();
+
+        for (let i = 0; i < position.length; i++) {
+          const insertPositionSql = 'INSERT INTO TB_POSITION (class_id, position) VALUES (?, ?);';
+          const positionData = [classRows.insertId, position[i]];
+
+          const [positionRows] = await connection.query(insertPositionSql, positionData);
+          if (positionRows.affectedRows > 0) {
+            await connection.commit();
+          } else {
+            await connection.rollback();
+            setResponseJson(res, 401, '클래스 포지션 등록 실패');
+          }
+        }
+
+        for (let i = 0; i < technology.length; i++) {
+          const insertTechnologySql = 'INSERT INTO TB_CLASS_TECHNOLOGY (class_id, technology_id) VALUES (?, ?)';
+          const technologyData = [classRows.insertId, technology[i]];
+
+          const [technologyRows] = await connection.query(insertTechnologySql, technologyData);
+          if (technologyRows.affectedRows > 0) {
+            await connection.commit();
+          } else {
+            await connection.rollback();
+            setResponseJson(res, 401, '클래스 기술 등록 실패');
+          }
+        }
+
         setResponseJson(res, 200, '클래스 등록 완료', classRows.insertId);
       } else {
         await connection.rollback();
