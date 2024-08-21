@@ -60,35 +60,37 @@ export async function insertClasses(req, res) {
       const [classRows] = await connection.query(insertClassSql, classData);
 
       if (classRows.affectedRows > 0) {
-        await connection.commit();
+        const classId = classRows.insertId;
 
+        // 포지션 추가
         for (let i = 0; i < position.length; i++) {
-          const insertPositionSql = 'INSERT INTO TB_POSITION (class_id, position) VALUES (?, ?);';
-          const positionData = [classRows.insertId, position[i]];
+          const insertPositionSql = 'INSERT INTO TB_POSITION (class_id, position) VALUES (?, ?)';
+          const positionData = [classId, position[i]];
 
           const [positionRows] = await connection.query(insertPositionSql, positionData);
-          if (positionRows.affectedRows > 0) {
-            await connection.commit();
-          } else {
+          if (positionRows.affectedRows === 0) {
             await connection.rollback();
             setResponseJson(res, 401, '클래스 포지션 등록 실패');
+            return;
           }
         }
 
+        // 기술 추가
         for (let i = 0; i < technology.length; i++) {
           const insertTechnologySql = 'INSERT INTO TB_CLASS_TECHNOLOGY (class_id, technology_id) VALUES (?, ?)';
-          const technologyData = [classRows.insertId, technology[i]];
+          const technologyData = [classId, technology[i]];
 
           const [technologyRows] = await connection.query(insertTechnologySql, technologyData);
-          if (technologyRows.affectedRows > 0) {
-            await connection.commit();
-          } else {
+          if (technologyRows.affectedRows === 0) {
             await connection.rollback();
             setResponseJson(res, 401, '클래스 기술 등록 실패');
+            return;
           }
         }
 
-        setResponseJson(res, 200, '클래스 등록 완료', classRows.insertId);
+        // 모든 작업 성공 시 커밋
+        await connection.commit();
+        setResponseJson(res, 200, '클래스 등록 완료', classId);
       } else {
         await connection.rollback();
         setResponseJson(res, 401, '클래스 등록 실패');

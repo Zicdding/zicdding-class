@@ -62,14 +62,12 @@ export async function updateClasses(req, res) {
       const [classRows] = await connection.query(updateClassSql, classData);
 
       if (classRows.affectedRows > 0) {
-        // 기존 포지션 조회
+        // 기존 포지션 삭제 및 추가
         const getPositionSql = "SELECT position FROM TB_POSITION WHERE class_id = ? AND del_yn = 'N'";
         const [existingPosition] = await connection.query(getPositionSql, [classId]);
 
-        // 기존 포지션 중 삭제된 것
         const deletedPosition = existingPosition.filter((pos) => !position.includes(pos.position));
 
-        // 기존 포지션 중 삭제되지 않은 것
         const existingPositionToKeep = existingPosition.filter((pos) => position.includes(pos.position));
 
         // 삭제된 포지션 삭제
@@ -78,11 +76,10 @@ export async function updateClasses(req, res) {
           const deletePositionData = [classId, deletedPosition[i].position];
 
           const [deletePositionRows] = await connection.query(deletePositionSql, deletePositionData);
-          if (deletePositionRows.affectedRows > 0) {
-            await connection.commit();
-          } else {
+          if (deletePositionRows.affectedRows === 0) {
             await connection.rollback();
             setResponseJson(res, 401, '클래스 포지션 삭제 실패');
+            return;
           }
         }
 
@@ -93,24 +90,21 @@ export async function updateClasses(req, res) {
             const positionData = [classId, position[i]];
 
             const [positionRows] = await connection.query(insertPositionSql, positionData);
-            if (positionRows.affectedRows > 0) {
-              await connection.commit();
-            } else {
+            if (positionRows.affectedRows === 0) {
               await connection.rollback();
               setResponseJson(res, 401, '클래스 포지션 추가 실패');
+              return;
             }
           }
         }
 
-        // 기존 기술 조회
+        // 기존 기술 삭제 및 추가
         const getTechnologySql = 'SELECT technology_id FROM TB_CLASS_TECHNOLOGY WHERE class_id = ?';
         const [existingTechnology] = await connection.query(getTechnologySql, [classId]);
 
-        // 기존 기술 중 삭제된 것
-        const deletedTechnology = existingTechnology.filter((pos) => !technology.includes(pos.technology));
+        const deletedTechnology = existingTechnology.filter((tech) => !technology.includes(tech.technology_id));
 
-        // 기존 기술 중 삭제되지 않은 것
-        const existingTechnologyToKeep = existingTechnology.filter((pos) => technology.includes(pos.technology));
+        const existingTechnologyToKeep = existingTechnology.filter((tech) => technology.includes(tech.technology_id));
 
         // 삭제된 기술 삭제
         for (let i = 0; i < deletedTechnology.length; i++) {
@@ -118,30 +112,29 @@ export async function updateClasses(req, res) {
           const deleteTechnologyData = [classId, deletedTechnology[i].technology_id];
 
           const [deleteTechnologyRows] = await connection.query(deleteTechnologySql, deleteTechnologyData);
-          if (deleteTechnologyRows.affectedRows > 0) {
-            await connection.commit();
-          } else {
+          if (deleteTechnologyRows.affectedRows === 0) {
             await connection.rollback();
             setResponseJson(res, 401, '클래스 기술 삭제 실패');
+            return;
           }
         }
 
         // 새로운 기술 추가
         for (let i = 0; i < technology.length; i++) {
-          if (!existingTechnologyToKeep.some((pos) => pos.technology === technology[i])) {
+          if (!existingTechnologyToKeep.some((tech) => tech.technology_id === technology[i])) {
             const insertTechnologySql = 'INSERT INTO TB_CLASS_TECHNOLOGY (class_id, technology_id) VALUES (?, ?)';
             const technologyData = [classId, technology[i]];
 
             const [technologyRows] = await connection.query(insertTechnologySql, technologyData);
-            if (technologyRows.affectedRows > 0) {
-              await connection.commit();
-            } else {
+            if (technologyRows.affectedRows === 0) {
               await connection.rollback();
               setResponseJson(res, 401, '클래스 기술 추가 실패');
+              return;
             }
           }
         }
 
+        await connection.commit();
         setResponseJson(res, 200, '클래스 정보 수정 완료');
       } else {
         await connection.rollback();

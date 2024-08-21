@@ -6,6 +6,7 @@ import { insertLike } from '../services/classes/insertLike';
 import { deleteLike } from '../services/classes/deleteLike';
 import { insertClasses } from '../services/classes/insertClasses';
 import { updateClasses } from '../services/classes/updateClasses';
+import { deleteClasses } from '../services/classes/deleteClasses';
 
 // 클래스 리스트 조회 (검색)
 router.get('/', classesList);
@@ -15,6 +16,9 @@ router.post('/', auth, insertClasses);
 
 // 클래스 수정
 router.put('/:classId', auth, updateClasses);
+
+// 클래스 삭제
+router.patch('/:classId', auth, deleteClasses);
 
 // 클래스 좋아요 등록
 router.post('/:classId/like', auth, insertLike);
