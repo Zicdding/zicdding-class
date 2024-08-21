@@ -1,4 +1,7 @@
-const deleteLike = async (req, res) => {
+import promisePool from '../../../config/db';
+import setResponseJson from "../../utils/responseDto";
+
+export async function deleteLike (req, res) {
     const userId = req.user.payload.userId;
     const { classId } = req.params;
     let connection;
@@ -27,5 +30,3 @@ const deleteLike = async (req, res) => {
         if (connection) connection.release();
     }
 };
-
-export { deleteLike };

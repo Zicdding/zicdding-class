@@ -40,40 +40,26 @@ router.get('/unAuth', unAuth, (req, res) => {
 })
 
 //일반 회원가입
-router.post(apiUrl + users + "/signUp", user.process.signUp);
-router.get(apiUrl + users + "/signUp", user.output.signUp);
-router.get(apiUrl + users + '/check-email', user.output['check-email']);
+router.post("/signUp", user.process.signUp);
+router.get("/signUp", user.output.signUp);
+router.get('/check-email', user.output['check-email']);
 
 //로그인
-router.get(apiUrl + users + "/signIn", user.output.signIn);
-router.post(apiUrl + users + "/signIn", user.process.signIn);
+router.get("/signIn", user.output.signIn);
+router.post("/signIn", user.process.signIn);
 
 //로그아웃
-router.get(apiUrl + users + '/logout', auth, user.output.logout);
+router.get('/logout', auth, user.output.logout);
 
 //아이디, 비밀번호 찾기
-router.post(apiUrl + users + "/reset-password", user.process['reset-password']);
-router.post(apiUrl + users + "/change-password", auth, user.process['change-password']);
+router.post("/reset-password", user.process['reset-password']);
+router.post("/change-password", auth, user.process['change-password']);
 
 //비밀번호 찾기 테스트
-router.get(apiUrl + users + "/change-password", auth, user.output['change-password']);
+router.get("/change-password", auth, user.output['change-password']);
 
 //마이페이지
-router.get(apiUrl + users + "/me", auth, user.output.me);
-router.put(apiUrl + users + "/me", auth, user.process.me);
-
-
-// ======================== 클래스 start ========================
-
-// // 클래스 리스트 조회 (검색)
-// router.get(apiUrl + "/classes", classes.output.classesList);
-
-// // 클래스 좋아요 등록
-// router.post(apiUrl + "/classes/:classId/like", auth, classes.process.insertLike);
-
-// // 클래스 좋아요 삭제
-// router.patch(apiUrl + "/classes/:classId/like", auth, classes.process.deleteLike);
-
-// ======================== 클래스 end ========================
+router.get("/me", auth, user.output.me);
+router.put("/me", auth, user.process.me);
 
 export default router;

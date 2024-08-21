@@ -1,4 +1,7 @@
-const classesList = async (req, res) => {
+import promisePool from '../../../config/db';
+import setResponseJson from "../../utils/responseDto";
+
+export async function classesList (req, res) {
     const userId = req.user?.payload?.userId ?? '';
     const connection = await promisePool.getConnection();
     const { classType, searchType, searchWord, sort } = req.query;
@@ -105,5 +108,3 @@ const classesList = async (req, res) => {
         if (connection) connection.release();
     }
 };
-
-export { classesList };
