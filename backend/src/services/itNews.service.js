@@ -1,14 +1,18 @@
 import promisePool from "../../config/db";
+import { any } from "../utils/multer";
 import setResponseJson from "../utils/responseDto";
 
 const output = {
     view: (req, res) => {
         res.render('itnews_insert_test');
     },
+    modify: (req, res) => {
+        res.render('itnews_modify_test');
+    },
     findOne: async (req, res) => {
         const itNewsId = req.query.itNewsId;
         console.log(itNewsId)
-        const sql = 'SELECT * FROM TB_ITNEWS WHERE itnews_id = ?';
+        const sql = 'SELECT * FROM TB_ITNEWS WHERE itnews_id = ? and del_yn ="N" ';
         try {
             let result = await promisePool.query(sql, [itNewsId]);
             result = result[0];
@@ -18,7 +22,7 @@ const output = {
         }
     },
     findAll: async (req, res) => {
-        const sql = 'SELECT itnews_title, itnews_type, start_date, end_date from TB_ITNEWS ORDER BY created_date DESC';
+        const sql = 'SELECT itnews_title, itnews_type, start_date, end_date FROM TB_ITNEWS WHERE del_yn ="N" ORDER BY created_date DESC';
         try {
             const result = await promisePool.query(sql);
             setResponseJson(res, 200, '아이티뉴스 리스트 조회 성공', result[0]);
@@ -31,7 +35,7 @@ const output = {
 }
 const process = {
     news: async (req, res) => {
-        const userId = req.user.payload.userId;
+        const userId = req.user.userId;
         const itNewsType = req.body.itNewsType;
         console.log(itNewsType)
         const typeSql = 'SELECT sort FROM TB_CODE where code_group_id = 4 and code = ?';
@@ -55,7 +59,7 @@ const process = {
     },
     search: async (req, res) => {
         const { itNewsType, itNewsTitle } = req.body;
-        let sql = 'SELECT itnews_title, itnews_type, start_date, end_date from TB_ITNEWS ';
+        let sql = 'SELECT itnews_title, itnews_type, start_date, end_date from TB_ITNEWS where del_yn ="N" ';
         const params = [];
         try {
 
@@ -79,7 +83,49 @@ const process = {
             console.log(err);
             setResponseJson(res, 500, '조회 중 오류 발생', { error: err.message });
         }
+    },
+    delete: async (req, res) => {
+        const itNewsId = req.query.itNewsId;
+        const userId = req.user.userId;
+        const sql = 'UPDATE TB_ITNEWS SET del_yn = "Y" WHERE itnews_id = ? and user_id = ?';
+        let [result] = await promisePool.query(sql, [itNewsId, userId]);
+        try {
+            if (result.affectedRows > 0) {
+                setResponseJson(res, 200, '삭제 완료');
+            } else {
+                setResponseJson(res, 500, '삭제 실패');
+            }
+        } catch (err) {
+            setResponseJson(res, 500, { error: err.mesaage });
+        }
+
+    },
+    put: async (req, res) => {
+        const itNewsId = req.query.itNewsId;
+        const userId = req.user.userId;
+        const itNewsType = req.body.itNewsType;
+        const typeSql = 'SELECT sort FROM TB_CODE where code_group_id = 4 and code = ?';
+        let typeResult = await promisePool.query(typeSql, itNewsType);
+        typeResult = typeResult[0][0].description;
+        const { itNewsTitle, itNewsPostion, reward, rewardConfirmYn, startDate, endDate, itNewsTarget, itNewsUrl, itNewsContent } = req.body;
+        const data = [userId, itNewsTitle, typeResult, itNewsPostion, reward, rewardConfirmYn, startDate, endDate, itNewsTarget, itNewsUrl, itNewsContent, userId, itNewsId];
+
+        const sql = 'UPDATE TB_ITNEWS SET itnews_title = ?, itnews_type = ?, itnews_position = ?,'
+            + ' reward = ?, reward_confirm_yn = ? , start_date = ? , end_date = ?, '
+            + 'itnews_target = ?, itnews_url = ?, itnews_content = ?, mod_user = ?, mod_date = now() where user_id =? and itnews_id =? '
+
+        try {
+            const [result] = await promisePool.query(sql, [data]);
+            if (result.affectedRows > 0) {
+                setResponseJson(res, 200, '아이티뉴스 수정 성공');
+            } else {
+                setResponseJson(res, 500, '아이티뉴스 수정 실패');
+            }
+        } catch (err) {
+            setResponseJson(res, 500, { error: err.message });
+        }
     }
+
 }
 
 

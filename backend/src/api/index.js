@@ -41,4 +41,18 @@ router.use("/api/v1/users", userRouter);
 router.use("/api/v1/itnews", itNewsRouter);
 
 
+
+// ======================== 클래스 start ========================
+
+// 클래스 리스트 조회 (검색)
+router.get(apiUrl + "/classes", classes.output.classesList);
+
+// 클래스 좋아요 등록
+router.post(apiUrl + "/classes/:classId/like", auth, classes.process.insertLike);
+
+// 클래스 좋아요 삭제
+router.patch(apiUrl + "/classes/:classId/like", auth, classes.process.deleteLike);
+
+// ======================== 클래스 end ========================
+
 export default router;

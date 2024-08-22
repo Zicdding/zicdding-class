@@ -1,49 +1,49 @@
 {
-    "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
-    "formatter": {
-      "enabled": true,
-      "lineWidth": 120,
-      "indentStyle": "space"
-    },
-    "linter": {
-      "enabled": true,
-      "rules": {
-        "recommended": true,
-        "nursery": {
-          "noUselessStringConcat": "warn"
-        },
-        "style": {
-          "useNodejsImportProtocol": "warn",
-          "useTemplate": "warn"
-        },
-        "a11y": {
-          "noSvgWithoutTitle": "warn"
-        }
+  "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+  "formatter": {
+    "enabled": true,
+    "lineWidth": 120,
+    "indentStyle": "space"
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "nursery": {
+        "noUselessStringConcat": "warn"
+      },
+      "style": {
+        "useNodejsImportProtocol": "warn",
+        "useTemplate": "warn"
+      },
+      "a11y": {
+        "noSvgWithoutTitle": "warn"
       }
-    },
-    "vcs": {
-      "enabled": true,
-      "clientKind": "git",
-      "useIgnoreFile": true,
-      "defaultBranch": "main"
-    },
-    "javascript": {
-      "formatter": {
-        "quoteStyle": "single",
-        "semicolons": "asNeeded"
-      }
-    },
-    "files": {
-      "ignore": [
-        "biome.json",
-        "*/node_modules/**",
-        "bin/**",
-        "*.config.js",
-        "*.config.ts",
-        "storybook-static",
-        "*.md",
-        "*.jpg",
-        "*.png"
-      ]
     }
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true,
+    "defaultBranch": "main"
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "semicolons": "always"
+    }
+  },
+  "files": {
+    "ignore": [
+      "biome.json",
+      "*/node_modules/**",
+      "bin/**",
+      "*.config.js",
+      "*.config.ts",
+      "storybook-static",
+      "*.md",
+      "*.jpg",
+      "*.png"
+    ]
   }
+}

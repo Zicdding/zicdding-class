@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+</head>
+<body>
+    <form action="/api/v1/modify" method="post">
+        <label for="itNewsTitle">itNewsTitle:</label>
+        <input type="text" id="itNewsTitle" name="itNewsTitle" required />
+        <label for="itNewsType">itNewsType:</label>
+        <input type="text" id="itNewsType" name="itNewsType" required />
+        <label for="itNewsPostion">itNewsPostion:</label>
+        <input type="text" id="itNewsPostion" name="itNewsPostion" required />
+        <label for="reward">reward:</label>
+        <input type="text" id="reward" name="reward" required />
+        <label for="rewardConfirmYn">rewardConfirmYn:</label>
+        <input type="text" id="rewardConfirmYn" name="rewardConfirmYn" required />
+        <label for="startDate">startDate:</label>
+        <input type="date" id="startDate" name="startDate" required />
+        <label for="endDate">endDate:</label>
+        <input type="date" id="endDate" name="endDate" required />
+        <label for="itNewsTarget">itNewsTarget:</label>
+        <input type="text" id="itNewsTarget" name="itNewsTarget" required />
+        <label for="itNewsUrl">itNewsUrl:</label>
+        <input type="text" id="itNewsUrl" name="itNewsUrl" required />
+        <label for="itNewsContent">itNewsContent:</label>
+        <textarea type="text" id="itNewsContent" name="itNewsContent">
+
+        </textarea>
+        <button type="submit">itnews 작성</button>
+    </form>
+ {%if data%}
+
+</body>
+</html>
