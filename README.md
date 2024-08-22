@@ -22,6 +22,5 @@ git clone https://github.com/Zicdding/zicdding-class.git
 
 ## 서버 url
 
-- front : http://121.152.79.226:13100
-
-- back  : http://121.152.79.226:13000
+- front : {$host}:13100
+- back  : {$host}:13000
