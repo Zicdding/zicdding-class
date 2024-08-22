@@ -19,3 +19,8 @@ git clone https://github.com/Zicdding/zicdding-class.git
 ## CDN
 
 - https://zicdding.github.io/fe-static-cdn/README.md
+
+## 서버 url
+
+- front : {$host}:13100
+- back  : {$host}:13000
