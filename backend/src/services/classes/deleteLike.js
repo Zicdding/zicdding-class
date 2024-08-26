@@ -10,17 +10,23 @@ export async function deleteLike(req, res) {
     connection = await promisePool.getConnection();
     await connection.beginTransaction();
 
-    const sql = `
-            DELETE FROM TB_LIKE WHERE user_id = ? AND class_id = ?;
-        `;
+    const checkSql = 'SELECT COUNT(*) AS count FROM TB_LIKE WHERE class_id = ? AND user_id = ?';
+    const [checkRows] = await connection.query(checkSql, [classId, userId]);
 
-    const [rows] = await connection.query(sql, [userId, classId]);
-    if (rows.affectedRows > 0) {
-      await connection.commit();
-      setResponseJson(res, 200, '클래스 좋아요 삭제 성공');
+    if (checkRows[0].count > 0) {
+      const sql = 'DELETE FROM TB_LIKE WHERE user_id = ? AND class_id = ?';
+
+      const [rows] = await connection.query(sql, [userId, classId]);
+      if (rows.affectedRows > 0) {
+        await connection.commit();
+        setResponseJson(res, 200, '클래스 좋아요 삭제 성공');
+      } else {
+        await connection.rollback();
+        setResponseJson(res, 401, '클래스 좋아요 삭제 실패');
+      }
     } else {
       await connection.rollback();
-      setResponseJson(res, 401, '클래스 좋아요 삭제 실패');
+      setResponseJson(res, 409, '해당 클래스에 등록된 좋아요가 없습니다.');
     }
   } catch (err) {
     await connection.rollback();

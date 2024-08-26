@@ -4,22 +4,29 @@ import setResponseJson from '../../utils/responseDto';
 export async function insertLike(req, res) {
   const userId = req.user.payload.userId;
   const { classId } = req.params;
-  const connection = await promisePool.getConnection();
+  let connection;
 
   try {
+    connection = await promisePool.getConnection();
     await connection.beginTransaction();
 
-    const sql = `
-            INSERT INTO TB_LIKE (user_id, class_id, created_date) VALUES (?, ?, now());
-        `;
+    const checkSql = 'SELECT COUNT(*) AS count FROM TB_LIKE WHERE class_id = ? AND user_id = ?';
+    const [checkRows] = await connection.query(checkSql, [classId, userId]);
 
-    const [rows] = await connection.query(sql, [userId, classId]);
-    if (rows.affectedRows > 0) {
-      await connection.commit();
-      setResponseJson(res, 200, '클래스 좋아요 등록 성공');
+    if (checkRows[0].count === 0) {
+      const sql = 'INSERT INTO TB_LIKE (user_id, class_id, created_date) VALUES (?, ?, now())';
+
+      const [rows] = await connection.query(sql, [userId, classId]);
+      if (rows.affectedRows > 0) {
+        await connection.commit();
+        setResponseJson(res, 200, '클래스 좋아요 등록 성공');
+      } else {
+        await connection.rollback();
+        setResponseJson(res, 401, '클래스 좋아요 등록 실패');
+      }
     } else {
       await connection.rollback();
-      setResponseJson(res, 401, '클래스 좋아요 등록 실패');
+      setResponseJson(res, 409, '이미 좋아요가 등록된 클래스 입니다.');
     }
   } catch (err) {
     await connection.rollback();

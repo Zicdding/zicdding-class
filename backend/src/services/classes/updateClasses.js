@@ -20,14 +20,15 @@ export async function updateClasses(req, res) {
   } = req.body;
   const startDate = new Date(req.body.startDate);
   const endDate = new Date(req.body.endDate);
-
-  const connection = await promisePool.getConnection();
+  let connection;
 
   try {
+    connection = await promisePool.getConnection();
     await connection.beginTransaction();
 
     const checkUserSql =
       "SELECT COUNT(*) AS count FROM TB_USER WHERE user_id = ? AND del_yn = 'N' AND suspension_yn = 'N'";
+    const checkClassSql = "SELECT COUNT(*) AS count FROM TB_CLASS WHERE class_id = ? AND user_id = ? AND del_yn = 'N'";
     const updateClassSql = `
       UPDATE TB_CLASS 
       SET class_title = ?, recruitment_yn = ?, start_date = ?, end_date = ?, class_how = ?, class_type = ?, 
@@ -39,8 +40,27 @@ export async function updateClasses(req, res) {
     // 사용자 존재 여부 확인
     const [checkUserRows] = await connection.query(checkUserSql, [userId]);
 
-    if (checkUserRows[0].count > 0) {
-      // 유저가 존재하는 경우 클래스 정보 수정
+    let checkUserBool = false;
+    if (checkUserRows[0].count <= 0) {
+      await connection.rollback();
+      setResponseJson(res, 409, '존재하지 않는 유저입니다.');
+    } else {
+      checkUserBool = true;
+    }
+
+    // 클래스 존재 여부 확인
+    const [checkClassRows] = await connection.query(checkClassSql, [classId, userId]);
+
+    let checkClassBool = false;
+    if (checkClassRows[0].count <= 0) {
+      await connection.rollback();
+      setResponseJson(res, 409, '존재하지 않는 클래스입니다.');
+    } else {
+      checkClassBool = true;
+    }
+
+    // 유저와 클래스가 존재하는 경우 클래스 정보 수정
+    if (checkUserBool && checkClassBool) {
       const classData = [
         classTitle,
         recruitmentYn,
@@ -140,9 +160,6 @@ export async function updateClasses(req, res) {
         await connection.rollback();
         setResponseJson(res, 401, '클래스 정보 수정 실패');
       }
-    } else {
-      await connection.rollback();
-      setResponseJson(res, 401, '존재하지 않는 유저입니다.');
     }
   } catch (err) {
     await connection.rollback();
