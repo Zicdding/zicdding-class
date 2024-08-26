@@ -1,5 +1,4 @@
 import promisePool from "../../config/db";
-import { any } from "../utils/multer";
 import setResponseJson from "../utils/responseDto";
 
 const output = {
@@ -8,6 +7,9 @@ const output = {
     },
     modify: (req, res) => {
         res.render('itnews_modify_test');
+    },
+    delete: (req, res) => {
+
     },
     findOne: async (req, res) => {
         const itNewsId = req.query.itNewsId;
@@ -18,7 +20,7 @@ const output = {
             result = result[0];
             setResponseJson(res, 200, '조회 성공', result);
         } catch (err) {
-            setResponseJson(res, 500, '조회 중 에러가 발생하였습니다', { error: err.mesaage })
+            setResponseJson(res, 500, '조회 중 에러가 발생하였습니다', { error: err.message })
         }
     },
     findAll: async (req, res) => {
@@ -54,7 +56,7 @@ const process = {
             }
         } catch (err) {
             console.log(err)
-            setResponseJson(res, 500, '작성 실패', { error: err.mesaage });
+            setResponseJson(res, 500, '작성 실패', { error: err.message });
         }
     },
     search: async (req, res) => {
@@ -84,29 +86,41 @@ const process = {
             setResponseJson(res, 500, '조회 중 오류 발생', { error: err.message });
         }
     },
-    delete: async (req, res) => {
+    del: async (req, res) => {
         const itNewsId = req.query.itNewsId;
+        console.log('삭제' + itNewsId)
         const userId = req.user.userId;
         const sql = 'UPDATE TB_ITNEWS SET del_yn = "Y" WHERE itnews_id = ? and user_id = ?';
-        let [result] = await promisePool.query(sql, [itNewsId, userId]);
         try {
+            let [result] = await promisePool.query(sql, [itNewsId, userId]);
             if (result.affectedRows > 0) {
+                console.log(result)
                 setResponseJson(res, 200, '삭제 완료');
             } else {
-                setResponseJson(res, 500, '삭제 실패');
+                setResponseJson(res, 404, '삭제 실패');
             }
         } catch (err) {
-            setResponseJson(res, 500, { error: err.mesaage });
+            console.log(err)
+            setResponseJson(res, 500, { error: err.message });
         }
 
     },
-    put: async (req, res) => {
+    modify: async (req, res) => {
         const itNewsId = req.query.itNewsId;
         const userId = req.user.userId;
         const itNewsType = req.body.itNewsType;
-        const typeSql = 'SELECT sort FROM TB_CODE where code_group_id = 4 and code = ?';
-        let typeResult = await promisePool.query(typeSql, itNewsType);
-        typeResult = typeResult[0][0].description;
+
+        const typeSql = 'SELECT description FROM TB_CODE WHERE code_group_id = 4 AND code = ?';
+        let typeResult;
+        try {
+            let [typeRows] = await promisePool.query(typeSql, [itNewsType]);
+            typeResult = typeRows[0].description;
+        } catch (err) {
+            console.log(err);
+            return setResponseJson(res, 500, { error: '코드 유형 조회 중 오류 발생' });
+        }
+
+
         const { itNewsTitle, itNewsPostion, reward, rewardConfirmYn, startDate, endDate, itNewsTarget, itNewsUrl, itNewsContent } = req.body;
         const data = [userId, itNewsTitle, typeResult, itNewsPostion, reward, rewardConfirmYn, startDate, endDate, itNewsTarget, itNewsUrl, itNewsContent, userId, itNewsId];
 
@@ -115,13 +129,13 @@ const process = {
             + 'itnews_target = ?, itnews_url = ?, itnews_content = ?, mod_user = ?, mod_date = now() where user_id =? and itnews_id =? '
 
         try {
-            const [result] = await promisePool.query(sql, [data]);
+            const [result] = await promisePool.query(sql, data);
             if (result.affectedRows > 0) {
+                console.log(result.affectedRows);
                 setResponseJson(res, 200, '아이티뉴스 수정 성공');
-            } else {
-                setResponseJson(res, 500, '아이티뉴스 수정 실패');
             }
         } catch (err) {
+            console.log(err)
             setResponseJson(res, 500, { error: err.message });
         }
     }

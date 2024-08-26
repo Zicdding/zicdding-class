@@ -1,6 +1,7 @@
 import express from 'express';
-import userRoutes from './user.js';
+import userRoutes from './user.controller.js';
 import classesRoutes from './classes.js';
+import itNewsRoutes from './itNews.controller.js';
 import kakaoRouter from '../api/routes/kakaoLogin.js';
 import { mainAuth, auth, unAuth } from '../middlewares/auth.js';
 
@@ -39,5 +40,6 @@ router.get('/unAuth', unAuth, (req, res) => {
 
 router.use('/users', userRoutes);
 router.use('/classes', classesRoutes);
+router.use('/itNews', itNewsRoutes)
 
 export default router;
