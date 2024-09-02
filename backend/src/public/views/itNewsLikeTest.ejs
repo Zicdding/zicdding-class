@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>좋아요 테스트</title>
+</head>
+<body>
+    <!-- 좋아요 취소를 위한 폼 -->
+    <form id="likeDelForm">
+        <input type="hidden" id="newsId" value="3" /> 
+        <button type="button" onclick="deleteLike()">좋아요취소</button>
+    </form>
+
+    <script>
+        function deleteLike() {
+            const newsId = document.getElementById('newsId').value;
+            
+            // Fetch API를 사용하여 DELETE 요청 보내기
+            fetch(`/api/v1/itNews/likeDel/${newsId}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                alert('좋아요 취소 완료!');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('좋아요 취소 실패!');
+            });
+        }
+    </script>
+</body>
+</html>

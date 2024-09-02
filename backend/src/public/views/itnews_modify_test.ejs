@@ -4,10 +4,10 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Modify IT News</title>
 </head>
 <body>
-    <form action="/api/v1/itNews/modify" method="post">
+    <form id="itNewsForm">
         <label for="itNewsTitle">itNewsTitle:</label>
         <input type="text" id="itNewsTitle" name="itNewsTitle" required />
         <label for="itNewsType">itNewsType:</label>
@@ -27,12 +27,35 @@
         <label for="itNewsUrl">itNewsUrl:</label>
         <input type="text" id="itNewsUrl" name="itNewsUrl" required />
         <label for="itNewsContent">itNewsContent:</label>
-        <textarea type="text" id="itNewsContent" name="itNewsContent">
-
-        </textarea>
-        <button type="submit">itnews 작성</button>
+        <textarea id="itNewsContent" name="itNewsContent" required></textarea>
+        <button type="submit">Modify IT News</button>
     </form>
- {%if data%}
 
+    <script>
+        // JavaScript를 사용하여 PATCH 요청을 전송합니다.
+        document.getElementById('itNewsForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // 기본 폼 제출 동작 방지
+
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+
+            fetch('/api/v1/itNews/modify', {
+                method: 'PATCH', // PATCH 메서드 사용
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log('Success:', result);
+                alert('IT 뉴스가 성공적으로 수정되었습니다!');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('수정 중 오류가 발생했습니다.');
+            });
+        });
+    </script>
 </body>
 </html>

@@ -1,25 +1,33 @@
 import express from "express";
-import { itNewsService } from '../services/itNews.service.js';
+const router = express.Router();
+import { deleteItNews } from '../services/itNews/deleteItNews.js';
+import { insertItNews } from '../services/itNews/insertItNews.js';
+import { findItNews } from '../services/itNews/findItNews.js';
+import { updateItNews } from '../services/itNews/updateItNews.js';
+import { LikeItNews } from '../services/itNews/itNewsLike.js';
 import { mainAuth, auth } from '../middlewares/auth.js';
 
-const router = express.Router();
-
-//itNews
 
 //등록
-router.post('/', itNewsService.process.news);
-router.get('/', itNewsService.output.view);
+router.post('/', insertItNews.process.news);
+router.get('/', insertItNews.output.view);
 
 //조회
-router.get('/find', itNewsService.output.findOne);
-router.get('/findAll', itNewsService.output.findAll);
-router.post('/search', itNewsService.process.search);
+router.get('/find', findItNews.output.findOne);
+router.get('/findAll', findItNews.output.findAll);
+router.post('/search', findItNews.process.search);
 
 //삭제
-router.patch('/del', auth, itNewsService.process.del);
-router.get('/del', auth, itNewsService.process.del);
-//수정
-router.patch('/modify', auth, itNewsService.process.modify);
-router.get('/modify', auth, itNewsService.output.modify);
+router.patch('/del', auth, deleteItNews.process.delete);
+router.get('/del', auth, deleteItNews.process.delete);
 
+//수정
+router.patch('/modify', auth, updateItNews.process.modify);
+router.get('/modify', auth, updateItNews.output.modify);
+
+//좋아요
+router.post('/like/:newsId', auth, LikeItNews.process.newsLike);
+router.delete('/likeDel/:newsId', auth, LikeItNews.process.newsLikeCancel);
+router.get('/like/:newsId', auth, LikeItNews.output.newsLike);
+router.get('/likeDel/:newsId', auth, LikeItNews.output.newsDel);
 export default router;

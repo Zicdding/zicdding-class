@@ -1,6 +1,6 @@
 import express from 'express';
 import userRoutes from './user.controller.js';
-import classesRoutes from './classes.js';
+import classesRoutes from './classes.controller.js';
 import itNewsRoutes from './itNews.controller.js';
 import kakaoRouter from '../api/routes/kakaoLogin.js';
 import { mainAuth, auth, unAuth } from '../middlewares/auth.js';

@@ -1,5 +1,5 @@
-import promisePool from "../../config/db";
-import setResponseJson from "../utils/responseDto";
+import promisePool from "../../../config/db";
+import setResponseJson from "../../utils/responseDto";
 
 const output = {
     view: (req, res) => {
