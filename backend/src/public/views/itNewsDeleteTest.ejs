@@ -8,9 +8,30 @@
 </head>
 <body>
     <!-- GET 메소드를 사용하여 newsId를 쿼리 파라미터로 전달 -->
-    <form action="/api/v1/itNews/likeDel/3" method="delete">
+    <form id="likeDelForm" action="/api/v1/itNews/likeDel" method="post">
         <input type="hidden" name="newsId" value="3" /> <!-- 실제 newsId 값으로 수정 -->
         <button type="submit">좋아요취소</button>
     </form>
+
+    <script>
+        document.getElementById('likeDelForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // 폼 기본 제출 방지
+
+            // Fetch API를 사용하여 DELETE 요청 보내기
+            const newsId = this.querySelector('input[name="newsId"]').value;
+            fetch(`/api/v1/itNews/likeDel/${newsId}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                alert('좋아요 취소 완료!');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('좋아요 취소 실패!');
+            });
+        });
+    </script>
 </body>
 </html>
