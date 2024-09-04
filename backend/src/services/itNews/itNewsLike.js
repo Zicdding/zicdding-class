@@ -19,8 +19,8 @@ const process = {
         const data = [userId, newsId];
         try {
             const [checkResult] = await promisePool.query(checkSql, [userId, newsId]);
-            console.log(checkResult[0])
-            if (checkResult.length > 0) { // 이미 좋아요를 누른 경우
+
+            if (checkResult.length > 0) {
                 setResponseJson(res, 409, '이미 좋아요를 누른 상태입니다.');
                 return;
             } else {
@@ -37,24 +37,20 @@ const process = {
     newsLikeCancel: async (req, res) => {
         const userId = req.user.userId;
         const { newsId } = req.params;
-        console.log(newsId);
 
         const checkSql = 'SELECT * from TB_ITNEWS_LIKE WHERE user_id = ? and itnews_id = ?';
-        console.log(checkSql)
         try {
             const checkResult = await promisePool.query(checkSql, [userId, newsId]);
             console.log(checkResult)
-            if (checkResult.length > 0) {
+            if (checkResult[0].length != 0) {
                 const delSql = 'DELETE FROM TB_ITNEWS_LIKE WHERE user_id = ? and itnews_id = ?';
                 const [delResult] = await promisePool.query(delSql, [userId, newsId]);
                 if (delResult.affectedRows) {
                     setResponseJson(res, 200, '좋아요 취소');
                 }
-            } else {
-                setResponseJson(res, 500, '좋아요 취소 도중 오류 발생')
             }
         } catch (err) {
-            setResponseJson(res, 500, '좋아요 취소 도중 오류 발생', { error: err.message })
+            setResponseJson(res, 500, '좋아요 취소 실패', { error: err.message })
         }
     }
 }

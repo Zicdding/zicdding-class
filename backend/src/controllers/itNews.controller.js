@@ -9,8 +9,8 @@ import { mainAuth, auth } from '../middlewares/auth.js';
 
 
 //등록
-router.post('/', insertItNews.process.news);
-router.get('/', insertItNews.output.view);
+router.post('/', auth, insertItNews.process.news);
+router.get('/', auth, insertItNews.output.view);
 
 //조회
 router.get('/find', findItNews.output.findOne);
