@@ -7,13 +7,10 @@ const output = {
     findOne: async (req, res) => {
         const connection = await promisePool.getConnection();
         const itNewsId = req.query.itNewsId;
-
         const sql = 'SELECT * FROM TB_ITNEWS WHERE itnews_id = ? and del_yn ="N" ';
         try {
-            await connection.beginTransaction();
             let result = await connection.query(sql, [itNewsId]);
             result = result[0];
-            await connection.commit();
             setResponseJson(res, 200, '조회 성공', result);
         } catch (err) {
             setResponseJson(res, 500, '조회 중 에러가 발생하였습니다', { error: err.message })

@@ -5,6 +5,7 @@ import { insertItNews } from '../services/itNews/insertItNews.js';
 import { findItNews } from '../services/itNews/findItNews.js';
 import { updateItNews } from '../services/itNews/updateItNews.js';
 import { LikeItNews } from '../services/itNews/itNewsLike.js';
+import { viewItNews } from '../services/itNews/itNewsViewCnt.js'
 import { mainAuth, auth } from '../middlewares/auth.js';
 
 
@@ -30,4 +31,7 @@ router.post('/like/:newsId', auth, LikeItNews.process.newsLike);
 router.delete('/likeDel/:newsId', auth, LikeItNews.process.newsLikeCancel);
 router.get('/like/:newsId', auth, LikeItNews.output.newsLike);
 router.get('/likeDel/:newsId', auth, LikeItNews.output.newsDel);
+//조회수
+router.post('/cnt/:newsId', viewItNews.process.newsCnt);
+router.get('/cnt/:newsId', viewItNews.output.newsCnt);
 export default router;
