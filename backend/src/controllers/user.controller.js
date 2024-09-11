@@ -59,4 +59,8 @@ router.get("/change-password", auth, userService.output.changePassword);
 router.get("/me", auth, userService.output.me);
 router.put("/me", auth, userService.process.me);
 
+
+//회원 신고
+router.get("/report/:targetUserId", auth, userService.output.report);
+router.post("/report/:targetUserId", auth, userService.process.report);
 export default router;

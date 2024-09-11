@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>신고 테스트</title>
+</head>
+<body>
+    <form id="report" action="/api/v1/users/report/97" method="post">
+        <input type="hidden" name="targetUserId" value="97" />
+
+        <label for="reasonType">신고 사유</label>
+        <input type="text" name="reasonType" />
+
+        <label for="reasonContent">기타</label>
+        <textarea id="reasonContent" name="reasonContent"></textarea>
+
+        <button type="submit">신고하기</button>
+    </form>
+
+    <script>
+        document.getElementById('report').addEventListener('submit', function(event) {
+            event.preventDefault(); // 폼 기본 제출 방지
+
+            const targetUserId = this.querySelector('input[name="targetUserId"]').value;
+            const reasonType = this.querySelector('input[name="reasonType"]').value;
+            const reasonContent = this.querySelector('textarea[name="reasonContent"]').value;
+            console.log(targetUserId)
+            fetch(`/api/v1/users/report/${targetUserId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    reasonType: reasonType,
+                    reasonContent: reasonContent
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                alert('신고 완료!');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('신고 실패!');
+            });
+        });
+    </script>
+</body>
+</html>
