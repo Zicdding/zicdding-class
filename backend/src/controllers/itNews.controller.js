@@ -6,13 +6,15 @@ import { findItNews } from '../services/itNews/findItNews.js';
 import { updateItNews } from '../services/itNews/updateItNews.js';
 import { LikeItNews } from '../services/itNews/itNewsLike.js';
 import { viewItNews } from '../services/itNews/itNewsViewCnt.js'
+
+import { orderByItnews } from '../services/itNews/orderitNews.js'
 import { mainAuth, auth } from '../middlewares/auth.js';
 
 
 //등록
 router.post('/', auth, insertItNews.process.news);
 router.get('/', auth, insertItNews.output.view);
-
+router.get('/:sort', orderByItnews.output.news);
 //조회
 router.get('/find', findItNews.output.findOne);
 router.get('/findAll', findItNews.output.findAll);
@@ -34,4 +36,5 @@ router.get('/likeDel/:newsId', auth, LikeItNews.output.newsDel);
 //조회수
 router.post('/cnt/:newsId', viewItNews.process.newsCnt);
 router.get('/cnt/:newsId', viewItNews.output.newsCnt);
+
 export default router;

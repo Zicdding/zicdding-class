@@ -77,12 +77,12 @@ const process = {
         const checkSql = 'SELECT email FROM TB_USER WHERE email = ?';
         const data = [email, passwordBycrpt, nickname, phoneNum];
         try {
+            await connection.beginTransaction();
             const [checkRows] = await connection.query(checkSql, [email]);
             if (checkRows.length > 0) {
                 setResponseJson(res, 409, "이미 사용중인 이메일입니다.");
                 return;
             } else {
-                await connection.beginTransaction();
                 const [rows] = await connection.query(sql, data);
                 const userId = rows.insertId;
                 await connection.commit();
@@ -104,9 +104,9 @@ const process = {
                     secure: false,
                     expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000) // 90일
                 });
-                console.log(userId)
-                setResponseJson(res, 200, '회원가입 완료! 환영합니다', { accessToken, refreshToken, userId });
                 await connection.commit();
+                setResponseJson(res, 200, '회원가입 완료! 환영합니다', { accessToken, refreshToken, userId });
+
             }
         } catch (err) {
             await connection.rollback();
@@ -117,11 +117,12 @@ const process = {
     },
 
     signIn: async (req, res) => {
+        const connection = await promisePool.getConnection();
         const { email, password } = req.body;
         console.log(email, password)
         const sql = 'SELECT * FROM TB_USER WHERE email = ?';
         try {
-            const [rows] = await promisePool.query(sql, [email]);
+            const [rows] = await connection.query(sql, [email]);
             const rowsPassword = rows[0].password;
             if (rows.length > 0) {
                 bcrypt.compare(password, rowsPassword, (err, isMatch) => {
@@ -198,6 +199,7 @@ const process = {
     },
 
     changePassword: async (req, res) => {
+        const connection = await promisePool.getConnection();
         const { password, newPassword } = req.body;
         const userId = req.user.userId;
         console.log(password)
@@ -205,8 +207,8 @@ const process = {
         const sql = 'UPDATE TB_USER SET password = ?, mod_date = now() where user_id =?';
         const checkSql = 'SELECT password from TB_USER where user_id = ?';
         try {
-
-            const [checkRows] = await promisePool.query(checkSql, [userId]);
+            await connection.beginTransaction();
+            const [checkRows] = await connection.query(checkSql, [userId]);
             console.log(checkRows)
             const checkRowsPassword = checkRows[0].password;
 
@@ -215,21 +217,20 @@ const process = {
                 if (!isMatch) {
                     setResponseJson(res, 401, '없는 비밀번호입니다.')
                 }
-                const [updateResult] = await promisePool.query(sql, [hashedPaaword, userId]);
-
+                const [updateResult] = await connection.query(sql, [hashedPaaword, userId]);
                 if (updateResult.affectedRows > 0) {
                     setResponseJson(res, 200, '비밀번호 변경에 성공하였습니다.');
-                } else {
-                    setResponseJson(res, 500, '비밀번호 변경 중 오류가 발생했습니다.');
                 }
             }
         } catch (err) {
+            await connection.rollback();
             console.log(err);
             setResponseJson(res, 500, '비밀번호 변경 중 오류가 발생했습니다.', { error: err.message })
         }
     },
 
     me: async (req, res) => {
+        const connection = await promisePool.getConnection();
         const { nickname, phoneNum } = req.body;
         const newPassword = req.body.newPassword;
         const userId = req.user.userId;
@@ -241,6 +242,7 @@ const process = {
             phone_num = IFNULL(NULLIF(?, ""), phone_num) 
         WHERE user_id = ?;`;
         try {
+            await connection.beginTransaction();
             if (newPassword) {
                 const hashedPaaword = bcrypt.hashSync(newPassword, 12);
                 const values = [
@@ -249,11 +251,9 @@ const process = {
                     phoneNum || "",
                     userId
                 ];
-                const rows = await promisePool.query(sql, values);
+                const rows = await connection.query(sql, values);
                 if (rows.affectedRows > 0) {
                     setResponseJson(res, 200, '마이페이지 정보 변경에 성공하였습니다.', rows);
-                } else {
-                    setResponseJson(res, 500, '마이페이지 정보 변경 중 오류가 발생했습니다.');
                 }
             } else {
                 const values = [
@@ -262,14 +262,13 @@ const process = {
                     phoneNum || "",
                     userId
                 ];
-                const [rows] = await promisePool.query(sql, values);
+                const [rows] = await connection.query(sql, values);
                 if (rows.affectedRows > 0) {
                     setResponseJson(res, 200, '마이페이지 정보 변경에 성공하였습니다.');
-                } else {
-                    setResponseJson(res, 500, '마이페이지 정보 변경 중 오류가 발생했습니다.');
                 }
             }
         } catch (err) {
+            await connection.rollback();
             console.log(err);
             setResponseJson(res, 500, '마이페이지 정보 변경 중 오류가 발생했습니다.', { error: err.message })
         }
@@ -287,12 +286,12 @@ const process = {
             await connection.beginTransaction();
             console.log(targetUserId)
             const [targetResult] = await connection.query(targetCheckSql, [targetUserId]);
-            if (targetResult.length === 0) {
+            if (targetResult.length === 0) { //신고 대상 유저 확인 여부
                 setResponseJson(res, 500, '해당 유저가 존재하지 않습니다');
             }
             const [reportTypeResult] = await connection.query(reportTypeSql, [reasonType]);
             if (!reportTypeResult) {
-                setResponseJson(res, 500, '신고 중 오류 발생');
+                setResponseJson(res, 500, '신고사유 오류');
             }
             reasonType = reportTypeResult[0].code;
             const data = [userId, targetUserId, reasonType, reasonContent];
@@ -305,6 +304,8 @@ const process = {
             await connection.rollback();
             console.log(err)
             setResponseJson(res, 500, '신고 중 오류가 발생하였씁니다.', { error: err.message })
+        } finally {
+            connection.release();
         }
     }
 }
