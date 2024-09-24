@@ -2,10 +2,7 @@ import express from 'express';
 import { userService } from '../services/user/user.service.js';
 import { mainAuth, auth, unAuth } from '../middlewares/auth.js';
 const router = express.Router();
-import { kakaoRouter } from '../api/routes/kakaoLogin.js'
 
-
-//router.use('/oauth', kakaoRouter);
 
 router.get('/', mainAuth, (req, res) => {
     const { user } = req;

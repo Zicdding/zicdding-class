@@ -9,15 +9,15 @@ const output = {
         const limit = parseInt(req.query.limit) || 9;
         const offest = (page - 1) * limit;
 
-        const sort = req.query.sort || 'latest';
+        const sort = req.params.sort || 'latest';
         let orderBy;
         console.log(sort)
         if (sort === 'latest') {
             orderBy = 'ORDER BY news.created_date DESC';
         } else if (sort === 'views') {
-            orderBy = 'ORDER BY view.view_count DESC';
+            orderBy = 'ORDER BY view_cnt DESC';
         } else if (sort === 'popular') {
-            orderBy = 'ORDER BY like.like_count DESC';
+            orderBy = 'ORDER BY like_cnt DESC';
         }
 
         const sql = `
@@ -28,6 +28,7 @@ const output = {
                 LEFT JOIN TB_ITNEWS_VIEW view ON news.itnews_id = view.itnews_id 
                 LEFT JOIN TB_ITNEWS_LIKE likes ON news.itnews_id = likes.itnews_id WHERE news.del_yn = "N" GROUP BY news.itnews_id ${orderBy} LIMIT ?, ?`;
         try {
+            await connection.beginTransaction();
             const [orderResult] = await connection.query(sql, [offest, limit]);
             await connection.commit();
             setResponseJson(res, 200, '아이티뉴스 리스트 조회 성공', orderResult)
