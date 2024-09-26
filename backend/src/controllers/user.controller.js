@@ -46,11 +46,11 @@ router.post("/signIn", userService.process.signIn);
 router.get('/logout', auth, userService.output.logout);
 
 //아이디, 비밀번호 찾기
-router.post("/resetPassword", userService.process.resetPassword);
-router.post("/changePassword", auth, userService.process.changePassword);
+router.post("/reset-password", userService.process.resetPassword);
+router.post("/change-password", auth, userService.process.changePassword);
 
 //비밀번호 찾기 테스트페이지
-router.get("/changePassword", auth, userService.output.changePassword);
+router.get("/change-password", auth, userService.output.changePassword);
 
 //마이페이지
 router.get("/me", auth, userService.output.me);
