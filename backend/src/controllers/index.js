@@ -7,7 +7,9 @@ import { mainAuth, auth, unAuth } from '../middlewares/auth.js';
 
 const router = express.Router();
 
+//카카오로그인
 router.use('/oauth', kakaoRouter);
+
 
 router.get('/', mainAuth, (req, res) => {
   const { user } = req;
@@ -26,6 +28,7 @@ router.get('/test', auth, (req, res) => {
     res.render('test', user);
   }
 });
+
 //비로그인
 router.get('/unAuth', unAuth, (req, res) => {
   const { user } = req;

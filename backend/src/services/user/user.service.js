@@ -47,7 +47,6 @@ const output = {
 
     me: async (req, res) => {
         const userId = req.user.userId;
-        console.log("유저아이디" + userId)
         const sql = 'SELECT nickname, email, phone_num FROM TB_USER where user_id = ?';
         try {
             const [rows] = await promisePool.query(sql, [userId]);

@@ -12,7 +12,7 @@ const output = {
             + 'LEFT JOIN TB_USER user ON comment.user_id = user.user_id  WHERE news.itnews_id = ? and news.del_yn ="N" ';
         try {
             let [result] = await connection.query(sql, [itNewsId, itNewsId]);
-            setResponseJson(res, 200, '아이티뉴스 상세 조회 성공', { itnews: result[0] });
+            setResponseJson(res, 200, '아이티뉴스 상세 조회 성공', result[0]);
         } catch (err) {
             console.log(err)
             setResponseJson(res, 500, '조회 중 에러가 발생하였습니다', { error: err.message })
@@ -24,9 +24,9 @@ const output = {
         const sql = 'SELECT itnews_title, itnews_type, start_date, end_date FROM TB_ITNEWS WHERE del_yn ="N" ORDER BY created_date DESC';
         try {
             await connection.beginTransaction();
-            const result = await connection.query(sql);
+            const [result] = await connection.query(sql);
             await connection.commit();
-            setResponseJson(res, 200, '아이티뉴스 리스트 조회 성공', result[0]);
+            setResponseJson(res, 200, '아이티뉴스 리스트 조회 성공', { itnews: result });
         } catch (err) {
             console.log(err);
             setResponseJson(res, 500, '조회 중 오류 발생', { error: err.message });
@@ -54,10 +54,10 @@ const process = {
             sql += 'ORDER BY created_date DESC';
 
             let result = await connection.query(sql, params);
-            result = result[0];
+            [result] = result[0];
             if (result.length > 0) {
                 await connection.commit();
-                setResponseJson(res, 200, '조회성공', result);
+                setResponseJson(res, 200, '조회성공', { itnews: result });
             }
         } catch (err) {
             console.log(err);

@@ -13,7 +13,6 @@ import { mainAuth, auth } from '../middlewares/auth.js';
 
 //등록
 router.post('/', auth, insertItNews.process.news);
-router.get('/', orderByItnews.output.news);
 router.get('/', auth, insertItNews.output.view);
 
 
