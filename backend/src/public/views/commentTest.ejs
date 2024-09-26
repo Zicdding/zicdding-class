@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>댓글 테스트 페이지</title>
+</head>
+<body>
+    <h1>댓글 작성 테스트</h1>
+    
+    <!-- 일반 댓글 작성 -->
+    <form id="commentForm">
+        <input type="hidden" name="itnewsId" value="2" /> <!-- postId는 게시물 ID -->
+        <input type="hidden" name="parentId" value="" /> <!-- 대댓글일 경우 parentId가 설정됨 -->
+        
+        <label for="commentContent">댓글 내용:</label>
+        <textarea id="conetnt" name="content" rows="4" cols="50" required></textarea>
+        
+        <button type="submit">댓글 작성</button>
+    </form>
+
+    <h2>댓글 목록</h2>
+    <ul id="commentList"></ul> <!-- 댓글이 여기에 추가됨 -->
+
+    <script>
+        // 댓글 작성 폼
+        const commentForm = document.getElementById('commentForm');
+        const commentList = document.getElementById('commentList');
+
+        // 댓글 제출 이벤트 처리
+        commentForm.addEventListener('submit', function(event) {
+    event.preventDefault(); // 폼 기본 제출 방지
+
+    const itnewsId = parseInt(commentForm.querySelector('input[name="itnewsId"]').value, 10);
+    const parentId = commentForm.querySelector('input[name="parentId"]').value || null;
+    const content = commentForm.querySelector('textarea[name="content"]').value;
+
+    // POST 요청으로 서버에 댓글 전송
+    fetch('/api/v1/itNews/comments', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            itnewsId: itnewsId,
+            parentId: parentId,
+            content: content
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Server response:', data);  // 서버 응답을 콘솔에 출력하여 구조 확인
+        if (data.success) {
+            alert('댓글 작성 완료!');
+            // 댓글 목록에 새 댓글 추가
+            addCommentToList(data.comment);
+            commentForm.reset(); // 폼 초기화
+        } else {
+            alert(data.message || '댓글 작성 실패!');
+        }
+    }).catch(error => {
+        console.error('Error:', error);
+        alert('댓글 작성 중 오류가 발생했습니다.');
+    });
+    })
+
+
+        // 댓글 목록에 댓글 추가하는 함수
+        function addCommentToList(comment) {
+            const listItem = document.createElement('li');
+            listItem.textContent = comment.content;
+
+            // 대댓글 버튼 추가
+            const replyButton = document.createElement('button');
+            replyButton.textContent = '대댓글 작성';
+            replyButton.onclick = function() {
+                commentForm.querySelector('input[name="parentId"]').value = comment.commentId;
+                commentForm.querySelector('textarea[name="content"]').focus();
+            };
+
+            listItem.appendChild(replyButton);
+            commentList.appendChild(listItem);
+        }
+    </script>
+</body>
+</html>

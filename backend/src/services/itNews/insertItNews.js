@@ -1,3 +1,4 @@
+import { contentType } from "express/lib/response";
 import promisePool from "../../../config/db";
 import setResponseJson from "../../utils/responseDto";
 
@@ -6,6 +7,9 @@ const output = {
     view: (req, res) => {
         res.render('itnews_insert_test');
     },
+    comments: (req, res) => {
+        res.render('commentTest');
+    }
 
 }
 const process = {
@@ -58,6 +62,27 @@ const process = {
         }
 
     },
+    comments: async (req, res) => {
+        const connetion = await promisePool.getConnection();
+
+        const user = req.user.userId;
+        const { itnewsId, content, parentId } = req.body;
+        console.log(content, user)
+        const sql = 'INSERT INTO TB_ITNEWS_COMMENT(user_id, itnews_id, parent_id, content) VALUES(?,?,?,?)'
+        try {
+            await connetion.beginTransaction();
+            const result = await connetion.query(sql, [user, itnewsId, parentId || null, content]);
+            if (result.affectedRows > 0) {
+                res.setResponseJson(res, 200, '댓글 입력 성공');
+            }
+            await connetion.commit();
+        } catch (err) {
+            console.log(err);
+            await connetion.rollback();
+            res.setResponseJson(res, 500, err);
+        }
+
+    }
 }
 
 

@@ -1,4 +1,4 @@
-import { query } from 'express';
+
 import promisePool from '../../../config/db';
 import setResponseJson from '../../utils/responseDto';
 
@@ -9,7 +9,7 @@ const output = {
         const limit = parseInt(req.query.limit) || 9;
         const offest = (page - 1) * limit;
 
-        const sort = req.params.sort || 'latest';
+        const sort = req.query.sort || 'latest';
         let orderBy;
         console.log(sort)
         if (sort === 'latest') {

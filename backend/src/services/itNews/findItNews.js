@@ -7,12 +7,14 @@ const output = {
     findOne: async (req, res) => {
         const connection = await promisePool.getConnection();
         const itNewsId = req.query.itNewsId;
-        const sql = 'SELECT * FROM TB_ITNEWS WHERE itnews_id = ? and del_yn ="N" ';
+        const sql = 'SELECT news.*,JSON_ARRAYAGG(JSON_OBJECT( "content", comment.content, "parent_id", comment.parent_id, "createdDate", comment.created_date, "nickname", user.nickname)) AS comments FROM TB_ITNEWS news' +
+            ' LEFT JOIN TB_ITNEWS_COMMENT comment ON news.itnews_id = comment.itnews_id '
+            + 'LEFT JOIN TB_USER user ON comment.user_id = user.user_id  WHERE news.itnews_id = ? and news.del_yn ="N" ';
         try {
-            let result = await connection.query(sql, [itNewsId]);
-            result = result[0];
-            setResponseJson(res, 200, '조회 성공', result);
+            let [result] = await connection.query(sql, [itNewsId, itNewsId]);
+            setResponseJson(res, 200, '아이티뉴스 상세 조회 성공', { itnews: result[0] });
         } catch (err) {
+            console.log(err)
             setResponseJson(res, 500, '조회 중 에러가 발생하였습니다', { error: err.message })
         }
     },
@@ -47,7 +49,7 @@ const process = {
                 sql += 'WHERE itnews_title = ?';
                 params.push(itNewsTitle);
             } else {
-                setResponseJson(res, 200, '조회 성공', '조회 목록이 없습니다');
+                setResponseJson(res, 200, '아이티뉴스 조회 성공', '조회 목록이 없습니다');
             }
             sql += 'ORDER BY created_date DESC';
 
