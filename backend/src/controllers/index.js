@@ -4,7 +4,7 @@ import classesRoutes from './classes.controller.js';
 import itNewsRoutes from './itNews.controller.js';
 import kakaoRouter from '../api/routes/kakaoLogin.js';
 import { mainAuth, auth, unAuth } from '../middlewares/auth.js';
-
+import uploadRoutes from './upload.controller.js'
 const router = express.Router();
 
 //카카오로그인
@@ -44,5 +44,6 @@ router.get('/unAuth', unAuth, (req, res) => {
 router.use('/users', userRoutes);
 router.use('/classes', classesRoutes);
 router.use('/itNews', itNewsRoutes)
+router.use('/upload', uploadRoutes)
 
 export default router;

@@ -56,7 +56,6 @@ const suspensionCheck = async (req, res, userId) => {
     } catch (err) {
         console.error(err);
         setResponseJson(res, 500, { error: err.message });
-        return false
     }
 
 }

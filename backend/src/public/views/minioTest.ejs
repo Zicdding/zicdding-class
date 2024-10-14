@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multiple File Upload to MinIO</title>
+</head>
+<body>
+  <h1>Upload Multiple Files to MinIO</h1>
+  <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+    <input type="file" name="file" id="fileInput" multiple required />
+    <button type="submit">Upload Files</button>
+  </form>
+</body>
+</html>

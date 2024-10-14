@@ -10,9 +10,9 @@ const process = {
     delete: async (req, res) => {
         const connection = await promisePool.getConnection();
         const itNewsId = req.query.itNewsId;
-        console.log('삭제' + itNewsId)
         const userId = req.user.userId;
         const sql = 'UPDATE TB_ITNEWS SET del_yn = "Y" WHERE itnews_id = ? and user_id = ?';
+        console.log('삭제' + itNewsId)
         try {
             await connection.beginTransaction();
             let [result] = await connection.query(sql, [itNewsId, userId]);
