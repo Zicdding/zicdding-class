@@ -43,7 +43,8 @@ router.get('/unAuth', unAuth, (req, res) => {
 
 router.use('/users', userRoutes);
 router.use('/classes', classesRoutes);
-router.use('/itNews', itNewsRoutes)
+router.use('/itNews', itNewsRoutes);
+//minIOTest
 router.use('/upload', uploadRoutes)
 
 export default router;

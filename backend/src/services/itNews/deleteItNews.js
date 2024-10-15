@@ -3,7 +3,6 @@ import setResponseJson from "../../utils/responseDto";
 
 const output = {
     delete: (req, res) => {
-
     },
 }
 const process = {

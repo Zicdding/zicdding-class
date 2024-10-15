@@ -7,7 +7,7 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="/api/v1/itnews" method="post">
+    <form action="/api/v1/itnews" method="post" enctype="multipart/form-data">
         <label for="itNewsTitle">itNewsTitle:</label>
         <input type="text" id="itNewsTitle" name="itNewsTitle" required />
         <label for="itNewsType">itNewsType:</label>
@@ -30,9 +30,9 @@
         <textarea type="text" id="itNewsContent" name="itNewsContent">
 
         </textarea>
+            <input type="file" name="files" id="files" multiple required />
         <button type="submit">itnews 작성</button>
     </form>
- {%if data%}
 
 </body>
 </html>

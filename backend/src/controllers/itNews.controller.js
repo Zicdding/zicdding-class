@@ -6,13 +6,12 @@ import { findItNews } from '../services/itNews/findItNews.js';
 import { updateItNews } from '../services/itNews/updateItNews.js';
 import { LikeItNews } from '../services/itNews/itNewsLike.js';
 import { viewItNews } from '../services/itNews/itNewsViewCnt.js'
-
 import { orderByItnews } from '../services/itNews/orderitNews.js'
 import { mainAuth, auth } from '../middlewares/auth.js';
-
+import { uploads } from '../utils/multer.js'
 
 //등록
-router.post('/', auth, insertItNews.process.news);
+router.post('/', uploads.array('files'), auth, insertItNews.process.news);
 
 router.get('/', auth, insertItNews.output.view);
 

@@ -1,25 +1,28 @@
 // services/upload.service.js
-import { uploadFileToMinIO } from '../utils/minio'; // MinIO 서비스 가져오기
-import { uploads } from '../utils/multer';
-
+import uploadFileToMinIO from '../utils/minio'; // MinIO 서비스 가져오기
 import setResponseJson from '../utils/responseDto';
 
 export const uploadService = {
   upload: async (req, res) => {
-    const bucketName = 'zic';
+    const bucketName = 'file';
     try {
       const files = req.files;
+      if (!Array.isArray(files)) {
+        files = [files];
+      }
       const etags = [];
+
       for (const file of files) {
-        const etag = await uploadFileToMinIO(bucketName, file); // 파일 업로드
-        etags.push(etag);
+        const etag = await uploadFileToMinIO(bucketName, file); // 각 파일을 업로드
+        etags.push(etag); // 각 파일의 ETag를 배열에 저장
       }
       setResponseJson(res, 200, '성공', etags)
     } catch (error) {
-      res.status(500).json({ message: 'File upload failed', error });
+      console.log(error)
+      setResponseJson(res, 500, { message: 'File upload failed', error });
     }
   },
-  upload: (req, res) => {
+  uploadRender: (req, res) => {
     res.render('minioTest');
   }
 };

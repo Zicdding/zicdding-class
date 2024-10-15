@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import bcrypt from 'bcrypt';
-import promisePool from "../../config/db";
-import setResponseJson from "../utils/responseDto";
+import promisePool from '../../config/db';
+import setResponseJson from '../utils/responseDto';
 import sendResetPasswordEmail from './nodemailer';
 
 //패스워드 랜덤 생성
@@ -42,7 +42,6 @@ const resetUserPassword = async (userId, email, res) => {
 };
 
 const suspensionCheck = async (req, res, userId) => {
-    console.log("유저" + userId)
     const sql = 'SELECT suspension_yn FROM TB_USER where user_id = ?';
     try {
         const [rows] = await promisePool.query(sql, userId);
