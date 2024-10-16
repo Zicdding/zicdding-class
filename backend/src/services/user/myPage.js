@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import promisePool from "../../../config/db";
 import setResponseJson from "../../utils/responseDto";
 import uploadFileToMinIO from '../../utils/minio';
+import encodedFileName from '../../utils/minio';
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
 const output = {
@@ -38,20 +39,23 @@ const process = {
             phone_num = IFNULL(NULLIF(?, ""), phone_num) 
             profile_image = IFNULL(NULLIF(?,""), )
         WHERE user_id = ?;`;
-        const insertFileSql = 'INSERT INTO TB_FILE(target_id,table_name,path,origin_name,change_name)'
+        const insertFileSql = `INSERT INTO TB_FILE(target_id,table_name,path,origin_name,change_name) 
+                                VALUES(user_id, TB_USER, )`;
         try {
             await connection.beginTransaction();
 
+            const file = req.file;
+            const bucketName = 'file';
+            const objName = 'users';
             let profileImageUrl = null;
-            let saveFileName = null;
-            if (req.file) {
-                const profileImage = req.file;
-                const originFileName = profileImage.originFileName;
-                const fileExt = path.extname(originFileName);
-
+            if (file) {
+                const encodedName = encodedFileName(file);
+                const originFileName = file.originalName;
+                const ext = path.extname(originFileName);
                 saveFileName = `zic${uuidv4()}${fileExt}`;
-                profileImageUrl = await uploadFileToMinIO('')
+                const imageUrl = `http://121.152.79.226:19000/${bucketName}/${objName}/${encodedName}`;
             }
+            //ai자동화ㅉ
 
             if (newPassword) {
                 const hashedPaaword = bcrypt.hashSync(newPassword, 12);

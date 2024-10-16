@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { generateToken, generateRefreshToken, saveRefreshToken, replaceAccessToken, updateRefreshToken } from "../../utils/jwt";
 import promisePool from "../../../config/db";
+import setResponseJson from "../../utils/responseDto";
 const output = {
     signUp: async (req, res) => {
         res.render('signUp_test');

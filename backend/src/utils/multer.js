@@ -1,6 +1,6 @@
 import multer from 'multer';
 
-//확장자 추출
+//확장자 추출 후 이름 변경
 const generatedFileName = (file) => {
   const originExt = file.originalname.split('.').pop();
   return `${file.fieldname}-${Date.now()}.${originExt}`
