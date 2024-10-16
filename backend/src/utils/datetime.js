@@ -1,3 +1,4 @@
+
 export function date() {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
