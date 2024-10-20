@@ -1,0 +1,54 @@
+name: Backend_Docker_Build
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/**
+      - backend/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            .github
+            backend
+
+      - name: Fetch all tags
+        run: git fetch --tags  # 모든 태그
+
+      - name: Set Docker image tag
+        id: docker_tag
+        run: |
+          IMAGE_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
+          echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --build-arg DB_DATABASE=${{ secrets.DB_DATABASE }} \
+            --build-arg DB_PORT=${{ secrets.DB_PORT }} \
+            --build-arg DB_HOST=${{ secrets.DB_HOST }} \
+            --build-arg DB_USER=${{ secrets.DB_USER }} \
+            --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+            --build-arg SECRET_KEY=${{ secrets.SECRET_KEY }} \
+            --build-arg JWT_ALGO=${{ secrets.JWT_ALGO }} \
+            --build-arg JWT_EXP=${{ secrets.JWT_EXP }} \
+            --build-arg JWT_ISSUER=${{ secrets.JWT_ISSUER }} \
+            --build-arg JWT_REFRESH_EXP=${{ secrets.JWT_REFRESH_EXP }} \
+            --build-arg CLIENT_ID=${{ secrets.CLIENT_ID }} \
+            --build-arg CLIENT_SECRET=${{ secrets.CLIENT_SECRET }} \
+            --build-arg REDIRECT_URI=${{ secrets.REDIRECT_URI }} \
+            -t zicdding0904/zicdding-back:${{ env.IMAGE_TAG }} backend
+          
+      - name: Push Docker image
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          docker push zicdding0904/zicdding-back:${{ env.IMAGE_TAG }}
+          docker tag zicdding0904/zicdding-back:${{ env.IMAGE_TAG }} ${{ secrets.DOCKER_USERNAME }}/zicdding-back:latest
+          docker push zicdding0904/zicdding-back:latest
