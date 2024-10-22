@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-app
+  namespace: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - image: zicdding0904/zicdding-back:latest
+        name: zicdding-backend-app
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: backend-secrets
+              key: DB_DATABASE
+        - name: DB_PORT
+          valueFrom:
+            secretKeyRef:
+              name: backend-secrets
+              key: DB_PORT
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: backend-secrets
+              key: DB_HOST
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: backend-secrets
+              key: DB_USER
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: backend-secrets
+              key: DB_PASSWORD
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: backend-secrets
+              key: SECRET_KEY
+        - name: JWT_ALGO
+          valueFrom:
+            secretKeyRef:
+              name: backend-secrets
+              key: JWT_ALGO
+        - name: JWT_EXP
+          valueFrom: 
+            secretKeyRef:
+              name: backend-secrets
+              key: JWT_EXP
+        - name: JWT_ISSUER
+          valueFrom:
+            secretKeyRef:
+              name: backend-secrets
+              key: JWT_ISSUER
+        - name: JWT_REFRESH_EXP
+          valueFrom:
+            secretKeyRef:
+              name: backend-secrets
+              key: JWT_REFRESH_EXP
+        - name: CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: backend-secrets
+              key: CLIENT_ID
+        - name: CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: backend-secrets
+              key: CLIENT_SECRET
+        - name: REDIRECT_URI
+          valueFrom:
+            secretKeyRef:
+              name: backend-secrets
+              key: REDIRECT_URI
+
