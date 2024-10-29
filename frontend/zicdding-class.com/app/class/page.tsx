@@ -32,11 +32,9 @@ export default function ClassPage() {
       </div>
 
       <ul className="flex flex-wrap items-start gap-8 mx-auto mt-8">
-        {/* item 의 크기를 400 정도로 고정? 그럴려면 className 추가해야함 */}
         {Array.from({ length: 10 }).map((_, index) => (
           <ClassCard
             key={`class-${index}`}
-            // className="flex-[0_0_405px]"
             className="w-[405px]"
             title="Example Class Title"
             endDate="2024-07-01"

@@ -80,7 +80,6 @@ export default function ClassCard({
           name="star"
           className={myLike ? 'text-yellow-400' : 'text-gray-300'}
           onClick={(e) => {
-            // 상위 card 까지 이벤트 전파 방지
             e.stopPropagation();
             onClickLike?.(e);
           }}
