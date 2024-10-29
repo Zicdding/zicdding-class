@@ -1,45 +1,54 @@
-
-import { Typography } from "@zicdding-web/ui/Typography";
-import OrderByTabs from "./_components/OrderByTabs";
-import ClassCard from "./_components/ClassCard";
+import { Typography } from '@zicdding-web/ui/Typography';
+import OrderByTabs from './_components/OrderByTabs';
+import ClassCard from './_components/ClassCard';
+import Link from 'next/link';
 const dummy = [
   {
-    id: 1,
-    title: "Example Class Title",
-    endDate: "2024-07-01",
-    positions: ["프론트엔드", "백엔드"],
-    nickname: "직띵",
+    id: '1',
+    title: 'Example Class Title',
+    endDate: '2024-07-01',
+    positions: ['프론트엔드', '백엔드'],
+    nickname: '직띵',
     likeCnt: 10,
     viewCnt: 20,
     commentCnt: 5,
-    technology: [{ name: 'react', imgUrl: '/next.svg' }, { name: 'js', imgUrl: '/vercel.svg' }],
+    technology: [
+      { name: 'react', imgUrl: '/next.svg' },
+      { name: 'js', imgUrl: '/vercel.svg' },
+    ],
     myLike: false,
   },
   {
-    id: 2,
-    title: "Example Class Title",
-    endDate: "2024-07-01",
-    positions: ["프론트엔드", "백엔드"],
-    nickname: "직띵",
+    id: '2',
+    title: 'Example Class Title',
+    endDate: '2024-07-01',
+    positions: ['프론트엔드', '백엔드'],
+    nickname: '직띵',
     likeCnt: 10,
     viewCnt: 20,
     commentCnt: 5,
-    technology: [{ name: 'react', imgUrl: '/next.svg' }, { name: 'js', imgUrl: '/vercel.svg' }],
+    technology: [
+      { name: 'react', imgUrl: '/next.svg' },
+      { name: 'js', imgUrl: '/vercel.svg' },
+    ],
     myLike: false,
   },
   {
-    id: 3,
-    title: "Example Class Title",
-    endDate: "2024-07-01",
-    positions: ["프론트엔드", "백엔드"],
-    nickname: "직띵",
+    id: '3',
+    title: 'Example Class Title',
+    endDate: '2024-07-01',
+    positions: ['프론트엔드', '백엔드'],
+    nickname: '직띵',
     likeCnt: 10,
     viewCnt: 20,
     commentCnt: 5,
-    technology: [{ name: 'react', imgUrl: '/next.svg' }, { name: 'js', imgUrl: '/vercel.svg' }],
+    technology: [
+      { name: 'react', imgUrl: '/next.svg' },
+      { name: 'js', imgUrl: '/vercel.svg' },
+    ],
     myLike: false,
-  }
-]
+  },
+];
 
 export default function Home() {
   return (
@@ -55,7 +64,11 @@ export default function Home() {
         </div>
 
         <div className="flex gap-4 pt-6 overflow-x-auto">
-          {dummy.map((item) => <ClassCard key={item.id} {...item} />)}
+          {dummy.map((item) => (
+            <Link href={`/class/${item.id}`} key={`${item.id}`}>
+              <ClassCard {...item} />
+            </Link>
+          ))}
         </div>
       </div>
 
@@ -65,7 +78,11 @@ export default function Home() {
         </div>
 
         <div className="flex gap-4 pt-6 overflow-x-auto">
-          {dummy.map((item) => <ClassCard key={item.id} {...item} />)}
+          {dummy.map((item) => (
+            <Link href={`/class/${item.id}`} key={`${item.id}`}>
+              <ClassCard key={item.id} {...item} />
+            </Link>
+          ))}
         </div>
       </div>
     </div>
