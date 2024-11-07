@@ -21,7 +21,6 @@ export default function DialogTestPage() {
         <button
           type="button"
           className="p-2 border rounded"
-          // onClick={onClickFetch}
           onClick={() => {
             set호출형_오픈(true);
           }}
