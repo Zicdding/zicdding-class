@@ -1,5 +1,5 @@
 'use client';
-import ITNews from '@/app/_components/ITNews';
+import ITNews from '@/app/_components/ITNewsCard';
 
 export default function TestPage() {
   return (

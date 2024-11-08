@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 interface Props {
-  id: number;
+  id: string;
   title: string;
   thumbnailSrc: string;
   type: string;
@@ -30,17 +30,17 @@ export default function ITNews({
   myLike,
 }: Props) {
   return (
-    <Card className="relative w-[400px] rounded-[20px] border border-black">
-      <CardHeader className="relative w-full pb-56  rounded-tl-[20px] rounded-tr-[20px] overflow-hidden">
+    <Card className="relative w-[calc(33.33%-26.667px)] rounded-[20px] border border-black">
+      <CardHeader className="relative w-full pb-56 pt-0 rounded-tl-[20px] rounded-tr-[20px] overflow-hidden">
         <Image src={thumbnailSrc} alt={title} layout="fill" />
       </CardHeader>
       <Link href={`/news/${id}`}>
-        <CardContent className="px-[15px] pb-0 pt-[10px]">
-          <CardDescription className="mt-[10px] leading-4 px-2 py-1 inline-block text-[14px] text-muted-foreground border bg-gray-300 rounded">
+        <CardContent className="px-[15px]">
+          <CardDescription className="mt-[10px] px-5 py-1 inline-block text-[14px] text-muted-foreground border bg-gray-300 rounded">
             {type}
           </CardDescription>
-          <CardTitle className="mt-[10px] text-base font-semibold leading-none tracking-tight">{title}</CardTitle>
-          <div className="flex gap-1 mt-[10px]">
+          <CardTitle className="mt-[15px] font-semibold text-xl leading-none tracking-tight">{title}</CardTitle>
+          <div className="flex gap-1 mt-[10px] text-sm">
             <span>기간 :</span>
             <span className="font-semibold">
               {date.start} ~ {date.end}
@@ -48,7 +48,7 @@ export default function ITNews({
           </div>
         </CardContent>
         <CardFooter className="mt-[20px] justify-end px-[15px] pb-[15px] pt-0">
-          <ul className="flex items-center justify-end gap-4">
+          <ul className="flex items-center justify-end gap-4 text-sm">
             <li className="flex gap-1">
               <span>⭐️</span>
               <span>{likeCount}</span>
@@ -64,8 +64,8 @@ export default function ITNews({
           </ul>
         </CardFooter>
       </Link>
-      <div className="absolute cursor-pointer top-1 right-1">
-        <Icon name="star" className={`${myLike ? 'text-yellow-400' : 'text-gray-400'} w-10 h-10`} />
+      <div className="absolute cursor-pointer top-2 right-2">
+        <Icon name="star" className={myLike ? 'text-yellow-400' : 'text-gray-400'} />
       </div>
     </Card>
   );
