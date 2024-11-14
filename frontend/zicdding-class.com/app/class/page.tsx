@@ -6,9 +6,36 @@ import { Input } from '@zicdding-web/ui/Input';
 import { Button } from '@zicdding-web/ui';
 import ClassCard from '../_components/ClassCard';
 import { useRouter } from 'next/navigation';
+import { getClasses } from '../_apis/class';
+import { useQuery } from '@tanstack/react-query';
+import type { ApiResponse } from '../_apis/mock/class/data';
+
+// GYU-TODO: 폴더 구조 정의 후 옮기기
+function adapterClassList(response: ApiResponse) {
+  const classes = response.data.classes;
+  return classes.map((item) => ({
+    classId: item.classId,
+    classTitle: item.classTitle,
+    myLike: Boolean(item.myLike), // 1, 0 으로 되어 있음 ㅠㅠ
+    startDate: item.startDate,
+    endDate: item.endDate,
+    positions: item.position,
+    technology: item.technology,
+    nickname: item.nickname,
+    likeCnt: item.likeCnt,
+    viewCnt: item.viewCnt,
+    commentCnt: item.commentCnt,
+  }));
+}
 
 export default function ClassPage() {
   const router = useRouter();
+
+  const { data: classList } = useQuery({
+    queryKey: ['classes'],
+    queryFn: getClasses,
+    select: adapterClassList,
+  });
 
   return (
     <div>
@@ -32,25 +59,22 @@ export default function ClassPage() {
       </div>
 
       <ul className="flex flex-wrap items-start gap-8 mx-auto mt-8">
-        {Array.from({ length: 10 }).map((_, index) => (
+        {classList?.map((classItem) => (
           <ClassCard
-            key={`class-${index}`}
+            key={classItem.classId}
             className="w-[405px]"
-            title="Example Class Title"
-            endDate="2024-07-01"
-            positions={['프론트엔드', '백엔드']}
-            nickname="직띵"
-            likeCnt={10}
-            viewCnt={20}
-            commentCnt={5}
-            technology={[
-              { name: 'react', imgUrl: '/next.svg' },
-              { name: 'js', imgUrl: '/vercel.svg' },
-            ]}
-            myLike={index % 2 === 0}
+            title={classItem.classTitle}
+            endDate={classItem.endDate}
+            positions={classItem.positions}
+            nickname={classItem.nickname}
+            likeCnt={classItem.likeCnt}
+            viewCnt={classItem.viewCnt}
+            commentCnt={classItem.commentCnt}
+            technology={classItem.technology}
+            myLike={classItem.myLike}
             onClick={() => {
               // 임시 테스트 기능 (클릭시 상세 페이지로 이동)
-              router.push(`/class/${index}`);
+              router.push(`/class/${classItem.classId}`);
             }}
             onClickLike={() => {
               // 임시 테스트 기능 (클릭시 좋아요 기능)
