@@ -1,40 +1,33 @@
 'use client';
 
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '@zicdding-web/ui/Dialog';
+import { Dialog } from '@zicdding-web/ui/Dialog';
 
 export function InnerPatternDialog() {
   return (
     <Dialog>
-      <DialogTrigger>Open</DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Are you absolutely sure?</DialogTitle>
-          <DialogDescription>
+      <Dialog.Trigger>Open</Dialog.Trigger>
+      <Dialog.Content>
+        <Dialog.Header>
+          <Dialog.Title>Are you absolutely sure?</Dialog.Title>
+          <Dialog.Description>
             This action cannot be undone. This will permanently delete your account and remove your data from our
             servers.
-          </DialogDescription>
-        </DialogHeader>
+          </Dialog.Description>
+        </Dialog.Header>
 
         <Dialog>
-          <DialogTrigger>Open</DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Are you absolutely sure?</DialogTitle>
-              <DialogDescription>
+          <Dialog.Trigger>Open</Dialog.Trigger>
+          <Dialog.Content>
+            <Dialog.Header>
+              <Dialog.Title>Are you absolutely sure?</Dialog.Title>
+              <Dialog.Description>
                 This action cannot be undone. This will permanently delete your account and remove your data from our
                 servers.
-              </DialogDescription>
-            </DialogHeader>
-          </DialogContent>
+              </Dialog.Description>
+            </Dialog.Header>
+          </Dialog.Content>
         </Dialog>
-      </DialogContent>
+      </Dialog.Content>
     </Dialog>
   );
 }
