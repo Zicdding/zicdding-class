@@ -20,6 +20,7 @@
     "./Calendar": "./src/components/Calendar/index.ts",
     "./Typography": "./src/components/Typography/index.ts",
     "./Card": "./src/components/Card/index.ts",
+    "./Dialog": "./src/components/Dialog/index.ts",
     "./package.json": "./package.json"
   },
   "devDependencies": {
@@ -42,6 +43,7 @@
     "vite-plugin-singlefile": "^2.0.2"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.0",
@@ -49,6 +51,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
+    "lucide-react": "^0.454.0",
     "postcss": "^8.4.38",
     "react": "^18.3.1",
     "react-day-picker": "^8.10.1",
