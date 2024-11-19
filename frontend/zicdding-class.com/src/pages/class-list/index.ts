@@ -1,0 +1,1 @@
+export { ClassListPage } from './ui';
