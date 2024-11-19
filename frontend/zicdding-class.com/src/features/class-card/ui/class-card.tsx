@@ -24,7 +24,6 @@ interface ClassCardProps extends React.ComponentPropsWithoutRef<typeof Card> {
   onClick?: (e: MouseEvent<HTMLDivElement>) => void;
 }
 
-// GYU-TODO: ClassCard 에 좋아요 toggle API 추가 예정
 export function ClassCard({
   title,
   endDate,
@@ -37,7 +36,6 @@ export function ClassCard({
   myLike,
   className,
   onClick,
-  // onClickLike,
   ...rest
 }: ClassCardProps) {
   const { onClickLike } = useClassCard();
