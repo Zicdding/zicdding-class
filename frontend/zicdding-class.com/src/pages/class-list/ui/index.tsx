@@ -7,7 +7,7 @@ import { Button } from '@zicdding-web/ui';
 import { useRouter } from 'next/navigation';
 import { getClasses } from '@/src/entities/class';
 import { useQuery } from '@tanstack/react-query';
-import ClassCard from './ClassCard';
+import { ClassCard } from './ClassCard';
 import { adapterClassList } from '../model/adapter-class-list';
 
 export function ClassListPage() {

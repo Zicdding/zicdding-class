@@ -24,7 +24,7 @@ interface ClassCardProps extends React.ComponentPropsWithoutRef<typeof Card> {
   onClickLike?: (e: MouseEvent<SVGAElement>) => void;
 }
 
-export default function ClassCard({
+export function ClassCard({
   title,
   endDate,
   positions,
