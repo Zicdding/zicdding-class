@@ -24,7 +24,8 @@ interface ClassCardProps extends React.ComponentPropsWithoutRef<typeof Card> {
   onClickLike?: (e: MouseEvent<SVGAElement>) => void;
 }
 
-export default function ClassCard({
+// GYU-TODO: ClassCard 에 좋아요 toggle API 추가 예정
+export function ClassCard({
   title,
   endDate,
   positions,

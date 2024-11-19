@@ -1,1 +1,1 @@
-export { classListData } from './class/data';
+export { classListData, classListApiResponse } from './class/data';
