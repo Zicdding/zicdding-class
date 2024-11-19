@@ -4,13 +4,15 @@ import { Typography } from '@zicdding-web/ui/Typography';
 
 import Link from 'next/link';
 import { ClassCard, useGetClasses } from '@/src/features/class-card';
+import { useRouter } from 'next/navigation';
 
 export function MainPage() {
   const { data: classList, isLoading } = useGetClasses();
+  const router = useRouter();
 
   return (
     <div className="flex flex-col px-6 gap-[52px] mb-28">
-      <section className="">
+      <section>
         <div className="flex justify-between items-center border-b-[1px] border-[#C6C6C6] py-4">
           <Typography variant="h2" className="text-[#0F172A]">
             클래스
@@ -19,21 +21,20 @@ export function MainPage() {
         </div>
 
         {/* GYU-TODO: ClassList 로 추출해도 될듯 */}
-        {/* 추출해야하나?? */}
         <ul className="flex flex-wrap gap-8 w-full mt-7">
           {isLoading ? (
             <div>loading...</div>
           ) : (
-            classList?.slice(0, 3).map((classItem) => (
-              <Link href={`/class/${classItem.classId}`} key={`${classItem.classId}`} className="w-[calc(34%-32px)]">
-                {/* <ClassCard {...item} className="w-full" /> */}
-                <ClassCard
-                  // key={classItem.classId}
-                  // className="w-[405px]"
-                  title={classItem.classTitle}
-                  {...classItem}
-                />
-              </Link>
+            classList?.slice(0, 4).map((classItem) => (
+              <ClassCard
+                key={classItem.classId}
+                className="w-[calc(34%-32px)]"
+                title={classItem.classTitle}
+                onClick={() => {
+                  router.push(`/class/${classItem.classId}`);
+                }}
+                {...classItem}
+              />
             ))
           )}
         </ul>

@@ -44,7 +44,7 @@ export function ClassCard({
 
   return (
     <Card
-      className={cn('relative w-[300px] aspect-[400/240] bg-white border-[1px] border-black', className)}
+      className={cn('relative w-[300px] aspect-[400/240] bg-white border-[1px] border-black cursor-pointer', className)}
       onClick={onClick}
       {...rest}
     >
