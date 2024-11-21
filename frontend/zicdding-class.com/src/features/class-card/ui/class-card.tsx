@@ -5,6 +5,7 @@ import { Icon } from '@ui/components/Icon';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@zicdding-web/ui/Card';
 import { cn } from '@ui/lib/utils';
 import type { MouseEvent } from 'react';
+import { useClassCard } from './use-class-card';
 
 interface ClassCardProps extends React.ComponentPropsWithoutRef<typeof Card> {
   myLike: boolean;
@@ -21,10 +22,9 @@ interface ClassCardProps extends React.ComponentPropsWithoutRef<typeof Card> {
   }[];
 
   onClick?: (e: MouseEvent<HTMLDivElement>) => void;
-  onClickLike?: (e: MouseEvent<SVGAElement>) => void;
 }
 
-export default function ClassCard({
+export function ClassCard({
   title,
   endDate,
   positions,
@@ -36,12 +36,13 @@ export default function ClassCard({
   myLike,
   className,
   onClick,
-  onClickLike,
   ...rest
 }: ClassCardProps) {
+  const { onClickLike } = useClassCard();
+
   return (
     <Card
-      className={cn('relative w-[300px] aspect-[400/240] bg-white border-[1px] border-black', className)}
+      className={cn('relative w-[300px] aspect-[400/240] bg-white border-[1px] border-black cursor-pointer', className)}
       onClick={onClick}
       {...rest}
     >
@@ -81,7 +82,7 @@ export default function ClassCard({
           className={myLike ? 'text-yellow-400' : 'text-gray-300'}
           onClick={(e) => {
             e.stopPropagation();
-            onClickLike?.(e);
+            onClickLike(myLike);
           }}
         />
       </div>

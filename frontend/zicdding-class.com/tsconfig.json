@@ -1,7 +1,14 @@
 {
   "extends": "../tsconfig.json",
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
   "compilerOptions": {
     "plugins": [
       {
@@ -9,8 +16,13 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"],
-      "@ui/*": ["../packages/ui/src/*"]
-    }
+      "@/*": [
+        "./*"
+      ],
+      "@ui/*": [
+        "../packages/ui/src/*"
+      ]
+    },
+    "strictNullChecks": true
   }
 }
