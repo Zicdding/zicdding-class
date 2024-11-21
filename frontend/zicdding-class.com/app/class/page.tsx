@@ -1,6 +1,6 @@
 'use client';
 
-import { ClassListPage } from '@/src/pages/class-list';
+import { ClassListPage } from '@/src/views/class-list';
 
 export default function Page() {
   return <ClassListPage />;
