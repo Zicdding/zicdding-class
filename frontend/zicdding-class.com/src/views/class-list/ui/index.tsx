@@ -5,15 +5,23 @@ import { Tabs } from '@zicdding-web/ui/Tabs';
 import { Input } from '@zicdding-web/ui/Input';
 import { Button } from '@zicdding-web/ui';
 import { ClassCard, useGetClasses } from '@/src/features/class-card';
+import type { SortType } from '../model/type';
+import { useSearchClass } from './use-search-class';
 import { useRouter } from 'next/navigation';
+import { useMemo } from 'react';
 
 export function ClassListPage() {
-  const { data: classList, isLoading } = useGetClasses();
   const router = useRouter();
 
-  // GYU-TODO: 인기순/최신순 query 로 관리하고 데이터가 없으면 기본값 설정해서 tabs 와 데이터 일치하게 하기!
-  // tabs 도 상태로 해야하나? 아니면 onChange 가 발생할때 url 로 제어해서 따로 client-component 로 추출하지 않게 해야하나?
-  // URL 로 제어하는게 좋을듯
+  const { data: classList, isLoading } = useGetClasses();
+
+  const { localSearchValue, searchValue, sortType, onSearchSubmit, onChangeSearchValue, onSearch, onSortTypeChange } =
+    useSearchClass();
+
+  const _classList = useMemo(() => {
+    return classList?.filter((classItem) => classItem.classTitle.includes(searchValue));
+  }, [classList, searchValue]);
+
   return (
     <div className="px-6">
       <div className="flex justify-between items-center">
@@ -23,7 +31,8 @@ export function ClassListPage() {
             { title: '인기순', value: 'popular' },
             { title: '최신순', value: 'recent' },
           ]}
-          onChange={() => {}}
+          value={sortType}
+          onChange={(value) => onSortTypeChange(value as SortType)}
           defaultValue="popular"
         />
       </div>
@@ -32,14 +41,23 @@ export function ClassListPage() {
 
       <div className="flex justify-between items-center">
         <Button>클래스 만들기</Button>
-        <Input type="search" width={366} onClickSearch={() => {}} />
+        <form onSubmit={onSearchSubmit}>
+          <Input
+            type="search" //
+            name="search"
+            width={366}
+            value={localSearchValue}
+            onChange={onChangeSearchValue}
+            onClickSearch={onSearch}
+          />
+        </form>
       </div>
 
       <ul className="flex flex-wrap items-start gap-8 mx-auto mt-8">
         {isLoading ? (
           <div>loading...</div>
         ) : (
-          classList?.map((classItem) => (
+          _classList?.map((classItem) => (
             <ClassCard
               key={classItem.classId}
               title={classItem.classTitle}
