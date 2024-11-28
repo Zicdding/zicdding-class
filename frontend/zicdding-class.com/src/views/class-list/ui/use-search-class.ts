@@ -15,8 +15,10 @@ export function useSearchClass() {
     e.preventDefault();
 
     const formData = new FormData(e.target as HTMLFormElement);
-    const _searchValue = formData.get('search') as string;
-    onSearch(_searchValue);
+    const searchValue = formData.get('search');
+    if (typeof searchValue === 'string') {
+      onSearch(searchValue);
+    }
   };
 
   const onSearch = (searchValue: string) => {
