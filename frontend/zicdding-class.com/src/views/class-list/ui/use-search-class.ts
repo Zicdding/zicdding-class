@@ -8,7 +8,7 @@ export function useSearchClass() {
 
   const [localSearchValue, setLocalSearchValue] = useState('');
 
-  const sortType = (searchParams.get('sortType') as SortType) ?? 'popular';
+  const sortType = searchParams.get('sortType') ?? 'popular';
   const searchValue = searchParams.get('search') ?? '';
 
   const onSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
