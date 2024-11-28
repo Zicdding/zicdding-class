@@ -6,7 +6,7 @@ import { Input } from '@zicdding-web/ui/Input';
 import { Button } from '@zicdding-web/ui';
 import { ClassCard, useGetClasses } from '@/src/features/class-card';
 import type { SortType } from '../model/type';
-import { useSearch } from './use-search';
+import { useSearchClass } from './use-search-class';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 
@@ -16,7 +16,7 @@ export function ClassListPage() {
   const { data: classList, isLoading } = useGetClasses();
 
   const { localSearchValue, searchValue, sortType, onSearchSubmit, onChangeSearchValue, onSearch, onSortTypeChange } =
-    useSearch();
+    useSearchClass();
 
   const _classList = useMemo(() => {
     return classList?.filter((classItem) => classItem.classTitle.includes(searchValue));
