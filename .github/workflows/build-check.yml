@@ -1,0 +1,20 @@
+name: build-check
+
+on:
+  push:
+
+jobs:
+  build-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install Dependencies
+        working-directory: ./frontend
+        run: yarn
+      - name: Build Check
+        working-directory: ./frontend
+        run: |
+          yarn workspace @zicdding-web/zicdding-class-com run build
