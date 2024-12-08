@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useCallback } from "react";
-import { apiV1 } from "@/app/_remotes";
-import { useQuery } from "@tanstack/react-query";
+import { useCallback } from 'react';
+import { apiV1 } from '@/app/_remotes';
+import { useQuery } from '@tanstack/react-query';
 
 export function useUser() {
   const { data, refetch, isError, isFetching } = useQuery({
     initialData: undefined,
-    queryKey: ["useUser"],
+    queryKey: ['useUser'],
     queryFn: () => apiV1.users.getMe(),
     retry: false,
   });

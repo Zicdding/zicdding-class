@@ -2,7 +2,7 @@
 
 import { Typography } from '@zicdding-web/ui/Typography';
 import { Tabs } from '@zicdding-web/ui/Tabs';
-import { Input } from '@zicdding-web/ui/Input';
+import { SearchInput } from '@zicdding-web/ui';
 import { Button } from '@zicdding-web/ui';
 import { ClassCard, useGetClasses } from '@/src/features/class-card';
 import type { SortType } from '../model/type';
@@ -42,8 +42,7 @@ export function ClassListPage() {
       <div className="flex justify-between items-center">
         <Button>클래스 만들기</Button>
         <form onSubmit={onSearchSubmit}>
-          <Input
-            type="search" //
+          <SearchInput
             name="search"
             width={366}
             value={localSearchValue}
