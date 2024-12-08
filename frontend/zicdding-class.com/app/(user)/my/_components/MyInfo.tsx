@@ -21,19 +21,22 @@ function useLoginPageGuard(nextPage: string) {
 export function MyInfo({ mode }: { mode: 'view' | 'modify' }) {
   const router = useRouter();
   const { user } = useUser();
-  const { register, getValues } = useForm<{
+  const { register, setValue } = useForm<{
     nickname: string;
     email: string;
     password: string;
     phoneNumber: string;
-  }>({
-    defaultValues: {
-      nickname: user?.nickname,
-      email: user?.email,
-      password: '**********',
-      phoneNumber: user?.phone_num,
-    },
-  });
+  }>();
+
+  useEffect(() => {
+    if (user == null) {
+      return;
+    }
+
+    setValue('nickname', user.nickname);
+    setValue('email', user.email);
+    setValue('phoneNumber', user.phone_num);
+  }, [user, setValue]);
 
   useLoginPageGuard('/login');
 
@@ -50,7 +53,6 @@ export function MyInfo({ mode }: { mode: 'view' | 'modify' }) {
       <Input
         id="nickname"
         label="닉네임"
-        defaultValue={getValues('nickname')}
         disabled={mode === 'view'}
         required={true}
         inputClassName={mode === 'view' ? 'text-[#959595] bg-[#F4F4F4]' : 'bg-[#F4F4F4] text-[#959595]'}
@@ -58,7 +60,6 @@ export function MyInfo({ mode }: { mode: 'view' | 'modify' }) {
       />
 
       <Input
-        defaultValue={getValues('email')}
         label="Email"
         id="email"
         type="email"
@@ -78,7 +79,6 @@ export function MyInfo({ mode }: { mode: 'view' | 'modify' }) {
       />
 
       <Input
-        defaultValue={getValues('phoneNumber')}
         label="전화번호"
         id="phoneNumber"
         type="tel"
