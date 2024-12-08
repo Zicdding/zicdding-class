@@ -9,11 +9,7 @@ export default function MyPage() {
             <h1 className="text-3xl font-bold text-left mb-4">마이페이지</h1>
             <h2 className="text-lg font-medium text-left mb-6">내 정보</h2>
 
-            <div className="flex justify-center mb-8">
-              <img src="/my/default-profile.png" alt="Profile" width="205" className="bg-gray-200" />
-            </div>
-
-            <MyInfo />
+            <MyInfo mode="view" />
           </div>
         </div>
       </div>
