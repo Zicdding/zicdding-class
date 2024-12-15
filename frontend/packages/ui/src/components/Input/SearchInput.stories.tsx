@@ -1,21 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Input } from './Input';
+import { fn } from '@storybook/test';
+import { SearchInput } from './SearchInput';
 
 const meta = {
-  title: 'Zicdding-UI/Input',
-  component: Input,
+  title: 'Zicdding-UI/SearchInput',
+  component: SearchInput,
   parameters: {
     layout: 'centered',
   },
   tags: ['autodocs'],
   argTypes: {},
   args: {
-    id: 'nickname',
-    type: 'text',
-    placeholder: '크레코',
-    label: '닉네임',
+    onClickSearch: fn(),
+    type: 'search',
+    placeholder: '검색어를 입력하세요',
   },
-} satisfies Meta<typeof Input>;
+} satisfies Meta<typeof SearchInput>;
 
 export default meta;
 
