@@ -7,17 +7,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
-function useLoginPageGuard(nextPage: string) {
-  const { isLogged } = useUser();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!isLogged) {
-      router.push(nextPage);
-    }
-  }, [isLogged, router, nextPage]);
-}
-
 export function MyInfo({ mode }: { mode: 'view' | 'modify' }) {
   const router = useRouter();
   const { user } = useUser();
@@ -37,8 +26,6 @@ export function MyInfo({ mode }: { mode: 'view' | 'modify' }) {
     setValue('email', user.email);
     setValue('phoneNumber', user.phone_num);
   }, [user, setValue]);
-
-  useLoginPageGuard('/login');
 
   return (
     <div className="space-y-4 w-[420px] mx-auto my-0">
@@ -100,7 +87,12 @@ export function MyInfo({ mode }: { mode: 'view' | 'modify' }) {
           </Button>
         </div>
       ) : (
-        <Button className="w-full rounded-[20px]" onClick={() => router.push('/my/modify')}>
+        <Button
+          className="w-full rounded-[20px]"
+          onClick={() => {
+            router.push('/my/modify');
+          }}
+        >
           개인정보 수정
         </Button>
       )}
