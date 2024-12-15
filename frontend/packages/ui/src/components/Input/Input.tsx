@@ -14,7 +14,6 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
 
 export const Input = React.forwardRef<HTMLInputElement, Props>(
   ({ id, type, disabled, required, defaultValue, label, placeholder, inputClassName = '', ...props }: Props, ref) => {
-    console.log('defaultValue', defaultValue);
 
     return (
       <p className="mb-[15px]">
