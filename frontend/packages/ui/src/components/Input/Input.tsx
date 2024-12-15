@@ -14,21 +14,10 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
 
 export const Input = React.forwardRef<HTMLInputElement, Props>(
   ({ id, type, disabled, required, defaultValue, label, placeholder, inputClassName = '', ...props }: Props, ref) => {
-
     return (
       <p className="mb-[15px]">
         {label && <label className={labelStyle}>{label}</label>}
-        <input
-          ref={ref}
-          id={id}
-          className={cn(inputStyle, inputClassName)}
-          type={type}
-          disabled={disabled}
-          required={required}
-          placeholder={placeholder}
-          defaultValue={defaultValue}
-          {...props}
-        />
+        <input ref={ref} id={id} className={cn(inputStyle, inputClassName)} type={type} {...props} />
       </p>
     );
   },
