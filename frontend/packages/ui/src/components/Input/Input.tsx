@@ -9,13 +9,17 @@ const inputStyle =
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   type?: string;
   label?: string;
+  className?: string;
   inputClassName?: string;
 }
 
 export const Input = React.forwardRef<HTMLInputElement, Props>(
-  ({ id, type, disabled, required, defaultValue, label, placeholder, inputClassName = '', ...props }: Props, ref) => {
+  (
+    { id, type, className, disabled, required, defaultValue, label, placeholder, inputClassName = '', ...props }: Props,
+    ref,
+  ) => {
     return (
-      <p className="mb-[15px]">
+      <p className={cn(className, 'mb-[15px]')}>
         {label && <label className={labelStyle}>{label}</label>}
         <input ref={ref} id={id} className={cn(inputStyle, inputClassName)} type={type} {...props} />
       </p>
