@@ -8,7 +8,6 @@ export interface SearchInputProps extends React.InputHTMLAttributes<HTMLInputEle
   onClickSearch?: (value: string) => void;
 }
 
-// FIXME: Input으로 갈음할 수 있도록 개선이 필요할까? 일단 구현체가 다르므로 나눠둡니다.
 export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
   ({ className, onClickSearch, ...props }, ref) => {
     const [value, setValue] = useState<string>('');
