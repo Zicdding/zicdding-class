@@ -1,7 +1,7 @@
 'use client';
 
 import { Typography } from '@zicdding-web/ui/Typography';
-import { Input } from '@zicdding-web/ui';
+import { SearchInput } from '@zicdding-web/ui/Input';
 import { TypeButton } from './_components/TypeButton';
 import { ItTabs } from './_components/ItTabs';
 import ITNewsCard from '../_components/ITNewsCard';
@@ -140,7 +140,7 @@ export default function ITNewsPage() {
       </Typography>
       <TypeButton />
       <article className="flex justify-between mt-12">
-        <Input type="search" width={400} />
+        <SearchInput width={400} />
         <ItTabs
           item={[
             { title: '최신순', value: 'recent' },
