@@ -1,42 +1,28 @@
-'use client';
-
 import { cn } from '@ui/lib/utils';
-import React, { useState } from 'react';
-import { Icon } from '../Icon';
+import React from 'react';
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  onClickSearch?: (value: string) => void;
+const labelStyle = "font-['Roboto'] font-normal block text-left text-[14px] leading-[22px]";
+
+const inputStyle =
+  'w-full box-border flex-row align-center p-[13px] gap-[10px] bg-[#FFFFFF] border-[1px] border-[#C6C6C6] rounded-[20px]';
+
+interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
+  type?: string;
+  label?: string;
+  className?: string;
+  inputClassName?: string;
 }
 
-export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, onClickSearch, ...props }, ref) => {
-    const [value, setValue] = useState<string>('');
-
-    if (type === 'search') {
-      props.placeholder = '검색어를 입력하세요';
-    }
-
+export const Input = React.forwardRef<HTMLInputElement, Props>(
+  (
+    { id, type, className, disabled, required, defaultValue, label, placeholder, inputClassName = '', ...props }: Props,
+    ref,
+  ) => {
     return (
-      <div className="relative" style={{ width: props.width ? `${props.width}px` : '200px' }}>
-        <input
-          ref={ref}
-          type={type}
-          className={cn(
-            'flex h-[44px] w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 pr-[44px]',
-            className,
-          )}
-          onChange={(e) => setValue(e.target.value)}
-          value={value}
-          {...props}
-        />
-        {type === 'search' ? (
-          <Icon
-            name="search"
-            className="absolute top-0 right-0 mr-4 mt-[10px]"
-            onClick={() => onClickSearch?.(value)}
-          />
-        ) : null}
-      </div>
+      <p className={cn(className, 'mb-[15px]')}>
+        {label && <label className={labelStyle}>{label}</label>}
+        <input ref={ref} id={id} className={cn(inputStyle, inputClassName)} type={type} {...props} />
+      </p>
     );
   },
 );
