@@ -3,7 +3,7 @@
 import { Button } from '@zicdding-web/ui/Button';
 import { Typography } from '@zicdding-web/ui/Typography';
 import { Fragment, useState } from 'react';
-import { Calendar, Input } from '@zicdding-web/ui';
+import { Calendar, } from '@zicdding-web/ui';
 import { Tabs } from '@zicdding-web/ui/Tabs';
 
 export default function ClassDetailCreatePage() {
