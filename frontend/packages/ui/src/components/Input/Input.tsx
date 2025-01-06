@@ -3,8 +3,10 @@
 import { cn } from '@ui/lib/utils';
 import React, { useState } from 'react';
 import { Icon } from '../Icon';
+import type { IconName } from '../Icon';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  type?: IconName;
   onClickSearch?: (value: string) => void;
 }
 
@@ -29,13 +31,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           value={value}
           {...props}
         />
-        {type === 'search' ? (
-          <Icon
-            name="search"
-            className="absolute top-0 right-0 mr-4 mt-[10px]"
-            onClick={() => onClickSearch?.(value)}
-          />
-        ) : null}
+        {type && (
+          <div className="absolute top-1/2 right-4 -translate-y-1/2">
+            <Icon name={type} onClick={() => onClickSearch?.(value)} />
+          </div>
+        )}
       </div>
     );
   },

@@ -1,8 +1,9 @@
 import type React from 'react';
 import { SearchIcon } from './resources/SearchIcon';
 import { Star } from './resources/Star';
+import { CalendarIcon } from './resources/CalendarIcon';
 
-type IconName = 'search' | 'star';
+export type IconName = 'search' | 'star' | 'calendar';
 
 export interface IconProps extends React.SVGAttributes<SVGAElement> {
   name: IconName;
@@ -13,8 +14,12 @@ export function Icon({ name, ...props }: IconProps) {
     case 'search': {
       return <SearchIcon {...props} />;
     }
-    case 'star':
+    case 'star': {
       return <Star {...props} />;
+    }
+    case 'calendar': {
+      return <CalendarIcon {...props} />;
+    }
   }
 }
 
