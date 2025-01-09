@@ -3,8 +3,9 @@
 import { Button } from '@zicdding-web/ui/Button';
 import { Typography } from '@zicdding-web/ui/Typography';
 import { Fragment, useState } from 'react';
-import { Calendar, } from '@zicdding-web/ui';
+import { Calendar, Input } from '@zicdding-web/ui';
 import { Tabs } from '@zicdding-web/ui/Tabs';
+import Markdown from '../_components/Markdown';
 
 export default function ClassDetailCreatePage() {
   const [inputs, setInputs] = useState({
@@ -28,9 +29,10 @@ export default function ClassDetailCreatePage() {
     del_yn: false,
     dead_yn: false,
     file_id: '',
+    content: '',
   });
 
-  const handleChangeInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  const handleChangeInput: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
     const { name, value } = e.target;
 
     setInputs((prev) => ({
@@ -49,14 +51,20 @@ export default function ClassDetailCreatePage() {
   };
 
   const handleClickCreate = () => {
-    new Promise((resolve) => resolve);
+    console.log(inputs);
   };
 
   return (
     <div className="px-6">
       <div>
         <div className="flex justify-between">
-          <input value={inputs.title} className="text-6xl" placeholder="타이틀을 입력하세요" />
+          <input
+            name="title"
+            value={inputs.title}
+            onChange={handleChangeInput}
+            className="text-6xl"
+            placeholder="타이틀을 입력하세요"
+          />
           <Button variant="default" size="sm" onClick={handleClickCreate}>
             등록하기
           </Button>
@@ -200,7 +208,19 @@ export default function ClassDetailCreatePage() {
 
       <hr className="my-8" />
 
-      <div>소개 내용</div>
+      <div className="flex">
+        <div className="w-1/2">
+          <Markdown content={inputs.content} />
+        </div>
+        <div className="w-1/2">
+          <textarea
+            name="content"
+            onChange={handleChangeInput}
+            className="w-full min-h-[400px] h-full bg-gray-200 p-4 outline-none"
+            value={inputs.content}
+          />
+        </div>
+      </div>
 
       <hr className="my-8" />
     </div>

@@ -6,11 +6,12 @@ import { Fragment, useState } from 'react';
 import { Calendar, Input } from '@zicdding-web/ui';
 import { CLASS_MOCK_LIST } from '../../data';
 import { Tabs } from '@zicdding-web/ui/Tabs';
+import Markdown from '../../_components/Markdown';
 
-export default function ClassDetailModifyPage({params}: {params: {id: string}}) {
+export default function ClassDetailModifyPage({ params }: { params: { id: string } }) {
   const [inputs, setInputs] = useState(CLASS_MOCK_LIST[Number(params.id)]);
 
-  const handleChangeInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  const handleChangeInput: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
     const { name, value } = e.target;
 
     setInputs((prev) => ({
@@ -29,7 +30,7 @@ export default function ClassDetailModifyPage({params}: {params: {id: string}}) 
   };
 
   const handleClickCreate = () => {
-    new Promise((resolve) => resolve);
+    console.log(inputs);
   };
 
   return (
@@ -180,7 +181,19 @@ export default function ClassDetailModifyPage({params}: {params: {id: string}}) 
 
       <hr className="my-8" />
 
-      <div>소개 내용</div>
+      <div className="flex">
+        <div className="w-1/2">
+          <Markdown content={inputs.content} />
+        </div>
+        <div className="w-1/2">
+          <textarea
+            name="content"
+            onChange={handleChangeInput}
+            className="w-full min-h-[400px] h-full bg-gray-200 p-4 outline-none"
+            value={inputs.content}
+          />
+        </div>
+      </div>
 
       <hr className="my-8" />
     </div>

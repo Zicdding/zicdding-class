@@ -19,6 +19,7 @@
 //   del_yn: false,
 //   dead_yn: false,
 //   file_id: '',
+//   content: '',
 // };
 
 export const CLASS_MOCK_LIST = [
@@ -43,6 +44,7 @@ export const CLASS_MOCK_LIST = [
     del_yn: false,
     dead_yn: false,
     file_id: '',
+    content: '# 모각코',
   },
   {
     id: 2,
@@ -65,6 +67,7 @@ export const CLASS_MOCK_LIST = [
     del_yn: false,
     dead_yn: false,
     file_id: 'file456',
+    content: '# 모임 준비 프로젝트',
   },
   {
     id: 3,
@@ -87,6 +90,7 @@ export const CLASS_MOCK_LIST = [
     del_yn: false,
     dead_yn: false,
     file_id: '',
+    content: '# React 입문',
   },
   {
     id: 4,
@@ -109,6 +113,7 @@ export const CLASS_MOCK_LIST = [
     del_yn: false,
     dead_yn: false,
     file_id: '',
+    content: '# 알고리즘 스터디',
   },
   {
     id: 5,
@@ -131,6 +136,7 @@ export const CLASS_MOCK_LIST = [
     del_yn: false,
     dead_yn: false,
     file_id: 'ai789',
+    content: '# AI 개발 그룹',
   },
   {
     id: 6,
@@ -153,6 +159,7 @@ export const CLASS_MOCK_LIST = [
     del_yn: false,
     dead_yn: false,
     file_id: '',
+    content: '# UX/UI 디자인 워크샵',
   },
   {
     id: 7,
@@ -175,6 +182,7 @@ export const CLASS_MOCK_LIST = [
     del_yn: false,
     dead_yn: false,
     file_id: '',
+    content: '# 백엔드 심화 스터디',
   },
   {
     id: 8,
@@ -197,6 +205,7 @@ export const CLASS_MOCK_LIST = [
     del_yn: false,
     dead_yn: false,
     file_id: 'data999',
+    content: '# 데이터 분석 프로젝트',
   },
   {
     id: 9,
@@ -219,6 +228,7 @@ export const CLASS_MOCK_LIST = [
     del_yn: false,
     dead_yn: false,
     file_id: '',
+    content: '# DevOps 워크샵',
   },
   {
     id: 10,
@@ -241,5 +251,6 @@ export const CLASS_MOCK_LIST = [
     del_yn: false,
     dead_yn: false,
     file_id: 'abc123',
+    content: '# 웹 개발 스터디',
   },
 ];

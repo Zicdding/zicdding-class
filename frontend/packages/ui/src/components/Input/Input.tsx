@@ -19,7 +19,7 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(
     ref,
   ) => {
     return (
-      <p className={cn(className, 'mb-[15px]')}>
+      <p className={className}>
         {label && <label className={labelStyle}>{label}</label>}
         <input ref={ref} id={id} className={cn(inputStyle, inputClassName)} type={type} {...props} />
       </p>

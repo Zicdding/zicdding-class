@@ -3,9 +3,11 @@ import { Typography } from '@zicdding-web/ui/Typography';
 
 import { Fragment } from 'react';
 import { CLASS_MOCK_LIST } from '../data';
+import Markdown from '../_components/Markdown';
 
-export default function ClassDetailPage({params}: {params: {id: string}}) {
-  const { id, title, start_date, deadline, type, how, eta, contact, lang, accommodate, dead_yn, create_date } = CLASS_MOCK_LIST[Number(params.id)];
+export default async function ClassDetailPage({ params }: { params: { id: string } }) {
+  const { id, title, start_date, deadline, type, how, eta, contact, lang, accommodate, dead_yn, create_date, content } =
+    CLASS_MOCK_LIST[Number(params.id)];
 
   return (
     <div className="px-6">
@@ -106,7 +108,7 @@ export default function ClassDetailPage({params}: {params: {id: string}}) {
 
       <hr className="my-8" />
 
-      <div>소개 내용</div>
+      <Markdown content={content} />
 
       <hr className="my-8" />
 
